@@ -1,0 +1,8 @@
+[
+{
+  "directory": "C:/CODING_PROJECTS/SpaceShooter2/build/debug",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -std=c++17 -Wall -o CMakeFiles\\SpaceShooter.dir\\src\\main.cpp.obj -c C:\\CODING_PROJECTS\\SpaceShooter2\\src\\main.cpp",
+  "file": "C:/CODING_PROJECTS/SpaceShooter2/src/main.cpp",
+  "output": "CMakeFiles/SpaceShooter.dir/src/main.cpp.obj"
+}
+]
