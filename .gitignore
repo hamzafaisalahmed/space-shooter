@@ -67,3 +67,24 @@ vcpkg_installed/
 # test output & cache
 Testing/
 .cache/
+
+# VS Code
+.vscode/
+.history/
+*.code-workspace
+
+# Windows thumbnails and metadata
+Thumbs.db
+desktop.ini
+
+# Common Archive formats (as we discussed)
+*.zip
+*.tar
+*.gz
+*.7z
+
+# Documents and Data
+*.pdf
+*.xlsx
+*.xls
+*.csv
