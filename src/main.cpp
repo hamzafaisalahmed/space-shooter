@@ -179,7 +179,7 @@ void Game::init()
     std::srand((unsigned)std::time(nullptr));
 
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-    window.create(desktop, "Space Shooter", sf::Style::Fullscreen);
+    window.create(desktop, "Space Shooter", sf::Style::Default);
     window.setFramerateLimit(60);
 
     float scaleY = (float)desktop.height / 720.f;
