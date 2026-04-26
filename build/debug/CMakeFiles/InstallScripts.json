@@ -1,7 +1,7 @@
 {
 	"InstallScripts" : 
 	[
-		"C:/CODING_PROJECTS/SpaceShooter2/build/debug/cmake_install.cmake"
+		"C:/CODING_PROJECTS/SpaceShooter/build/debug/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

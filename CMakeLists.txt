@@ -38,20 +38,12 @@ endif()
 # ============================================================
 # FONT
 # ============================================================
-set(FONT_DST "${CMAKE_BINARY_DIR}/assets/game_font.ttf")
 
-if(NOT EXISTS "${FONT_DST}")
-    file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/assets")
+# 1. This ensures the 'assets' folder is copied every time you build
+add_custom_command(TARGET SpaceShooter POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_CURRENT_SOURCE_DIR}/assets"
+        "$<TARGET_FILE_DIR:SpaceShooter>/assets"
+    COMMENT "Updating assets in build directory..."
+)
 
-    if(EXISTS "C:/Windows/Fonts/arial.ttf")
-        file(COPY "C:/Windows/Fonts/arial.ttf" DESTINATION "${CMAKE_BINARY_DIR}/assets")
-        file(RENAME "${CMAKE_BINARY_DIR}/assets/arial.ttf" "${FONT_DST}")
-        message(STATUS "Font: copied Arial from C:/Windows/Fonts")
-    elseif(EXISTS "${CMAKE_SOURCE_DIR}/assets/game_font.ttf")
-        file(COPY "${CMAKE_SOURCE_DIR}/assets/game_font.ttf"
-             DESTINATION "${CMAKE_BINARY_DIR}/assets")
-        message(STATUS "Font: copied game_font.ttf from project assets/")
-    else()
-        message(WARNING "No font found! Place any .ttf as SpaceShooter2/assets/game_font.ttf then reconfigure.")
-    endif()
-endif()
