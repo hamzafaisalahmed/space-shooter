@@ -336,6 +336,7 @@ private:
     sf::Font font;           // font used for all text rendering (loaded from .ttf file)
     sf::Texture shipTexture;
     sf::Sprite shipSprite;
+    sf::View gameView;
     // --- State machine ---
     // The state stack manages which screen is active. Pushing a new state
     // puts it on top (e.g. Paused on top of Playing). Popping removes the

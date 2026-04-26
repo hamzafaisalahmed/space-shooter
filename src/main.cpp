@@ -34,15 +34,15 @@ static std::vector<sf::Vector2f> pathDiveBomb()
 }
 static std::vector<sf::Vector2f> pathBossEnter()
 {
-    return {{240, -80}, {240, 120}};
+    return {{240, -300}, {240, 120}};
 }
 static std::vector<sf::Vector2f> pathBossEnterLeft()
 {
-    return {{160, -80}, {160, 120}};
+    return {{160, -300}, {160, 120}};
 }
 static std::vector<sf::Vector2f> pathBossEnterRight()
 {
-    return {{320, -80}, {320, 120}};
+    return {{320, -300}, {320, 120}};
 }
 static SpawnEvent makeEvent(float t, EnemyType et, sf::Vector2f start,
                             std::vector<sf::Vector2f> path, int count = 1,
@@ -177,8 +177,23 @@ void Game::buildLevels()
 void Game::init()
 {
     std::srand((unsigned)std::time(nullptr));
-    window.create(sf::VideoMode(480, 720), "Space Shooter", sf::Style::Close);
+
+    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+    window.create(desktop, "Space Shooter", sf::Style::Fullscreen);
     window.setFramerateLimit(60);
+
+    float scaleY = (float)desktop.height / 720.f;
+    float scaledW = 480.f * scaleY;
+    float xOffset = ((float)desktop.width - scaledW) / 2.f;
+
+    gameView = sf::View(sf::FloatRect(0.f, 0.f, 480.f, 720.f));
+    gameView.setViewport(sf::FloatRect(
+        xOffset / (float)desktop.width,
+        0.f,
+        scaledW / (float)desktop.width,
+        1.f));
+    window.setView(gameView);
+
     if (!font.loadFromFile("assets/fonts/ProFontWindows.ttf"))
     {
         if (!font.loadFromFile("ProFontWindows.ttf"))
@@ -228,7 +243,6 @@ void Game::run()
         {
             update(dt);
         }
-        window.clear(sf::Color(4, 6, 12));
         render();
         window.display();
     }
@@ -293,7 +307,18 @@ void Game::handleEvents()
             }
             else if (current == GameState::Paused)
             {
-                stateStack.pop();
+                // Check if exit to menu button was clicked
+                sf::FloatRect exitBtn(160.f, 358.f, 160.f, 34.f);
+                if (exitBtn.contains(mp))
+                {
+                    while (!stateStack.empty())
+                        stateStack.pop();
+                    stateStack.push(GameState::LevelSelect);
+                }
+                else
+                {
+                    stateStack.pop(); // resume
+                }
             }
             else if (current == GameState::GameOver)
             {
@@ -319,6 +344,13 @@ void Game::handleEvents()
                 if (pauseBtn.contains(mp))
                 {
                     stateStack.push(GameState::Paused);
+                }
+                sf::FloatRect exitBtn(430.f, 48.f, 36.f, 36.f);
+                if (exitBtn.contains(mp))
+                {
+                    while (!stateStack.empty())
+                        stateStack.pop();
+                    stateStack.push(GameState::LevelSelect);
                 }
             }
         }
@@ -409,7 +441,7 @@ void Game::update(float dt)
         }
     }
     player.shootTimer -= dt;
-    if (player.shootTimer <= 0.f)
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && player.shootTimer <= 0.f)
     {
         spawnPlayerBullet();
         player.shootTimer = player.shootInterval;
@@ -457,19 +489,22 @@ void Game::update(float dt)
                 }
             }
         }
+        else if (e.etype == EnemyType::Boss)
+        {
+            // Path done: oscillate side-to-side, stay in upper third
+            e.pos.x += std::sin(e.pulse * 0.7f) * 60.f * dt;
+            e.pos.x = clampf(e.pos.x, 80.f, 400.f);
+            e.pos.y = clampf(e.pos.y, 60.f, 340.f); // never past halfway (360)
+        }
         else
         {
+            // Non-boss: drift off bottom
             e.pos.y += 100.f * dt;
             if (e.pos.y > 800.f)
             {
                 e.on = false;
                 continue;
             }
-        }
-        if (e.etype == EnemyType::Boss && e.pathIndex >= (int)e.path.size())
-        {
-            e.pos.x += std::sin(e.pulse * 0.7f) * 60.f * dt;
-            e.pos.x = clampf(e.pos.x, 80.f, 400.f);
         }
         if (e.etype == EnemyType::Boss && e.phase == 0 && e.hp < e.maxHp * 0.4f)
         {
@@ -1077,6 +1112,9 @@ void Game::buildStationTile()
 }
 void Game::render()
 {
+    window.setView(window.getDefaultView());
+    window.clear(sf::Color::Black);
+    window.setView(gameView);
     GameState current = stateStack.top();
     if (current == GameState::LevelSelect)
     {
@@ -1547,6 +1585,7 @@ void Game::renderHUD()
     scoreTxt.setFillColor(sf::Color(180, 200, 230));
     scoreTxt.setPosition(20.f, 48.f);
     window.draw(scoreTxt);
+    // Pause button
     sf::RectangleShape pauseBg({32.f, 32.f});
     pauseBg.setPosition(432.f, 14.f);
     pauseBg.setFillColor(sf::Color(30, 40, 60, 180));
@@ -1561,6 +1600,22 @@ void Game::renderHUD()
     bar2.setPosition(451.f, 22.f);
     bar2.setFillColor(sf::Color(100, 150, 220));
     window.draw(bar2);
+
+    // X exit button (top-right, next to pause)
+    sf::RectangleShape exitBg({32.f, 32.f});
+    exitBg.setPosition(432.f, 50.f);
+    exitBg.setFillColor(sf::Color(60, 20, 20, 180));
+    exitBg.setOutlineColor(sf::Color(120, 40, 40));
+    exitBg.setOutlineThickness(1.f);
+    window.draw(exitBg);
+    sf::Text exitX;
+    exitX.setFont(font);
+    exitX.setString("X");
+    exitX.setCharacterSize(18);
+    exitX.setFillColor(sf::Color(220, 80, 80));
+    exitX.setPosition(441.f, 53.f);
+    window.draw(exitX);
+
     for (int i = 0; i < player.power; i++)
     {
         sf::RectangleShape pip({12.f, 6.f});
@@ -1800,8 +1855,17 @@ void Game::renderPauseOverlay()
     panel.setOutlineColor(sf::Color(40, 60, 120));
     panel.setOutlineThickness(2.f);
     window.draw(panel);
-    drawTextCentered("PAUSED", 320.f, 28, sf::Color(140, 180, 240));
-    drawTextCentered("Click or press P to resume", 360.f, 13, sf::Color(100, 120, 160));
+    drawTextCentered("PAUSED", 300.f, 28, sf::Color(140, 180, 240));
+    drawTextCentered("Click or press P to resume", 335.f, 13, sf::Color(100, 120, 160));
+
+    sf::RectangleShape exitBtn({160.f, 34.f});
+    exitBtn.setOrigin(80.f, 17.f);
+    exitBtn.setPosition(240.f, 375.f);
+    exitBtn.setFillColor(sf::Color(50, 20, 20));
+    exitBtn.setOutlineColor(sf::Color(120, 40, 40));
+    exitBtn.setOutlineThickness(1.5f);
+    window.draw(exitBtn);
+    drawTextCentered("EXIT TO MENU", 375.f, 13, sf::Color(220, 100, 100));
 }
 void Game::renderGameOverOverlay()
 {
