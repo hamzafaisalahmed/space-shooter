@@ -179,7 +179,7 @@ void Game::init()
     std::srand((unsigned)std::time(nullptr));
 
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-    window.create(desktop, "Space Shooter", sf::Style::Fullscreen);
+    window.create(desktop, "Space Shooter", sf::Style::Default);
     window.setFramerateLimit(60);
 
     float scaleY = (float)desktop.height / 720.f;
@@ -203,19 +203,35 @@ void Game::init()
     }
     if (!shipTexture.loadFromFile("assets/textures/spaceship.png"))
     {
-        MessageBoxA(NULL, "Failed to load assets/textures/spaceship.png! Check build folder.", "File Error", MB_ICONERROR);
-        window.close(); // Stop the game if assets are missing
+        std::cerr << "Warning: Could not load ship texture. Player sprite may not render.\n";
     }
     else
     {
         std::cout << "Loaded texture" << std::endl;
-        sf::Vector2u sz = shipTexture.getSize();
-        std::cerr << "Texture loaded OK: " << sz.x << "x" << sz.y << "\n";
         shipSprite.setScale(0.05f, 0.05f);
     }
     shipSprite.setTexture(shipTexture);
     sf::FloatRect bounds = shipSprite.getLocalBounds();
     shipSprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+    if (!smallEnemyTexture.loadFromFile("assets/textures/alien1.png"))
+    {
+        std::cerr << "Warning: Could not load small enemy texture. Small enemies may not render.\n";
+    }
+    else
+        std::cout << "Loaded small enemy texture" << std::endl;
+    if (!mediumEnemyTexture.loadFromFile("assets/textures/alien2.png"))
+    {
+        std::cerr << "Warning: Could not load medium enemy texture. Medium enemies may not render.\n";
+    }
+    else
+        std::cout << "Loaded medium enemy texture" << std::endl;
+    if (!bossEnemyTexture.loadFromFile("assets/textures/boss1.png"))
+    {
+        std::cerr << "Warning: Could not load boss enemy texture. Boss enemies may not render.\n";
+    }
+    else
+        std::cout << "Loaded boss enemy texture" << std::endl;
+
     for (auto &b : bullets)
         b.on = false;
     for (auto &e : enemies)
@@ -226,7 +242,6 @@ void Game::init()
         pk.on = false;
     buildLevels();
     initStars();
-    buildStationTile();
     stateStack.push(GameState::LevelSelect);
 }
 void Game::run()
@@ -1057,59 +1072,6 @@ void Game::initStars()
         }
     }
 }
-void Game::buildStationTile()
-{
-    stationTile.create(480, 1440);
-    stationTile.clear(sf::Color(6, 8, 14));
-    sf::RectangleShape panel;
-    panel.setSize({60.f, 1440.f});
-    panel.setPosition(210.f, 0.f);
-    panel.setFillColor(sf::Color(14, 18, 28));
-    stationTile.draw(panel);
-    for (int y = 0; y < 1440; y += 120)
-    {
-        panel.setSize({sf::Vector2f(180.f, 80.f)});
-        panel.setPosition(10.f, (float)y);
-        panel.setFillColor(sf::Color(10, 14, 22));
-        panel.setOutlineColor(sf::Color(20, 28, 45));
-        panel.setOutlineThickness(1.f);
-        stationTile.draw(panel);
-        panel.setPosition(290.f, (float)y);
-        stationTile.draw(panel);
-        sf::RectangleShape bar({460.f, 3.f});
-        bar.setPosition(10.f, y + 90.f);
-        bar.setFillColor(sf::Color(18, 24, 40));
-        stationTile.draw(bar);
-        for (int x = 0; x < 4; x++)
-        {
-            sf::CircleShape light(2.f);
-            light.setOrigin(2.f, 2.f);
-            light.setPosition(50.f + x * 110.f, y + 40.f);
-            light.setFillColor(sf::Color(30, 50, 80, 120));
-            stationTile.draw(light);
-        }
-        sf::RectangleShape pipe({4.f, 80.f});
-        pipe.setFillColor(sf::Color(15, 20, 35));
-        pipe.setPosition(195.f, (float)y);
-        stationTile.draw(pipe);
-        pipe.setPosition(281.f, (float)y);
-        stationTile.draw(pipe);
-    }
-    for (int i = 0; i < 40; i++)
-    {
-        float bx = randFloat(10.f, 460.f);
-        float by = randFloat(0.f, 1430.f);
-        float bw = randFloat(8.f, 30.f);
-        float bh = randFloat(6.f, 20.f);
-        sf::RectangleShape greeble({bw, bh});
-        greeble.setPosition(bx, by);
-        greeble.setFillColor(sf::Color(12, 16, 26));
-        greeble.setOutlineColor(sf::Color(16, 22, 38));
-        greeble.setOutlineThickness(0.5f);
-        stationTile.draw(greeble);
-    }
-    stationTile.display();
-}
 void Game::render()
 {
     window.setView(window.getDefaultView());
@@ -1165,12 +1127,6 @@ void Game::renderBackground()
     sf::RenderStates glowState;
     glowState.blendMode = sf::BlendAdd;
     window.draw(atmo, glowState);
-    sf::Sprite tile(stationTile.getTexture());
-    tile.setColor(sf::Color(255, 255, 255, 80));
-    tile.setPosition(0.f, bgY - 1440.f);
-    window.draw(tile);
-    tile.setPosition(0.f, bgY);
-    window.draw(tile);
 }
 void Game::renderStars()
 {
@@ -1193,7 +1149,7 @@ void Game::renderPlayer()
         if ((int)(player.iframeTimer * 10.f) % 2 == 0)
             return;
     }
-    drawPlayerShip(player.pos, player.tilt, 0.3f, sf::Color::White);
+    drawPlayerShip(player.pos, player.tilt, 0.4f, sf::Color::White);
     if (player.shieldTimer > 0.f)
     {
         sf::CircleShape shield(24.f);
@@ -1214,39 +1170,16 @@ void Game::renderPlayer()
 }
 void Game::drawPlayerShip(sf::Vector2f pos, float tilt, float scale, sf::Color tint)
 {
-    sf::Transform T;
-    T.translate(pos);
-    T.rotate(tilt);
-    T.scale(scale, scale);
-    sf::RenderStates states;
-    states.transform = T;
+    // 1. Apply the transformations directly to the sprite
     shipSprite.setPosition(pos);
     shipSprite.setRotation(tilt);
     shipSprite.setScale(scale, scale);
+
+    // 2. Apply the tint (useful for hit effects or flash effects)
+    shipSprite.setColor(tint);
+
+    // 3. Draw only the sprite
     window.draw(shipSprite);
-    sf::CircleShape engineGlow(8.f);
-    engineGlow.setOrigin(8.f, 8.f);
-    engineGlow.setPosition(0.f, 18.f);
-    engineGlow.setFillColor(sf::Color(60, 180, 255, 80));
-    sf::RenderStates glowState;
-    glowState.transform = T;
-    glowState.blendMode = sf::BlendAdd;
-    window.draw(engineGlow, glowState);
-    sf::CircleShape engineCore(4.f);
-    engineCore.setOrigin(4.f, 4.f);
-    engineCore.setPosition(0.f, 16.f);
-    engineCore.setFillColor(sf::Color(140, 220, 255, 200));
-    window.draw(engineCore, glowState);
-    sf::CircleShape tipL(2.f);
-    tipL.setOrigin(2.f, 2.f);
-    tipL.setPosition(-23.f, 12.f);
-    tipL.setFillColor(sf::Color(255, 80, 60, 180));
-    window.draw(tipL, states);
-    sf::CircleShape tipR(2.f);
-    tipR.setOrigin(2.f, 2.f);
-    tipR.setPosition(23.f, 12.f);
-    tipR.setFillColor(sf::Color(80, 255, 80, 180));
-    window.draw(tipR, states);
 }
 void Game::renderEnemies()
 {
@@ -1255,190 +1188,65 @@ void Game::renderEnemies()
         if (!e.on)
             continue;
         if (e.etype == EnemyType::Small)
-            drawSmallEnemy(e.pos, e.angle, e.pulse);
+            drawSmallEnemy(e.pos, e.angle);
         else if (e.etype == EnemyType::Medium)
-            drawMediumEnemy(e.pos, e.angle, e.pulse);
+            drawMediumEnemy(e.pos, e.angle);
         else if (e.etype == EnemyType::Boss)
-            drawBossEnemy(e.pos, e.angle, e.pulse, e.phase);
+            drawBossEnemy(e.pos, e.angle);
     }
 }
-void Game::drawSmallEnemy(sf::Vector2f pos, float angle, float pulse)
+void Game::drawSmallEnemy(sf::Vector2f pos, float angle)
 {
-    sf::Transform T;
-    T.translate(pos);
-    T.rotate(angle + 180.f);
-    sf::RenderStates states;
-    states.transform = T;
-    sf::CircleShape glow(6.f);
-    glow.setOrigin(6.f, 6.f);
-    glow.setPosition(0.f, -14.f);
-    float flicker = 0.6f + 0.4f * std::sin(pulse * 12.f);
-    glow.setFillColor(sf::Color(255, 120, 40, (sf::Uint8)(60 * flicker)));
-    sf::RenderStates gs;
-    gs.transform = T;
-    gs.blendMode = sf::BlendAdd;
-    window.draw(glow, gs);
-    sf::ConvexShape body(4);
-    body.setPoint(0, {0.f, 14.f});
-    body.setPoint(1, {7.f, -4.f});
-    body.setPoint(2, {0.f, -10.f});
-    body.setPoint(3, {-7.f, -4.f});
-    body.setFillColor(sf::Color(140, 50, 50));
-    window.draw(body, states);
-    sf::ConvexShape wL(3);
-    wL.setPoint(0, {-5.f, -2.f});
-    wL.setPoint(1, {-16.f, 6.f});
-    wL.setPoint(2, {-4.f, 8.f});
-    wL.setFillColor(sf::Color(120, 35, 35));
-    window.draw(wL, states);
-    sf::ConvexShape wR(3);
-    wR.setPoint(0, {5.f, -2.f});
-    wR.setPoint(1, {16.f, 6.f});
-    wR.setPoint(2, {4.f, 8.f});
-    wR.setFillColor(sf::Color(120, 35, 35));
-    window.draw(wR, states);
-    sf::CircleShape cockpit(2.5f);
-    cockpit.setOrigin(2.5f, 2.5f);
-    cockpit.setPosition(0.f, 4.f);
-    cockpit.setFillColor(sf::Color(255, 60, 60, 200));
-    window.draw(cockpit, states);
+    sf::Sprite sprite;
+    sprite.setTexture(smallEnemyTexture); // Assumes you loaded this in init()
+
+    // 1. Center the origin so rotation happens around the middle
+    sf::FloatRect bounds = sprite.getLocalBounds();
+    sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+
+    sprite.setScale(0.1f, 0.1f);
+    // 2. Apply position and rotation directly to the sprite
+    // No manual sf::Transform or sf::RenderStates needed!
+    sprite.setPosition(pos);
+    sprite.setRotation(angle + 180.f);
+
+    window.draw(sprite);
 }
-void Game::drawMediumEnemy(sf::Vector2f pos, float angle, float pulse)
+void Game::drawMediumEnemy(sf::Vector2f pos, float angle)
 {
-    sf::Transform T;
-    T.translate(pos);
-    T.rotate(angle + 180.f);
-    sf::RenderStates states;
-    states.transform = T;
-    sf::CircleShape glow(10.f);
-    glow.setOrigin(10.f, 10.f);
-    glow.setPosition(0.f, -18.f);
-    float flicker = 0.5f + 0.5f * std::sin(pulse * 10.f);
-    glow.setFillColor(sf::Color(60, 120, 255, (sf::Uint8)(70 * flicker)));
-    sf::RenderStates gs;
-    gs.transform = T;
-    gs.blendMode = sf::BlendAdd;
-    window.draw(glow, gs);
-    sf::ConvexShape body(5);
-    body.setPoint(0, {0.f, 20.f});
-    body.setPoint(1, {12.f, -2.f});
-    body.setPoint(2, {8.f, -16.f});
-    body.setPoint(3, {-8.f, -16.f});
-    body.setPoint(4, {-12.f, -2.f});
-    body.setFillColor(sf::Color(50, 60, 100));
-    window.draw(body, states);
-    sf::ConvexShape wL(4);
-    wL.setPoint(0, {-10.f, -4.f});
-    wL.setPoint(1, {-26.f, 6.f});
-    wL.setPoint(2, {-22.f, 14.f});
-    wL.setPoint(3, {-8.f, 10.f});
-    wL.setFillColor(sf::Color(40, 48, 85));
-    window.draw(wL, states);
-    sf::ConvexShape wR(4);
-    wR.setPoint(0, {10.f, -4.f});
-    wR.setPoint(1, {26.f, 6.f});
-    wR.setPoint(2, {22.f, 14.f});
-    wR.setPoint(3, {8.f, 10.f});
-    wR.setFillColor(sf::Color(40, 48, 85));
-    window.draw(wR, states);
-    sf::CircleShape cockpit(4.f);
-    cockpit.setOrigin(4.f, 4.f);
-    cockpit.setPosition(0.f, 6.f);
-    cockpit.setFillColor(sf::Color(80, 140, 255, 200));
-    window.draw(cockpit, states);
+    sf::Sprite sprite;
+    sprite.setTexture(mediumEnemyTexture); // Assumes you loaded this in init()
+
+    // 1. Center the origin so rotation happens around the middle
+    sf::FloatRect bounds = sprite.getLocalBounds();
+    sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+
+    sprite.setScale(0.4f, 0.4f);
+    // 2. Apply position and rotation directly to the sprite
+    // No manual sf::Transform or sf::RenderStates needed!
+    sprite.setPosition(pos);
+    sprite.setRotation(angle + 180.f);
+
+    window.draw(sprite);
 }
-void Game::drawBossEnemy(sf::Vector2f pos, float angle, float pulse, int phase)
+void Game::drawBossEnemy(sf::Vector2f pos, float angle)
 {
-    sf::Transform T;
-    T.translate(pos);
-    sf::RenderStates states;
-    states.transform = T;
-    sf::CircleShape bigGlow(70.f);
-    bigGlow.setOrigin(70.f, 70.f);
-    bigGlow.setPosition(0.f, 0.f);
-    sf::Color glowCol = (phase == 0) ? sf::Color(30, 50, 120, 20) : sf::Color(120, 40, 20, 25);
-    bigGlow.setFillColor(glowCol);
-    sf::RenderStates gs;
-    gs.transform = T;
-    gs.blendMode = sf::BlendAdd;
-    window.draw(bigGlow, gs);
-    sf::ConvexShape hull(6);
-    hull.setPoint(0, {0.f, -45.f});
-    hull.setPoint(1, {35.f, -15.f});
-    hull.setPoint(2, {40.f, 25.f});
-    hull.setPoint(3, {0.f, 40.f});
-    hull.setPoint(4, {-40.f, 25.f});
-    hull.setPoint(5, {-35.f, -15.f});
-    hull.setFillColor(sf::Color(55, 50, 65));
-    window.draw(hull, states);
-    sf::ConvexShape wL(4);
-    wL.setPoint(0, {-30.f, -10.f});
-    wL.setPoint(1, {-70.f, 5.f});
-    wL.setPoint(2, {-60.f, 20.f});
-    wL.setPoint(3, {-25.f, 15.f});
-    wL.setFillColor(sf::Color(45, 42, 58));
-    window.draw(wL, states);
-    sf::ConvexShape wR(4);
-    wR.setPoint(0, {30.f, -10.f});
-    wR.setPoint(1, {70.f, 5.f});
-    wR.setPoint(2, {60.f, 20.f});
-    wR.setPoint(3, {25.f, 15.f});
-    wR.setFillColor(sf::Color(45, 42, 58));
-    window.draw(wR, states);
-    sf::ConvexShape swL(3);
-    swL.setPoint(0, {-20.f, 20.f});
-    swL.setPoint(1, {-50.f, 35.f});
-    swL.setPoint(2, {-15.f, 35.f});
-    swL.setFillColor(sf::Color(40, 38, 52));
-    window.draw(swL, states);
-    sf::ConvexShape swR(3);
-    swR.setPoint(0, {20.f, 20.f});
-    swR.setPoint(1, {50.f, 35.f});
-    swR.setPoint(2, {15.f, 35.f});
-    swR.setFillColor(sf::Color(40, 38, 52));
-    window.draw(swR, states);
-    sf::RectangleShape cannonL({6.f, 18.f});
-    cannonL.setOrigin(3.f, 0.f);
-    cannonL.setPosition(-55.f, 8.f);
-    cannonL.setFillColor(sf::Color(70, 65, 80));
-    window.draw(cannonL, states);
-    sf::RectangleShape cannonR({6.f, 18.f});
-    cannonR.setOrigin(3.f, 0.f);
-    cannonR.setPosition(55.f, 8.f);
-    cannonR.setFillColor(sf::Color(70, 65, 80));
-    window.draw(cannonR, states);
-    sf::CircleShape dome(12.f);
-    dome.setOrigin(12.f, 12.f);
-    dome.setPosition(0.f, -15.f);
-    if (phase == 0)
-        dome.setFillColor(sf::Color(60, 100, 200, 200));
-    else
-        dome.setFillColor(sf::Color(200, 80, 30, 220));
-    window.draw(dome, states);
-    sf::CircleShape domeGlow(8.f);
-    domeGlow.setOrigin(8.f, 8.f);
-    domeGlow.setPosition(0.f, -15.f);
-    if (phase == 0)
-        domeGlow.setFillColor(sf::Color(100, 160, 255, 100));
-    else
-        domeGlow.setFillColor(sf::Color(255, 120, 40, 120));
-    window.draw(domeGlow, gs);
-    for (int i = -1; i <= 1; i++)
-    {
-        float ex = i * 18.f;
-        float ey = 36.f;
-        float flicker = 0.5f + 0.5f * std::sin(pulse * 8.f + i * 1.5f);
-        sf::CircleShape eng(7.f);
-        eng.setOrigin(7.f, 7.f);
-        eng.setPosition(ex, ey);
-        eng.setFillColor(sf::Color(100, 140, 255, (sf::Uint8)(80 * flicker)));
-        window.draw(eng, gs);
-        sf::CircleShape engCore(3.f);
-        engCore.setOrigin(3.f, 3.f);
-        engCore.setPosition(ex, ey);
-        engCore.setFillColor(sf::Color(180, 220, 255, (sf::Uint8)(180 * flicker)));
-        window.draw(engCore, gs);
-    }
+    sf::Sprite sprite;
+    sprite.setTexture(bossEnemyTexture); // Assumes you loaded this in init()
+
+    // 1. Center the origin
+    sf::FloatRect bounds = sprite.getLocalBounds();
+    sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+
+    // 2. Set the size
+    // Adjust this scale depending on how large your image file is
+    sprite.setScale(0.1f, 0.1f);
+
+    // 3. Set position and rotation
+    sprite.setPosition(pos);
+    sprite.setRotation(angle); // Boss usually faces down, adjust +180 if needed
+
+    window.draw(sprite);
 }
 void Game::renderBullets()
 {
@@ -1601,21 +1409,6 @@ void Game::renderHUD()
     bar2.setFillColor(sf::Color(100, 150, 220));
     window.draw(bar2);
 
-    // X exit button (top-right, next to pause)
-    sf::RectangleShape exitBg({32.f, 32.f});
-    exitBg.setPosition(432.f, 50.f);
-    exitBg.setFillColor(sf::Color(60, 20, 20, 180));
-    exitBg.setOutlineColor(sf::Color(120, 40, 40));
-    exitBg.setOutlineThickness(1.f);
-    window.draw(exitBg);
-    sf::Text exitX;
-    exitX.setFont(font);
-    exitX.setString("X");
-    exitX.setCharacterSize(18);
-    exitX.setFillColor(sf::Color(220, 80, 80));
-    exitX.setPosition(441.f, 53.f);
-    window.draw(exitX);
-
     for (int i = 0; i < player.power; i++)
     {
         sf::RectangleShape pip({12.f, 6.f});
@@ -1721,7 +1514,7 @@ void Game::renderLevelSelect()
     descText.setFillColor(sf::Color(120, 140, 170));
     descText.setPosition(80.f, 132.f);
     window.draw(descText);
-    drawBossEnemy({340.f, 190.f}, 0.f, 0.f, 0);
+    drawBossEnemy({340.f, 190.f}, 0.f);
     const char *statNames[3] = {"HP", "ATK", "DEF"};
     int statValues[3] = {3, 2 + selectedLevel, 1 + selectedLevel};
     for (int s = 0; s < 3; s++)

@@ -337,6 +337,9 @@ private:
     sf::Texture shipTexture;
     sf::Sprite shipSprite;
     sf::View gameView;
+    sf::Texture smallEnemyTexture;
+    sf::Texture mediumEnemyTexture;
+    sf::Texture bossEnemyTexture;
     // --- State machine ---
     // The state stack manages which screen is active. Pushing a new state
     // puts it on top (e.g. Paused on top of Playing). Popping removes the
@@ -427,14 +430,13 @@ private:
     // Ship drawing helpers: each builds a ship shape from ConvexShapes/CircleShapes
     // and draws it at the given position with rotation and effects.
     void drawPlayerShip(sf::Vector2f pos, float tilt, float scale, sf::Color tint);
-    void drawSmallEnemy(sf::Vector2f pos, float angle, float pulse);
-    void drawMediumEnemy(sf::Vector2f pos, float angle, float pulse);
-    void drawBossEnemy(sf::Vector2f pos, float angle, float pulse, int phase);
+    void drawSmallEnemy(sf::Vector2f pos, float angle);
+    void drawMediumEnemy(sf::Vector2f pos, float angle);
+    void drawBossEnemy(sf::Vector2f pos, float angle);
 
     // Initialization helpers
-    void buildStationTile(); // generate the scrolling station background texture
-    void initStars();        // randomize star positions, speeds, and sizes
-    void buildLevels();      // create all 3 levels with their wave scripts
+    void initStars();   // randomize star positions, speeds, and sizes
+    void buildLevels(); // create all 3 levels with their wave scripts
 
     // Utility
     void drawTextCentered(const std::string &str, float y, int size, sf::Color col); // draw centered text
