@@ -2,75 +2,126 @@
 #include <windows.h>
 
 // ============================================================================
-// STATIC INSTANCE DEFINITIONS (formerly enum values)
+// STATIC INSTANCE DEFINITIONS
 // ============================================================================
-const GameState GameState::LevelSelect{0};
-const GameState GameState::Playing{1};
-const GameState GameState::Paused{2};
-const GameState GameState::GameOver{3};
-const GameState GameState::LevelComplete{4};
+const GameState GameState::Home(5);
+const GameState GameState::LevelSelect(0);
+const GameState GameState::Playing(1);
+const GameState GameState::Paused(2);
+const GameState GameState::GameOver(3);
+const GameState GameState::LevelComplete(4);
 
-EnemyType *EnemyType::Small = new SmallEnemyType();
+EnemyType *EnemyType::Small  = new SmallEnemyType();
 EnemyType *EnemyType::Medium = new MediumEnemyType();
-EnemyType *EnemyType::Boss = new BossEnemyType();
+EnemyType *EnemyType::Boss   = new BossEnemyType();
 
-BulletType *BulletType::PlayerNorm = new PlayerNormBullet();
-BulletType *BulletType::PlayerWide = new PlayerWideBullet();
+BulletType *BulletType::PlayerNorm   = new PlayerNormBullet();
+BulletType *BulletType::PlayerWide   = new PlayerWideBullet();
 BulletType *BulletType::PlayerTriple = new PlayerTripleBullet();
-BulletType *BulletType::EnemyNorm = new EnemyNormBullet();
-BulletType *BulletType::EnemyBurst = new EnemyBurstBullet();
-BulletType *BulletType::BossBeam = new BossBeamBullet();
+BulletType *BulletType::EnemyNorm    = new EnemyNormBullet();
+BulletType *BulletType::EnemyBurst   = new EnemyBurstBullet();
+BulletType *BulletType::BossBeam     = new BossBeamBullet();
 
-PickupType *PickupType::Score = new ScorePickupType();
+PickupType *PickupType::Score  = new ScorePickupType();
 PickupType *PickupType::Health = new HealthPickupType();
-PickupType *PickupType::Power = new PowerPickupType();
+PickupType *PickupType::Power  = new PowerPickupType();
 
 // ============================================================================
-// PATH HELPERS (used by levels for waypoint-driven enemy paths)
+// PATH HELPERS
 // ============================================================================
 static std::vector<sf::Vector2f> pathSweepCenter()
 {
-    return {{240, -40}, {240, 200}, {240, 800}};
+    std::vector<sf::Vector2f> v;
+    v.push_back(sf::Vector2f(240, -40));
+    v.push_back(sf::Vector2f(240, 200));
+    v.push_back(sf::Vector2f(240, 800));
+    return v;
 }
 static std::vector<sf::Vector2f> pathSweepLeft()
 {
-    return {{240, -40}, {96, 200}, {96, 500}, {-80, 700}};
+    std::vector<sf::Vector2f> v;
+    v.push_back(sf::Vector2f(240, -40));
+    v.push_back(sf::Vector2f(96, 200));
+    v.push_back(sf::Vector2f(96, 500));
+    v.push_back(sf::Vector2f(-80, 700));
+    return v;
 }
 static std::vector<sf::Vector2f> pathSweepRight()
 {
-    return {{240, -40}, {384, 200}, {384, 500}, {560, 700}};
+    std::vector<sf::Vector2f> v;
+    v.push_back(sf::Vector2f(240, -40));
+    v.push_back(sf::Vector2f(384, 200));
+    v.push_back(sf::Vector2f(384, 500));
+    v.push_back(sf::Vector2f(560, 700));
+    return v;
 }
 static std::vector<sf::Vector2f> pathLoopLeft()
 {
-    return {{120, -40}, {60, 200}, {200, 380}, {120, 520}, {-60, 700}};
+    std::vector<sf::Vector2f> v;
+    v.push_back(sf::Vector2f(120, -40));
+    v.push_back(sf::Vector2f(60, 200));
+    v.push_back(sf::Vector2f(200, 380));
+    v.push_back(sf::Vector2f(120, 520));
+    v.push_back(sf::Vector2f(-60, 700));
+    return v;
 }
 static std::vector<sf::Vector2f> pathLoopRight()
 {
-    return {{360, -40}, {420, 200}, {280, 380}, {360, 520}, {540, 700}};
+    std::vector<sf::Vector2f> v;
+    v.push_back(sf::Vector2f(360, -40));
+    v.push_back(sf::Vector2f(420, 200));
+    v.push_back(sf::Vector2f(280, 380));
+    v.push_back(sf::Vector2f(360, 520));
+    v.push_back(sf::Vector2f(540, 700));
+    return v;
 }
 static std::vector<sf::Vector2f> pathZPattern()
 {
-    return {{60, -40}, {420, 180}, {60, 380}, {420, 600}, {60, 800}};
+    std::vector<sf::Vector2f> v;
+    v.push_back(sf::Vector2f(60, -40));
+    v.push_back(sf::Vector2f(420, 180));
+    v.push_back(sf::Vector2f(60, 380));
+    v.push_back(sf::Vector2f(420, 600));
+    v.push_back(sf::Vector2f(60, 800));
+    return v;
 }
 static std::vector<sf::Vector2f> pathZPatternRight()
 {
-    return {{420, -40}, {60, 180}, {420, 380}, {60, 600}, {420, 800}};
+    std::vector<sf::Vector2f> v;
+    v.push_back(sf::Vector2f(420, -40));
+    v.push_back(sf::Vector2f(60, 180));
+    v.push_back(sf::Vector2f(420, 380));
+    v.push_back(sf::Vector2f(60, 600));
+    v.push_back(sf::Vector2f(420, 800));
+    return v;
 }
 static std::vector<sf::Vector2f> pathDiveBomb()
 {
-    return {{240, -40}, {240, 800}};
+    std::vector<sf::Vector2f> v;
+    v.push_back(sf::Vector2f(240, -40));
+    v.push_back(sf::Vector2f(240, 800));
+    return v;
 }
 static std::vector<sf::Vector2f> pathBossEnter()
 {
-    return {{240, -300}, {240, 120}};
+    std::vector<sf::Vector2f> v;
+    v.push_back(sf::Vector2f(240, -300));
+    v.push_back(sf::Vector2f(240, 120));
+    return v;
 }
 static std::vector<sf::Vector2f> pathBossEnterLeft()
 {
-    return {{160, -300}, {160, 120}};
+    std::vector<sf::Vector2f> v;
+    v.push_back(sf::Vector2f(160, -300));
+    v.push_back(sf::Vector2f(160, 120));
+    return v;
 }
 static std::vector<sf::Vector2f> pathBossEnterRight()
 {
-    return {{320, -300}, {320, 120}};
+    std::vector<sf::Vector2f> v;
+    v.push_back(sf::Vector2f(320, -300));
+    v.push_back(sf::Vector2f(320, 120));
+    return v;
 }
 
 static SpawnEvent makeEvent(float t, EnemyType *et, sf::Vector2f start,
@@ -105,7 +156,7 @@ void Level::loadPlanet()
     }
     else
     {
-        std::cerr << "Warning: Could not load planet texture: " << path << "\n";
+        std::cerr << "Warning: could not load planet texture: " << path << "\n";
     }
 }
 
@@ -117,9 +168,9 @@ void Level::renderPlanet(sf::RenderWindow &window)
         sf::Sprite sprite(planetTexture);
         sf::FloatRect b = sprite.getLocalBounds();
         sprite.setOrigin(b.width / 2.f, b.height / 2.f);
-        // scale so the planet is roughly 240 px across in the gameplay view
         float targetSize = 240.f;
-        float scale = targetSize / std::max(b.width, b.height);
+        float largest = (b.width > b.height) ? b.width : b.height;
+        float scale = targetSize / largest;
         sprite.setScale(scale, scale);
         sprite.setPosition(360.f, 150.f);
         window.draw(sprite);
@@ -150,7 +201,7 @@ void Level::renderPlanet(sf::RenderWindow &window)
 }
 
 // ============================================================================
-// LEVEL ARIES (was the first LevelData block in buildLevels)
+// LEVEL ARIES
 // ============================================================================
 LevelAries::LevelAries()
 {
@@ -162,27 +213,26 @@ LevelAries::LevelAries()
 void LevelAries::buildWaves()
 {
     events.clear();
-    auto &e = events;
-    e.push_back(makeEvent(1.0f, EnemyType::Small, {240, -40}, pathSweepCenter()));
-    e.push_back(makeEvent(2.5f, EnemyType::Small, {120, -40}, pathSweepLeft()));
-    e.push_back(makeEvent(2.5f, EnemyType::Small, {360, -40}, pathSweepRight()));
-    e.push_back(makeEvent(5.0f, EnemyType::Small, {240, -40}, pathSweepCenter(), 3));
-    e.push_back(makeEvent(8.0f, EnemyType::Small, {120, -40}, pathLoopLeft(), 2));
-    e.push_back(makeEvent(8.0f, EnemyType::Small, {360, -40}, pathLoopRight(), 2));
-    e.push_back(makeEvent(11.0f, EnemyType::Medium, {240, -40}, pathDiveBomb()));
-    e.push_back(makeEvent(14.0f, EnemyType::Small, {240, -40}, pathSweepCenter(), 4));
-    e.push_back(makeEvent(14.5f, EnemyType::Medium, {120, -40}, pathSweepLeft()));
-    e.push_back(makeEvent(18.0f, EnemyType::Small, {60, -40}, pathZPattern()));
-    e.push_back(makeEvent(18.2f, EnemyType::Small, {420, -40}, pathZPatternRight()));
-    e.push_back(makeEvent(21.0f, EnemyType::Small, {240, -40}, pathSweepCenter(), 5, 50.f));
-    e.push_back(makeEvent(24.0f, EnemyType::Medium, {200, -40}, pathSweepCenter(), 2, 80.f));
-    e.push_back(makeEvent(27.0f, EnemyType::Small, {120, -40}, pathSweepLeft(), 3));
-    e.push_back(makeEvent(27.0f, EnemyType::Small, {360, -40}, pathSweepRight(), 3));
-    e.push_back(makeEvent(31.0f, EnemyType::Medium, {240, -40}, pathDiveBomb()));
-    e.push_back(makeEvent(31.3f, EnemyType::Small, {120, -40}, pathSweepLeft(), 2));
-    e.push_back(makeEvent(36.0f, EnemyType::Small, {240, -40}, pathSweepCenter(), 5, 45.f));
-    e.push_back(makeEvent(38.0f, EnemyType::Medium, {240, -40}, pathSweepCenter(), 2, 80.f));
-    e.push_back(makeEvent(43.0f, EnemyType::Boss, {240, -80}, pathBossEnter()));
+    events.push_back(makeEvent(1.0f,  EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter()));
+    events.push_back(makeEvent(2.5f,  EnemyType::Small,  sf::Vector2f(120, -40), pathSweepLeft()));
+    events.push_back(makeEvent(2.5f,  EnemyType::Small,  sf::Vector2f(360, -40), pathSweepRight()));
+    events.push_back(makeEvent(5.0f,  EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 3));
+    events.push_back(makeEvent(8.0f,  EnemyType::Small,  sf::Vector2f(120, -40), pathLoopLeft(), 2));
+    events.push_back(makeEvent(8.0f,  EnemyType::Small,  sf::Vector2f(360, -40), pathLoopRight(), 2));
+    events.push_back(makeEvent(11.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathDiveBomb()));
+    events.push_back(makeEvent(14.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 4));
+    events.push_back(makeEvent(14.5f, EnemyType::Medium, sf::Vector2f(120, -40), pathSweepLeft()));
+    events.push_back(makeEvent(18.0f, EnemyType::Small,  sf::Vector2f(60, -40),  pathZPattern()));
+    events.push_back(makeEvent(18.2f, EnemyType::Small,  sf::Vector2f(420, -40), pathZPatternRight()));
+    events.push_back(makeEvent(21.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 5, 50.f));
+    events.push_back(makeEvent(24.0f, EnemyType::Medium, sf::Vector2f(200, -40), pathSweepCenter(), 2, 80.f));
+    events.push_back(makeEvent(27.0f, EnemyType::Small,  sf::Vector2f(120, -40), pathSweepLeft(), 3));
+    events.push_back(makeEvent(27.0f, EnemyType::Small,  sf::Vector2f(360, -40), pathSweepRight(), 3));
+    events.push_back(makeEvent(31.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathDiveBomb()));
+    events.push_back(makeEvent(31.3f, EnemyType::Small,  sf::Vector2f(120, -40), pathSweepLeft(), 2));
+    events.push_back(makeEvent(36.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 5, 45.f));
+    events.push_back(makeEvent(38.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathSweepCenter(), 2, 80.f));
+    events.push_back(makeEvent(43.0f, EnemyType::Boss,   sf::Vector2f(240, -80), pathBossEnter()));
 }
 
 // ============================================================================
@@ -198,33 +248,32 @@ LevelTaurus::LevelTaurus()
 void LevelTaurus::buildWaves()
 {
     events.clear();
-    auto &e = events;
-    e.push_back(makeEvent(1.0f, EnemyType::Small, {240, -40}, pathSweepCenter(), 3));
-    e.push_back(makeEvent(3.0f, EnemyType::Small, {120, -40}, pathSweepLeft(), 2));
-    e.push_back(makeEvent(3.0f, EnemyType::Small, {360, -40}, pathSweepRight(), 2));
-    e.push_back(makeEvent(6.0f, EnemyType::Medium, {240, -40}, pathSweepCenter()));
-    e.push_back(makeEvent(6.0f, EnemyType::Small, {60, -40}, pathZPattern(), 2));
-    e.push_back(makeEvent(9.0f, EnemyType::Small, {240, -40}, pathSweepCenter(), 5, 45.f));
-    e.push_back(makeEvent(12.0f, EnemyType::Medium, {160, -40}, pathSweepLeft()));
-    e.push_back(makeEvent(12.0f, EnemyType::Medium, {320, -40}, pathSweepRight()));
-    e.push_back(makeEvent(15.0f, EnemyType::Medium, {240, -40}, pathDiveBomb()));
-    e.push_back(makeEvent(15.0f, EnemyType::Small, {120, -40}, pathLoopLeft(), 3));
-    e.push_back(makeEvent(18.0f, EnemyType::Small, {240, -40}, pathSweepCenter(), 4));
-    e.push_back(makeEvent(18.0f, EnemyType::Medium, {360, -40}, pathSweepRight()));
-    e.push_back(makeEvent(22.0f, EnemyType::Medium, {160, -40}, pathSweepCenter()));
-    e.push_back(makeEvent(22.0f, EnemyType::Medium, {320, -40}, pathSweepCenter()));
-    e.push_back(makeEvent(26.0f, EnemyType::Medium, {60, -40}, pathZPattern()));
-    e.push_back(makeEvent(26.0f, EnemyType::Medium, {420, -40}, pathZPatternRight()));
-    e.push_back(makeEvent(30.0f, EnemyType::Small, {240, -40}, pathSweepCenter(), 5, 40.f));
-    e.push_back(makeEvent(30.0f, EnemyType::Medium, {240, -40}, pathDiveBomb()));
-    e.push_back(makeEvent(34.0f, EnemyType::Small, {120, -40}, pathSweepLeft(), 3));
-    e.push_back(makeEvent(34.0f, EnemyType::Small, {360, -40}, pathSweepRight(), 3));
-    e.push_back(makeEvent(38.0f, EnemyType::Medium, {200, -40}, pathSweepCenter(), 3, 60.f));
-    e.push_back(makeEvent(42.0f, EnemyType::Small, {240, -40}, pathSweepCenter(), 4));
-    e.push_back(makeEvent(42.0f, EnemyType::Medium, {120, -40}, pathLoopLeft()));
-    e.push_back(makeEvent(46.0f, EnemyType::Small, {240, -40}, pathSweepCenter(), 5, 45.f));
-    e.push_back(makeEvent(46.0f, EnemyType::Medium, {240, -40}, pathDiveBomb()));
-    e.push_back(makeEvent(54.0f, EnemyType::Boss, {240, -80}, pathBossEnter()));
+    events.push_back(makeEvent(1.0f,  EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 3));
+    events.push_back(makeEvent(3.0f,  EnemyType::Small,  sf::Vector2f(120, -40), pathSweepLeft(), 2));
+    events.push_back(makeEvent(3.0f,  EnemyType::Small,  sf::Vector2f(360, -40), pathSweepRight(), 2));
+    events.push_back(makeEvent(6.0f,  EnemyType::Medium, sf::Vector2f(240, -40), pathSweepCenter()));
+    events.push_back(makeEvent(6.0f,  EnemyType::Small,  sf::Vector2f(60, -40),  pathZPattern(), 2));
+    events.push_back(makeEvent(9.0f,  EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 5, 45.f));
+    events.push_back(makeEvent(12.0f, EnemyType::Medium, sf::Vector2f(160, -40), pathSweepLeft()));
+    events.push_back(makeEvent(12.0f, EnemyType::Medium, sf::Vector2f(320, -40), pathSweepRight()));
+    events.push_back(makeEvent(15.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathDiveBomb()));
+    events.push_back(makeEvent(15.0f, EnemyType::Small,  sf::Vector2f(120, -40), pathLoopLeft(), 3));
+    events.push_back(makeEvent(18.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 4));
+    events.push_back(makeEvent(18.0f, EnemyType::Medium, sf::Vector2f(360, -40), pathSweepRight()));
+    events.push_back(makeEvent(22.0f, EnemyType::Medium, sf::Vector2f(160, -40), pathSweepCenter()));
+    events.push_back(makeEvent(22.0f, EnemyType::Medium, sf::Vector2f(320, -40), pathSweepCenter()));
+    events.push_back(makeEvent(26.0f, EnemyType::Medium, sf::Vector2f(60, -40),  pathZPattern()));
+    events.push_back(makeEvent(26.0f, EnemyType::Medium, sf::Vector2f(420, -40), pathZPatternRight()));
+    events.push_back(makeEvent(30.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 5, 40.f));
+    events.push_back(makeEvent(30.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathDiveBomb()));
+    events.push_back(makeEvent(34.0f, EnemyType::Small,  sf::Vector2f(120, -40), pathSweepLeft(), 3));
+    events.push_back(makeEvent(34.0f, EnemyType::Small,  sf::Vector2f(360, -40), pathSweepRight(), 3));
+    events.push_back(makeEvent(38.0f, EnemyType::Medium, sf::Vector2f(200, -40), pathSweepCenter(), 3, 60.f));
+    events.push_back(makeEvent(42.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 4));
+    events.push_back(makeEvent(42.0f, EnemyType::Medium, sf::Vector2f(120, -40), pathLoopLeft()));
+    events.push_back(makeEvent(46.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 5, 45.f));
+    events.push_back(makeEvent(46.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathDiveBomb()));
+    events.push_back(makeEvent(54.0f, EnemyType::Boss,   sf::Vector2f(240, -80), pathBossEnter()));
 }
 
 // ============================================================================
@@ -240,82 +289,96 @@ LevelGemini::LevelGemini()
 void LevelGemini::buildWaves()
 {
     events.clear();
-    auto &e = events;
-    e.push_back(makeEvent(1.0f, EnemyType::Medium, {240, -40}, pathSweepCenter(), 2, 80.f));
-    e.push_back(makeEvent(3.0f, EnemyType::Small, {120, -40}, pathSweepLeft(), 3));
-    e.push_back(makeEvent(3.0f, EnemyType::Small, {360, -40}, pathSweepRight(), 3));
-    e.push_back(makeEvent(6.0f, EnemyType::Medium, {60, -40}, pathZPattern()));
-    e.push_back(makeEvent(6.0f, EnemyType::Small, {240, -40}, pathSweepCenter(), 4));
-    e.push_back(makeEvent(10.0f, EnemyType::Medium, {160, -40}, pathDiveBomb()));
-    e.push_back(makeEvent(10.0f, EnemyType::Medium, {320, -40}, pathDiveBomb()));
-    e.push_back(makeEvent(10.0f, EnemyType::Small, {120, -40}, pathLoopLeft(), 2));
-    e.push_back(makeEvent(14.0f, EnemyType::Small, {240, -40}, pathSweepCenter(), 5, 42.f));
-    e.push_back(makeEvent(14.0f, EnemyType::Medium, {120, -40}, pathSweepLeft()));
-    e.push_back(makeEvent(14.0f, EnemyType::Medium, {360, -40}, pathSweepRight()));
-    e.push_back(makeEvent(18.0f, EnemyType::Small, {60, -40}, pathZPattern(), 2));
-    e.push_back(makeEvent(18.0f, EnemyType::Small, {420, -40}, pathZPatternRight(), 2));
-    e.push_back(makeEvent(20.0f, EnemyType::Medium, {160, -40}, pathSweepCenter()));
-    e.push_back(makeEvent(20.0f, EnemyType::Medium, {320, -40}, pathSweepCenter()));
-    e.push_back(makeEvent(20.0f, EnemyType::Medium, {240, -40}, pathDiveBomb()));
-    e.push_back(makeEvent(24.0f, EnemyType::Small, {240, -40}, pathSweepCenter(), 5, 45.f));
-    e.push_back(makeEvent(24.0f, EnemyType::Medium, {120, -40}, pathLoopLeft()));
-    e.push_back(makeEvent(28.0f, EnemyType::Medium, {200, -40}, pathSweepCenter(), 3, 60.f));
-    e.push_back(makeEvent(28.0f, EnemyType::Small, {60, -40}, pathZPattern(), 3));
-    e.push_back(makeEvent(32.0f, EnemyType::Medium, {240, -40}, pathDiveBomb()));
-    e.push_back(makeEvent(32.0f, EnemyType::Medium, {120, -40}, pathSweepLeft()));
-    e.push_back(makeEvent(32.0f, EnemyType::Medium, {360, -40}, pathSweepRight()));
-    e.push_back(makeEvent(36.0f, EnemyType::Small, {240, -40}, pathSweepCenter(), 5, 40.f));
-    e.push_back(makeEvent(36.0f, EnemyType::Medium, {160, -40}, pathLoopLeft(), 2));
-    e.push_back(makeEvent(40.0f, EnemyType::Medium, {200, -40}, pathSweepCenter(), 3, 70.f));
-    e.push_back(makeEvent(40.0f, EnemyType::Small, {420, -40}, pathZPatternRight(), 3));
-    e.push_back(makeEvent(44.0f, EnemyType::Small, {240, -40}, pathSweepCenter(), 5, 42.f));
-    e.push_back(makeEvent(44.0f, EnemyType::Medium, {240, -40}, pathDiveBomb()));
-    e.push_back(makeEvent(48.0f, EnemyType::Medium, {160, -40}, pathSweepCenter(), 2, 80.f));
-    e.push_back(makeEvent(48.0f, EnemyType::Small, {120, -40}, pathSweepLeft(), 3));
-    e.push_back(makeEvent(52.0f, EnemyType::Small, {240, -40}, pathSweepCenter(), 4));
-    e.push_back(makeEvent(52.0f, EnemyType::Medium, {240, -40}, pathDiveBomb()));
-    e.push_back(makeEvent(57.0f, EnemyType::Boss, {160, -80}, pathBossEnterLeft()));
-    e.push_back(makeEvent(70.0f, EnemyType::Boss, {320, -80}, pathBossEnterRight()));
+    events.push_back(makeEvent(1.0f,  EnemyType::Medium, sf::Vector2f(240, -40), pathSweepCenter(), 2, 80.f));
+    events.push_back(makeEvent(3.0f,  EnemyType::Small,  sf::Vector2f(120, -40), pathSweepLeft(), 3));
+    events.push_back(makeEvent(3.0f,  EnemyType::Small,  sf::Vector2f(360, -40), pathSweepRight(), 3));
+    events.push_back(makeEvent(6.0f,  EnemyType::Medium, sf::Vector2f(60, -40),  pathZPattern()));
+    events.push_back(makeEvent(6.0f,  EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 4));
+    events.push_back(makeEvent(10.0f, EnemyType::Medium, sf::Vector2f(160, -40), pathDiveBomb()));
+    events.push_back(makeEvent(10.0f, EnemyType::Medium, sf::Vector2f(320, -40), pathDiveBomb()));
+    events.push_back(makeEvent(10.0f, EnemyType::Small,  sf::Vector2f(120, -40), pathLoopLeft(), 2));
+    events.push_back(makeEvent(14.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 5, 42.f));
+    events.push_back(makeEvent(14.0f, EnemyType::Medium, sf::Vector2f(120, -40), pathSweepLeft()));
+    events.push_back(makeEvent(14.0f, EnemyType::Medium, sf::Vector2f(360, -40), pathSweepRight()));
+    events.push_back(makeEvent(18.0f, EnemyType::Small,  sf::Vector2f(60, -40),  pathZPattern(), 2));
+    events.push_back(makeEvent(18.0f, EnemyType::Small,  sf::Vector2f(420, -40), pathZPatternRight(), 2));
+    events.push_back(makeEvent(20.0f, EnemyType::Medium, sf::Vector2f(160, -40), pathSweepCenter()));
+    events.push_back(makeEvent(20.0f, EnemyType::Medium, sf::Vector2f(320, -40), pathSweepCenter()));
+    events.push_back(makeEvent(20.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathDiveBomb()));
+    events.push_back(makeEvent(24.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 5, 45.f));
+    events.push_back(makeEvent(24.0f, EnemyType::Medium, sf::Vector2f(120, -40), pathLoopLeft()));
+    events.push_back(makeEvent(28.0f, EnemyType::Medium, sf::Vector2f(200, -40), pathSweepCenter(), 3, 60.f));
+    events.push_back(makeEvent(28.0f, EnemyType::Small,  sf::Vector2f(60, -40),  pathZPattern(), 3));
+    events.push_back(makeEvent(32.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathDiveBomb()));
+    events.push_back(makeEvent(32.0f, EnemyType::Medium, sf::Vector2f(120, -40), pathSweepLeft()));
+    events.push_back(makeEvent(32.0f, EnemyType::Medium, sf::Vector2f(360, -40), pathSweepRight()));
+    events.push_back(makeEvent(36.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 5, 40.f));
+    events.push_back(makeEvent(36.0f, EnemyType::Medium, sf::Vector2f(160, -40), pathLoopLeft(), 2));
+    events.push_back(makeEvent(40.0f, EnemyType::Medium, sf::Vector2f(200, -40), pathSweepCenter(), 3, 70.f));
+    events.push_back(makeEvent(40.0f, EnemyType::Small,  sf::Vector2f(420, -40), pathZPatternRight(), 3));
+    events.push_back(makeEvent(44.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 5, 42.f));
+    events.push_back(makeEvent(44.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathDiveBomb()));
+    events.push_back(makeEvent(48.0f, EnemyType::Medium, sf::Vector2f(160, -40), pathSweepCenter(), 2, 80.f));
+    events.push_back(makeEvent(48.0f, EnemyType::Small,  sf::Vector2f(120, -40), pathSweepLeft(), 3));
+    events.push_back(makeEvent(52.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 4));
+    events.push_back(makeEvent(52.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathDiveBomb()));
+    events.push_back(makeEvent(57.0f, EnemyType::Boss,   sf::Vector2f(160, -80), pathBossEnterLeft()));
+    events.push_back(makeEvent(70.0f, EnemyType::Boss,   sf::Vector2f(320, -80), pathBossEnterRight()));
 }
 
 // ============================================================================
-// LEVEL ENDLESS — every variable picked from a vector by random index.
-// Loop:   spawn N normal bots (N random in [5,20]) → wait for arena clear →
-//         spawn 1 boss → after boss dies, roll a new N and repeat forever.
+// LEVEL ENDLESS
 // ============================================================================
 LevelEndless::LevelEndless()
+    : chosenPlanet(0), normalsBeforeBoss(0), normalsSpawned(0),
+      spawnedBoss(false), spawnTimer(0.f), currentInterval(1.5f)
 {
     name = "ENDLESS";
     desc = "Pure Chaos";
     locked = false;
 
-    normalPathPool = {
-        pathSweepCenter(), pathSweepLeft(), pathSweepRight(),
-        pathLoopLeft(), pathLoopRight(),
-        pathZPattern(), pathZPatternRight(), pathDiveBomb()};
-    bossPathPool = {pathBossEnter(), pathBossEnterLeft(), pathBossEnterRight()};
+    normalPathPool.push_back(pathSweepCenter());
+    normalPathPool.push_back(pathSweepLeft());
+    normalPathPool.push_back(pathSweepRight());
+    normalPathPool.push_back(pathLoopLeft());
+    normalPathPool.push_back(pathLoopRight());
+    normalPathPool.push_back(pathZPattern());
+    normalPathPool.push_back(pathZPatternRight());
+    normalPathPool.push_back(pathDiveBomb());
 
-    normalEnemyPool = {EnemyType::Small, EnemyType::Medium};
+    bossPathPool.push_back(pathBossEnter());
+    bossPathPool.push_back(pathBossEnterLeft());
+    bossPathPool.push_back(pathBossEnterRight());
 
-    speedPool = {120.f, 160.f, 200.f, 240.f, 280.f};
-    intervalPool = {0.6f, 0.9f, 1.2f, 1.5f, 1.8f, 2.2f};
+    normalEnemyPool.push_back(EnemyType::Small);
+    normalEnemyPool.push_back(EnemyType::Medium);
 
-    planetColorPool = {
-        sf::Color(180, 120, 60),
-        sf::Color(80, 60, 180),
-        sf::Color(30, 120, 50)};
-    planetTexturePool = {
-        "assets/textures/planet1.png",
-        "assets/textures/planet2.png",
-        "assets/textures/planet3.png"};
+    speedPool.push_back(120.f);
+    speedPool.push_back(160.f);
+    speedPool.push_back(200.f);
+    speedPool.push_back(240.f);
+    speedPool.push_back(280.f);
+
+    intervalPool.push_back(0.6f);
+    intervalPool.push_back(0.9f);
+    intervalPool.push_back(1.2f);
+    intervalPool.push_back(1.5f);
+    intervalPool.push_back(1.8f);
+    intervalPool.push_back(2.2f);
+
+    planetColorPool.push_back(sf::Color(180, 120, 60));
+    planetColorPool.push_back(sf::Color(80, 60, 180));
+    planetColorPool.push_back(sf::Color(30, 120, 50));
+
+    planetTexturePool.push_back("assets/textures/planet1.png");
+    planetTexturePool.push_back("assets/textures/planet2.png");
+    planetTexturePool.push_back("assets/textures/planet3.png");
 
     chosenPlanet = randInt(0, (int)planetTexturePool.size() - 1);
 }
 
 void LevelEndless::buildWaves()
 {
-    // Endless has no fixed event list — events stays empty. Spawning happens
-    // dynamically in updateEndless() based on random rolls from the pools.
     events.clear();
     chosenPlanet = randInt(0, (int)planetTexturePool.size() - 1);
     rollNextCycle();
@@ -324,7 +387,7 @@ void LevelEndless::buildWaves()
 
 void LevelEndless::rollNextCycle()
 {
-    normalsBeforeBoss = randInt(5, 20); // boss appears after 5..20 normal bots
+    normalsBeforeBoss = randInt(5, 20);
     normalsSpawned = 0;
     spawnedBoss = false;
     currentInterval = intervalPool[randInt(0, (int)intervalPool.size() - 1)];
@@ -340,7 +403,6 @@ void LevelEndless::updateEndless(float dt, float /*levelTimer*/,
     {
         if (spawnTimer <= 0.f)
         {
-            // Random everything for this normal bot:
             int pIdx = randInt(0, (int)normalPathPool.size() - 1);
             int eIdx = randInt(0, (int)normalEnemyPool.size() - 1);
             int sIdx = randInt(0, (int)speedPool.size() - 1);
@@ -366,7 +428,6 @@ void LevelEndless::updateEndless(float dt, float /*levelTimer*/,
     }
     else if (!spawnedBoss && normalsSpawned >= normalsBeforeBoss)
     {
-        // wait until the arena is clear before sending the boss in
         if (activeEnemies == 0 && q.empty())
         {
             int pIdx = randInt(0, (int)bossPathPool.size() - 1);
@@ -388,31 +449,67 @@ void LevelEndless::updateEndless(float dt, float /*levelTimer*/,
     }
     else if (spawnedBoss && !bossOnScreen && activeEnemies == 0 && q.empty())
     {
-        // Boss has been cleared — roll a fresh random cycle.
         rollNextCycle();
     }
 }
 
 // ============================================================================
-// GAME CLASS — buildLevels constructs the polymorphic level list.
+// GAME CLASS
 // ============================================================================
+Game::Game()
+    : currentLevel(0), selectedLevel(0), levelTimer(0.f),
+      bgY(0.f), bossActive(false)
+{
+}
+
+Game::~Game()
+{
+    for (int i = 0; i < (int)levels.size(); i++)
+        delete levels[i];
+    levels.clear();
+}
+
 void Game::buildLevels()
 {
+    for (int i = 0; i < (int)levels.size(); i++)
+        delete levels[i];
     levels.clear();
-    levels.emplace_back(std::make_unique<LevelAries>());
-    levels.emplace_back(std::make_unique<LevelTaurus>());
-    levels.emplace_back(std::make_unique<LevelGemini>());
-    levels.emplace_back(std::make_unique<LevelEndless>());
-    for (auto &lvl : levels)
+
+    levels.push_back(new LevelAries());
+    levels.push_back(new LevelTaurus());
+    levels.push_back(new LevelGemini());
+    levels.push_back(new LevelEndless());
+
+    for (int i = 0; i < (int)levels.size(); i++)
     {
-        lvl->buildWaves();
-        lvl->loadPlanet();
+        levels[i]->buildWaves();
+        levels[i]->loadPlanet();
+    }
+}
+
+// Throw on missing critical asset (Exception Handling topic).
+void Game::loadFontOrThrow(const std::string &path)
+{
+    if (!font.loadFromFile(path))
+    {
+        if (!font.loadFromFile("ProFontWindows.ttf"))
+        {
+            throw AssetLoadException("Could not load font: " + path);
+        }
+    }
+}
+
+void Game::loadTextureOrThrow(sf::Texture &tex, const std::string &path)
+{
+    if (!tex.loadFromFile(path))
+    {
+        throw AssetLoadException("Could not load texture: " + path);
     }
 }
 
 void Game::init()
 {
-    std::srand((unsigned)std::time(nullptr));
+    std::srand((unsigned)std::time(0));
 
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     window.create(desktop, "Space Shooter", sf::Style::Default);
@@ -430,56 +527,48 @@ void Game::init()
         1.f));
     window.setView(gameView);
 
-    if (!font.loadFromFile("assets/fonts/ProFontWindows.ttf"))
+    // Wrap critical asset loads in try/catch — Exception Handling topic.
+    try
     {
-        if (!font.loadFromFile("ProFontWindows.ttf"))
-        {
-            std::cerr << "Warning: Could not load font. Text may not render.\n";
-        }
+        loadFontOrThrow("assets/fonts/ProFontWindows.ttf");
     }
-    if (!shipTexture.loadFromFile("assets/textures/spaceship.png"))
+    catch (const AssetLoadException &ex)
     {
-        std::cerr << "Warning: Could not load ship texture. Player sprite may not render.\n";
+        std::cerr << "Asset warning: " << ex.what() << "\n";
     }
-    else
+
+    try
     {
-        std::cout << "Loaded texture" << std::endl;
+        loadTextureOrThrow(shipTexture, "assets/textures/spaceship.png");
         shipSprite.setScale(0.05f, 0.05f);
+    }
+    catch (const AssetLoadException &ex)
+    {
+        std::cerr << "Asset warning: " << ex.what() << "\n";
     }
     shipSprite.setTexture(shipTexture);
     sf::FloatRect bounds = shipSprite.getLocalBounds();
     shipSprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
-    if (!smallEnemyTexture.loadFromFile("assets/textures/alien1.png"))
-    {
-        std::cerr << "Warning: Could not load small enemy texture. Small enemies may not render.\n";
-    }
-    else
-        std::cout << "Loaded small enemy texture" << std::endl;
-    if (!mediumEnemyTexture.loadFromFile("assets/textures/alien2.png"))
-    {
-        std::cerr << "Warning: Could not load medium enemy texture. Medium enemies may not render.\n";
-    }
-    else
-        std::cout << "Loaded medium enemy texture" << std::endl;
-    if (!bossEnemyTexture.loadFromFile("assets/textures/boss1.png"))
-    {
-        std::cerr << "Warning: Could not load boss enemy texture. Boss enemies may not render.\n";
-    }
-    else
-        std::cout << "Loaded boss enemy texture" << std::endl;
 
-    for (auto &b : bullets)
-        b.on = false;
-    for (auto &e : enemies)
-        e.on = false;
-    for (auto &p : particles)
-        p.on = false;
-    for (auto &pk : pickups)
-        pk.on = false;
+    try { loadTextureOrThrow(smallEnemyTexture,  "assets/textures/alien1.png"); }
+    catch (const AssetLoadException &ex) { std::cerr << "Asset warning: " << ex.what() << "\n"; }
+    try { loadTextureOrThrow(mediumEnemyTexture, "assets/textures/alien2.png"); }
+    catch (const AssetLoadException &ex) { std::cerr << "Asset warning: " << ex.what() << "\n"; }
+    try { loadTextureOrThrow(bossEnemyTexture,   "assets/textures/boss1.png"); }
+    catch (const AssetLoadException &ex) { std::cerr << "Asset warning: " << ex.what() << "\n"; }
+
+    bullets.clearAll();
+    enemies.clearAll();
+    particles.clearAll();
+    pickups.clearAll();
+
     buildLevels();
     initStars();
-    stateStack.push(GameState::LevelSelect);
+    loadHighScores();
+
+    stateStack.push(GameState::Home);
 }
+
 void Game::run()
 {
     sf::Clock clock;
@@ -498,6 +587,7 @@ void Game::run()
         window.display();
     }
 }
+
 void Game::handleEvents()
 {
     sf::Event event;
@@ -509,53 +599,107 @@ void Game::handleEvents()
             return;
         }
         GameState current = stateStack.top();
+
         if (event.type == sf::Event::KeyPressed)
         {
             if (current == GameState::Playing)
             {
                 if (event.key.code == sf::Keyboard::P || event.key.code == sf::Keyboard::Escape)
-                {
                     stateStack.push(GameState::Paused);
-                }
             }
             else if (current == GameState::Paused)
             {
                 if (event.key.code == sf::Keyboard::P || event.key.code == sf::Keyboard::Escape)
-                {
                     stateStack.pop();
+            }
+            else if (current == GameState::Home)
+            {
+                if (event.key.code == sf::Keyboard::Return || event.key.code == sf::Keyboard::Space)
+                {
+                    stateStack.push(GameState::LevelSelect);
                 }
             }
         }
+
         if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
         {
-            sf::Vector2f mp = window.mapPixelToCoords({event.mouseButton.x, event.mouseButton.y});
-            if (current == GameState::LevelSelect)
+            sf::Vector2f mp = window.mapPixelToCoords(
+                sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+
+            if (current == GameState::Home)
+            {
+                sf::FloatRect playRect(170.f, 460.f, 140.f, 50.f);
+                if (playRect.contains(mp))
+                    stateStack.push(GameState::LevelSelect);
+            }
+            else if (current == GameState::LevelSelect)
             {
                 int n = (int)levels.size();
-                float planetY = 320.f;
-                float spacing = 480.f / (n + 1);
-                for (int i = 0; i < n; i++)
+                int storyCount = (n > 0) ? n - 1 : 0; // last entry is endless
+                float planetY = 280.f;
+                float spacing = 480.f / (storyCount + 1);
+
+                for (int i = 0; i < storyCount; i++)
                 {
                     float px = spacing * (i + 1);
                     float dist = std::hypot(mp.x - px, mp.y - planetY);
                     if (dist < 50.f)
                     {
-                        selectedLevel = i;
+                        try
+                        {
+                            if (i < 0 || i >= (int)levels.size())
+                                throw InvalidLevelException("Selected level out of range");
+                            selectedLevel = i;
+                        }
+                        catch (const InvalidLevelException &ex)
+                        {
+                            std::cerr << "Selection error: " << ex.what() << "\n";
+                        }
                     }
                 }
-                if (mp.x < 50.f && mp.y > 274.f && mp.y < 366.f)
-                    selectedLevel = std::max(0, selectedLevel - 1);
-                if (mp.x > 430.f && mp.y > 274.f && mp.y < 366.f)
-                    selectedLevel = std::min(n - 1, selectedLevel + 1);
-                sf::FloatRect playRect(330.f, 657.f, 110.f, 40.f);
-                if (playRect.contains(mp) && !levels[selectedLevel]->locked)
+
+                // Endless card (large, prominent)
+                sf::FloatRect endlessCard(60.f, 410.f, 360.f, 110.f);
+                if (endlessCard.contains(mp))
                 {
-                    startLevel(selectedLevel);
+                    try
+                    {
+                        if (n <= 0)
+                            throw InvalidLevelException("No levels available");
+                        selectedLevel = n - 1; // endless is last
+                        startLevel(selectedLevel);
+                    }
+                    catch (const InvalidLevelException &ex)
+                    {
+                        std::cerr << "Cannot start endless: " << ex.what() << "\n";
+                    }
                 }
+
+                // Play button
+                sf::FloatRect playRect(330.f, 657.f, 110.f, 40.f);
+                if (playRect.contains(mp))
+                {
+                    try
+                    {
+                        if (selectedLevel < 0 || selectedLevel >= (int)levels.size())
+                            throw InvalidLevelException("No level selected");
+                        if (levels[selectedLevel]->isLocked())
+                            throw InvalidLevelException("Level is locked");
+                        startLevel(selectedLevel);
+                    }
+                    catch (const InvalidLevelException &ex)
+                    {
+                        std::cerr << "Cannot start level: " << ex.what() << "\n";
+                    }
+                }
+
+                // Back button -> back to home
                 sf::FloatRect backRect(40.f, 657.f, 110.f, 40.f);
                 if (backRect.contains(mp))
                 {
-                    window.close();
+                    stateStack.pop();
+                    if (stateStack.empty())
+                        stateStack.push(GameState::Home);
                 }
             }
             else if (current == GameState::Paused)
@@ -565,6 +709,7 @@ void Game::handleEvents()
                 {
                     while (!stateStack.empty())
                         stateStack.pop();
+                    stateStack.push(GameState::Home);
                     stateStack.push(GameState::LevelSelect);
                 }
                 else
@@ -574,85 +719,81 @@ void Game::handleEvents()
             }
             else if (current == GameState::GameOver)
             {
-                startLevel(currentLevel);
+                try { startLevel(currentLevel); }
+                catch (const InvalidLevelException &ex)
+                {
+                    std::cerr << "Restart failed: " << ex.what() << "\n";
+                }
             }
             else if (current == GameState::LevelComplete)
             {
                 if (currentLevel + 1 < (int)levels.size())
                 {
-                    levels[currentLevel + 1]->locked = false;
+                    levels[currentLevel + 1]->unlock();
                 }
-                while (stateStack.size() > 1)
+                while (!stateStack.empty())
                     stateStack.pop();
-                if (stateStack.top() != GameState::LevelSelect)
-                {
-                    stateStack.pop();
-                    stateStack.push(GameState::LevelSelect);
-                }
+                stateStack.push(GameState::Home);
+                stateStack.push(GameState::LevelSelect);
             }
             else if (current == GameState::Playing)
             {
                 sf::FloatRect pauseBtn(430.f, 12.f, 36.f, 36.f);
                 if (pauseBtn.contains(mp))
-                {
                     stateStack.push(GameState::Paused);
-                }
                 sf::FloatRect exitBtn(430.f, 48.f, 36.f, 36.f);
                 if (exitBtn.contains(mp))
                 {
                     while (!stateStack.empty())
                         stateStack.pop();
+                    stateStack.push(GameState::Home);
                     stateStack.push(GameState::LevelSelect);
                 }
             }
         }
     }
 }
+
 void Game::startLevel(int index)
 {
+    if (index < 0 || index >= (int)levels.size())
+        throw InvalidLevelException("startLevel: index out of range");
+
     currentLevel = index;
     levelTimer = 0.f;
     bossActive = false;
-    for (auto &b : bullets)
-        b.on = false;
-    for (auto &e : enemies)
-        e.on = false;
-    for (auto &p : particles)
-        p.on = false;
-    for (auto &pk : pickups)
-        pk.on = false;
+
+    bullets.clearAll();
+    enemies.clearAll();
+    particles.clearAll();
+    pickups.clearAll();
     while (!spawnQueue.empty())
         spawnQueue.pop();
-    // Re-build waves so endless re-rolls and fixed levels reset their fired flags.
+
     levels[currentLevel]->buildWaves();
-    for (auto &ev : levels[currentLevel]->events)
-        ev.fired = false;
+    std::vector<SpawnEvent> &evs = levels[currentLevel]->getEvents();
+    for (int i = 0; i < (int)evs.size(); i++)
+        evs[i].fired = false;
+
     scoreLog.clear();
     resetPlayer();
+
     while (!stateStack.empty())
         stateStack.pop();
     stateStack.push(GameState::Playing);
 }
+
 void Game::resetPlayer()
 {
-    player.pos = {240.f, 600.f};
-    player.hp = player.maxHp;
-    player.speed = 310.f;
-    player.power = 1;
-    player.powerTimer = 0.f;
-    player.shootTimer = 0.f;
-    player.iframeTimer = 0.f;
-    player.shieldTimer = 0.f;
-    player.tilt = 0.f;
-    player.alive = true;
-    player.score = 0;
-    player.lives = 3;
+    player.resetForLevel();
 }
+
 void Game::update(float dt)
 {
-    if (!player.alive)
+    if (!player.isAlive())
         return;
     levelTimer += dt;
+
     sf::Vector2f moveDir(0.f, 0.f);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         moveDir.x -= 1.f;
@@ -666,41 +807,37 @@ void Game::update(float dt)
     if (ml > 0.f)
     {
         moveDir = vnorm(moveDir);
-        player.pos += moveDir * player.speed * dt;
+        player.move(moveDir * player.getSpeed() * dt);
     }
-    player.pos.x = clampf(player.pos.x, 24.f, 456.f);
-    player.pos.y = clampf(player.pos.y, 24.f, 696.f);
+    player.clampToArena();
+
     float targetTilt = moveDir.x * 18.f;
-    player.tilt = lerp(player.tilt, targetTilt, dt * 8.f);
-    if (player.iframeTimer > 0.f)
+    player.setTilt(lerp(player.getTilt(), targetTilt, dt * 8.f));
+
+    if (player.getIframeTimer() > 0.f)
+        player.tickIframe(dt);
+    if (player.getShieldTimer() > 0.f)
+        player.tickShield(dt);
+
+    if (player.getPower() > 1)
     {
-        player.iframeTimer -= dt;
-    }
-    if (player.shieldTimer > 0.f)
-    {
-        player.shieldTimer -= dt;
-    }
-    if (player.power > 1)
-    {
-        player.powerTimer -= dt;
-        if (player.powerTimer <= 0.f)
+        player.tickPowerTimer(dt);
+        if (player.getPowerTimer() <= 0.f)
         {
-            player.power -= 1;
-            if (player.power > 1)
-            {
-                player.powerTimer = 8.0f;
-            }
+            player.decreasePower();
+            if (player.getPower() > 1)
+                player.setPowerTimer(8.0f);
         }
     }
-    player.shootTimer -= dt;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && player.shootTimer <= 0.f)
+    player.tickShootTimer(dt);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && player.getShootTimer() <= 0.f)
     {
         spawnPlayerBullet();
-        player.shootTimer = player.shootInterval;
+        player.setShootTimer(player.getShootInterval());
     }
+
     checkSpawns(dt);
 
-    // Endless level: dispatch dynamic spawning via virtual function.
     if (levels[currentLevel]->isEndless())
     {
         levels[currentLevel]->updateEndless(dt, levelTimer, spawnQueue,
@@ -721,9 +858,11 @@ void Game::update(float dt)
             break;
         }
     }
+
     bossActive = false;
-    for (auto &e : enemies)
+    for (int i = 0; i < enemies.capacity(); i++)
     {
+        Enemy &e = enemies.at(i);
         if (!e.on)
             continue;
         if (e.type == EnemyType::Boss)
@@ -774,27 +913,25 @@ void Game::update(float dt)
         {
             spawnEnemyBullet(e);
             if (e.type == EnemyType::Boss)
-            {
                 e.shootTimer = (e.phase == 0) ? 0.8f : 0.6f;
-            }
             else
-            {
                 e.shootTimer = e.shootInterval;
-            }
         }
     }
-    for (auto &b : bullets)
+
+    for (int i = 0; i < bullets.capacity(); i++)
     {
+        Bullet &b = bullets.at(i);
         if (!b.on)
             continue;
         b.pos += b.vel * dt;
         if (b.pos.y < -20.f || b.pos.y > 740.f || b.pos.x < -20.f || b.pos.x > 500.f)
-        {
             b.on = false;
-        }
     }
-    for (auto &p : particles)
+
+    for (int i = 0; i < particles.capacity(); i++)
     {
+        Particle &p = particles.at(i);
         if (!p.on)
             continue;
         p.life -= dt;
@@ -806,8 +943,10 @@ void Game::update(float dt)
         p.pos += p.vel * dt;
         p.vel *= 0.97f;
     }
-    for (auto &pk : pickups)
+
+    for (int i = 0; i < pickups.capacity(); i++)
     {
+        Pickup &pk = pickups.at(i);
         if (!pk.on)
             continue;
         pk.life -= dt;
@@ -820,11 +959,13 @@ void Game::update(float dt)
         pk.pos += pk.vel * dt;
         pk.vel.y += 20.f * dt;
     }
+
     bgY += 60.f * dt;
     if (bgY >= 1440.f)
         bgY -= 1440.f;
-    for (auto &s : stars)
+    for (int i = 0; i < MAX_STARS; i++)
     {
+        Star &s = stars[i];
         s.pos.y += s.speed * dt;
         if (s.pos.y > 730.f)
         {
@@ -832,24 +973,28 @@ void Game::update(float dt)
             s.pos.x = randFloat(0.f, 480.f);
         }
     }
+
     checkCollisions();
     if (isLevelClear())
     {
+        recordHighScore(player.getScore(), currentLevel);
         stateStack.push(GameState::LevelComplete);
     }
 }
+
 void Game::checkCollisions()
 {
-    for (auto &b : bullets)
+    // Player bullets vs enemies
+    for (int bi = 0; bi < bullets.capacity(); bi++)
     {
-        if (!b.on)
-            continue;
-        if (!b.type || !b.type->isPlayerBullet())
-            continue;
-        for (auto &e : enemies)
+        Bullet &b = bullets.at(bi);
+        if (!b.on) continue;
+        if (!b.type || !b.type->isPlayerBullet()) continue;
+
+        for (int ei = 0; ei < enemies.capacity(); ei++)
         {
-            if (!e.on)
-                continue;
+            Enemy &e = enemies.at(ei);
+            if (!e.on) continue;
             float eRadius = e.type ? e.type->getRadius() : 16.f;
             float dist = vlen(b.pos - e.pos);
             if (dist < 4.f + eRadius)
@@ -862,40 +1007,39 @@ void Game::checkCollisions()
                     e.on = false;
                     sf::Color cStart, cEnd;
                     int pCount = 12;
+                    std::string label;
                     if (e.type == EnemyType::Small)
                     {
                         cStart = sf::Color(255, 160, 30);
                         cEnd = sf::Color(200, 40, 10, 0);
+                        label = "Small enemy";
                     }
                     else if (e.type == EnemyType::Medium)
                     {
                         cStart = sf::Color(80, 255, 120);
                         cEnd = sf::Color(20, 150, 50, 0);
                         pCount = 18;
+                        label = "Medium enemy";
                     }
                     else
                     {
                         cStart = sf::Color(255, 80, 80);
                         cEnd = sf::Color(80, 20, 20, 0);
                         pCount = 40;
+                        label = "BOSS";
                     }
                     spawnExplosion(e.pos, cStart, cEnd, pCount);
-                    player.score += e.scoreValue;
-                    std::string label = (e.type == EnemyType::Small) ? "Small enemy"
-                                        : (e.type == EnemyType::Medium) ? "Medium enemy"
-                                                                        : "BOSS";
-                    scoreLog.push_front({label, e.scoreValue, levelTimer});
+                    player += e.scoreValue; // operator+= overload
+                    scoreLog.push_front(ScoreEvent(label, e.scoreValue, levelTimer));
                     spawnPickup(e.pos, PickupType::Score);
                     if (e.type == EnemyType::Medium && e.hp < 40.f)
-                    {
                         spawnPickup(e.pos + sf::Vector2f(15.f, 0.f), PickupType::Health);
-                    }
                     if (e.type == EnemyType::Boss)
                     {
-                        for (int i = 0; i < 8; i++)
+                        for (int k = 0; k < 8; k++)
                         {
                             sf::Vector2f offset(randFloat(-40.f, 40.f), randFloat(-40.f, 40.f));
-                            PickupType *pt = (i % 3 == 0) ? PickupType::Health : PickupType::Score;
+                            PickupType *pt = (k % 3 == 0) ? PickupType::Health : PickupType::Score;
                             spawnPickup(e.pos + offset, pt);
                         }
                     }
@@ -904,116 +1048,125 @@ void Game::checkCollisions()
             }
         }
     }
-    if (player.iframeTimer <= 0.f)
+
+    // Enemy bullets vs player
+    if (player.getIframeTimer() <= 0.f)
     {
-        for (auto &b : bullets)
+        for (int bi = 0; bi < bullets.capacity(); bi++)
         {
-            if (!b.on)
-                continue;
-            if (!b.type || b.type->isPlayerBullet())
-                continue;
-            float dist = vlen(b.pos - player.pos);
+            Bullet &b = bullets.at(bi);
+            if (!b.on) continue;
+            if (!b.type || b.type->isPlayerBullet()) continue;
+            float dist = vlen(b.pos - player.getPos());
             if (dist < 5.f + 18.f)
             {
                 b.on = false;
-                if (player.shieldTimer > 0.f)
+                if (player.getShieldTimer() > 0.f)
                 {
-                    player.shieldTimer = 0.f;
-                    spawnExplosion(player.pos, sf::Color(60, 160, 255), sf::Color(20, 80, 180, 0), 10);
+                    player.setShieldTimer(0.f);
+                    spawnExplosion(player.getPos(), sf::Color(60, 160, 255), sf::Color(20, 80, 180, 0), 10);
                 }
                 else
                 {
-                    player.hp -= 12.f;
-                    player.iframeTimer = 1.4f;
-                    spawnExplosion(player.pos, sf::Color(255, 80, 80), sf::Color(255, 200, 50, 0), 6);
-                    if (player.hp <= 0.f)
+                    player.takeDamage(12.f);
+                    player.setIframeTimer(1.4f);
+                    spawnExplosion(player.getPos(), sf::Color(255, 80, 80), sf::Color(255, 200, 50, 0), 6);
+                    if (player.getHp() <= 0.f)
                     {
-                        player.lives--;
-                        if (player.lives <= 0)
+                        player.loseLife();
+                        if (player.getLives() <= 0)
                         {
-                            player.alive = false;
+                            player.setAlive(false);
+                            recordHighScore(player.getScore(), currentLevel);
                             stateStack.push(GameState::GameOver);
                         }
                         else
                         {
-                            player.hp = player.maxHp;
-                            player.iframeTimer = 2.0f;
+                            player.heal(player.getMaxHp());
+                            player.setIframeTimer(2.0f);
                         }
                     }
                 }
             }
         }
     }
-    if (player.iframeTimer <= 0.f)
+
+    // Enemies vs player (ramming)
+    if (player.getIframeTimer() <= 0.f)
     {
-        for (auto &e : enemies)
+        for (int ei = 0; ei < enemies.capacity(); ei++)
         {
-            if (!e.on)
-                continue;
+            Enemy &e = enemies.at(ei);
+            if (!e.on) continue;
             float eRadius = e.type ? e.type->getRadius() : 16.f;
-            float dist = vlen(e.pos - player.pos);
+            float dist = vlen(e.pos - player.getPos());
             if (dist < eRadius + 18.f)
             {
-                if (player.shieldTimer > 0.f)
+                if (player.getShieldTimer() > 0.f)
                 {
-                    player.shieldTimer = 0.f;
-                    spawnExplosion(player.pos, sf::Color(60, 160, 255), sf::Color(20, 80, 180, 0), 10);
+                    player.setShieldTimer(0.f);
+                    spawnExplosion(player.getPos(), sf::Color(60, 160, 255), sf::Color(20, 80, 180, 0), 10);
                 }
                 else
                 {
-                    player.hp -= 20.f;
-                    player.iframeTimer = 1.4f;
-                    spawnExplosion(player.pos, sf::Color(255, 80, 80), sf::Color(255, 200, 50, 0), 8);
-                    if (player.hp <= 0.f)
+                    player.takeDamage(20.f);
+                    player.setIframeTimer(1.4f);
+                    spawnExplosion(player.getPos(), sf::Color(255, 80, 80), sf::Color(255, 200, 50, 0), 8);
+                    if (player.getHp() <= 0.f)
                     {
-                        player.lives--;
-                        if (player.lives <= 0)
+                        player.loseLife();
+                        if (player.getLives() <= 0)
                         {
-                            player.alive = false;
+                            player.setAlive(false);
+                            recordHighScore(player.getScore(), currentLevel);
                             stateStack.push(GameState::GameOver);
                         }
                         else
                         {
-                            player.hp = player.maxHp;
-                            player.iframeTimer = 2.0f;
+                            player.heal(player.getMaxHp());
+                            player.setIframeTimer(2.0f);
                         }
                     }
                 }
             }
         }
     }
-    for (auto &pk : pickups)
+
+    // Pickups vs player
+    for (int pi = 0; pi < pickups.capacity(); pi++)
     {
-        if (!pk.on)
-            continue;
-        float dist = vlen(pk.pos - player.pos);
+        Pickup &pk = pickups.at(pi);
+        if (!pk.on) continue;
+        float dist = vlen(pk.pos - player.getPos());
         if (dist < 32.f + 18.f)
         {
             pk.on = false;
             if (pk.type == PickupType::Score)
             {
-                player.score += 25;
-                scoreLog.push_front({"Score orb", 25, levelTimer});
+                player += 25;
+                scoreLog.push_front(ScoreEvent("Score orb", 25, levelTimer));
             }
             else if (pk.type == PickupType::Health)
             {
-                player.hp = std::min(player.hp + 25.f, player.maxHp);
+                player.heal(25.f);
             }
             else if (pk.type == PickupType::Power)
             {
-                if (player.power < 3)
-                    player.power++;
-                player.powerTimer = 8.0f;
-                player.shieldTimer = 8.0f;
+                player.increasePower();
+                player.setPowerTimer(8.0f);
+                player.setShieldTimer(8.0f);
             }
         }
     }
 }
+
 void Game::checkSpawns(float dt)
 {
     (void)dt;
-    for (auto &ev : levels[currentLevel]->events)
+    std::vector<SpawnEvent> &evs = levels[currentLevel]->getEvents();
+    for (int i = 0; i < (int)evs.size(); i++)
     {
+        SpawnEvent &ev = evs[i];
         if (!ev.fired && levelTimer >= ev.time)
         {
             ev.fired = true;
@@ -1023,18 +1176,16 @@ void Game::checkSpawns(float dt)
             float shootInt = et->getShootInterval();
             int scoreVal = et->getScoreValue();
             float moveSpd = et->getMoveSpeed();
-            for (int i = 0; i < ev.count; i++)
+            for (int k = 0; k < ev.count; k++)
             {
                 SpawnJob job;
                 job.etype = ev.etype;
                 job.startPos = ev.startPos;
-                job.startPos.x += (i - (ev.count - 1) / 2.f) * ev.xSpacing;
-                job.delayRemaining = i * ev.delay;
+                job.startPos.x += (k - (ev.count - 1) / 2.f) * ev.xSpacing;
+                job.delayRemaining = k * ev.delay;
                 job.path = ev.path;
                 if (!job.path.empty())
-                {
                     job.path[0] = job.startPos;
-                }
                 job.hp = hp;
                 job.maxHp = maxHp;
                 job.shootInterval = shootInt;
@@ -1045,15 +1196,15 @@ void Game::checkSpawns(float dt)
         }
     }
 }
+
 void Game::spawnEnemyFromJob(const SpawnJob &job)
 {
-    Enemy *e = allocEnemy();
-    if (!e)
-        return;
+    Enemy *e = enemies.alloc();
+    if (!e) return;
     e->on = true;
     e->type = job.etype;
     e->pos = job.startPos;
-    e->vel = {0.f, 0.f};
+    e->vel = sf::Vector2f(0.f, 0.f);
     e->hp = job.hp;
     e->maxHp = job.maxHp;
     e->shootTimer = job.shootInterval * randFloat(0.3f, 1.0f);
@@ -1066,30 +1217,31 @@ void Game::spawnEnemyFromJob(const SpawnJob &job)
     e->scoreValue = job.scoreValue;
     e->moveSpeed = job.moveSpeed;
 }
+
 void Game::spawnPlayerBullet()
 {
-    if (player.power == 1)
+    if (player.getPower() == 1)
     {
-        Bullet *b = allocBullet();
+        Bullet *b = bullets.alloc();
         if (b)
         {
             b->on = true;
-            b->pos = player.pos + sf::Vector2f(0.f, -20.f);
-            b->vel = {0.f, -600.f};
+            b->pos = player.getPos() + sf::Vector2f(0.f, -20.f);
+            b->vel = sf::Vector2f(0.f, -600.f);
             b->dmg = 20.f;
             b->type = BulletType::PlayerNorm;
         }
     }
-    else if (player.power == 2)
+    else if (player.getPower() == 2)
     {
         for (int i = -1; i <= 1; i += 2)
         {
-            Bullet *b = allocBullet();
+            Bullet *b = bullets.alloc();
             if (b)
             {
                 b->on = true;
-                b->pos = player.pos + sf::Vector2f(i * 7.f, -20.f);
-                b->vel = {0.f, -600.f};
+                b->pos = player.getPos() + sf::Vector2f(i * 7.f, -20.f);
+                b->vel = sf::Vector2f(0.f, -600.f);
                 b->dmg = 20.f;
                 b->type = BulletType::PlayerWide;
             }
@@ -1099,26 +1251,27 @@ void Game::spawnPlayerBullet()
     {
         for (int i = -1; i <= 1; i++)
         {
-            Bullet *b = allocBullet();
+            Bullet *b = bullets.alloc();
             if (b)
             {
                 b->on = true;
-                b->pos = player.pos + sf::Vector2f(i * 12.f, -20.f);
-                b->vel = {i * 40.f, -600.f};
+                b->pos = player.getPos() + sf::Vector2f(i * 12.f, -20.f);
+                b->vel = sf::Vector2f(i * 40.f, -600.f);
                 b->dmg = 20.f;
                 b->type = BulletType::PlayerTriple;
             }
         }
     }
 }
+
 void Game::spawnEnemyBullet(Enemy &e)
 {
-    sf::Vector2f toPlayer = player.pos - e.pos;
+    sf::Vector2f toPlayer = player.getPos() - e.pos;
     float baseAngle = std::atan2(toPlayer.y, toPlayer.x);
     if (e.type == EnemyType::Small)
     {
         sf::Vector2f dir = vnorm(toPlayer);
-        Bullet *b = allocBullet();
+        Bullet *b = bullets.alloc();
         if (b)
         {
             b->on = true;
@@ -1133,8 +1286,8 @@ void Game::spawnEnemyBullet(Enemy &e)
         for (int i = -1; i <= 1; i++)
         {
             float a = baseAngle + i * 0.2f;
-            sf::Vector2f dir = {std::cos(a), std::sin(a)};
-            Bullet *b = allocBullet();
+            sf::Vector2f dir(std::cos(a), std::sin(a));
+            Bullet *b = bullets.alloc();
             if (b)
             {
                 b->on = true;
@@ -1153,8 +1306,8 @@ void Game::spawnEnemyBullet(Enemy &e)
         for (int i = 0; i < numShots; i++)
         {
             float a = baseAngle + (i - (numShots - 1) / 2.f) * spread;
-            sf::Vector2f dir = {std::cos(a), std::sin(a)};
-            Bullet *b = allocBullet();
+            sf::Vector2f dir(std::cos(a), std::sin(a));
+            Bullet *b = bullets.alloc();
             if (b)
             {
                 b->on = true;
@@ -1166,46 +1319,18 @@ void Game::spawnEnemyBullet(Enemy &e)
         }
     }
 }
-Bullet *Game::allocBullet()
-{
-    for (auto &b : bullets)
-        if (!b.on)
-            return &b;
-    return nullptr;
-}
-Enemy *Game::allocEnemy()
-{
-    for (auto &e : enemies)
-        if (!e.on)
-            return &e;
-    return nullptr;
-}
-Particle *Game::allocParticle()
-{
-    for (auto &p : particles)
-        if (!p.on)
-            return &p;
-    return nullptr;
-}
-Pickup *Game::allocPickup()
-{
-    for (auto &pk : pickups)
-        if (!pk.on)
-            return &pk;
-    return nullptr;
-}
+
 void Game::spawnExplosion(sf::Vector2f pos, sf::Color cStart, sf::Color cEnd, int count)
 {
     for (int i = 0; i < count; i++)
     {
-        Particle *p = allocParticle();
-        if (!p)
-            break;
+        Particle *p = particles.alloc();
+        if (!p) break;
         p->on = true;
         p->pos = pos + sf::Vector2f(randFloat(-6.f, 6.f), randFloat(-6.f, 6.f));
         float angle = randFloat(0.f, 6.2832f);
         float speed = randFloat(40.f, 180.f);
-        p->vel = {std::cos(angle) * speed, std::sin(angle) * speed};
+        p->vel = sf::Vector2f(std::cos(angle) * speed, std::sin(angle) * speed);
         p->colorStart = cStart;
         p->colorEnd = cEnd;
         p->maxLife = randFloat(0.3f, 0.8f);
@@ -1213,46 +1338,37 @@ void Game::spawnExplosion(sf::Vector2f pos, sf::Color cStart, sf::Color cEnd, in
         p->size = randFloat(1.5f, 4.f);
     }
 }
+
 void Game::spawnPickup(sf::Vector2f pos, PickupType *ptype)
 {
-    Pickup *pk = allocPickup();
-    if (!pk)
-        return;
+    Pickup *pk = pickups.alloc();
+    if (!pk) return;
     pk->on = true;
     pk->pos = pos;
-    pk->vel = {randFloat(-30.f, 30.f), randFloat(-50.f, -10.f)};
+    pk->vel = sf::Vector2f(randFloat(-30.f, 30.f), randFloat(-50.f, -10.f));
     pk->type = ptype;
     pk->life = 8.f;
     pk->pulse = 0.f;
 }
+
 bool Game::isLevelClear()
 {
     if (levels[currentLevel]->isEndless())
-        return false; // endless never auto-completes
-    for (auto &ev : levels[currentLevel]->events)
-    {
-        if (!ev.fired)
-            return false;
-    }
-    if (!spawnQueue.empty())
         return false;
-    for (auto &e : enemies)
-    {
-        if (e.on)
-            return false;
-    }
+    std::vector<SpawnEvent> &evs = levels[currentLevel]->getEvents();
+    for (int i = 0; i < (int)evs.size(); i++)
+        if (!evs[i].fired) return false;
+    if (!spawnQueue.empty()) return false;
+    for (int i = 0; i < enemies.capacity(); i++)
+        if (enemies.at(i).on) return false;
     return true;
 }
+
 int Game::countActiveEnemies()
 {
-    int count = 0;
-    for (auto &e : enemies)
-    {
-        if (e.on)
-            count++;
-    }
-    return count;
+    return enemies.countActive();
 }
+
 void Game::drawTextCentered(const std::string &str, float y, int size, sf::Color col)
 {
     sf::Text text;
@@ -1265,6 +1381,7 @@ void Game::drawTextCentered(const std::string &str, float y, int size, sf::Color
     text.setPosition(240.f, y);
     window.draw(text);
 }
+
 void Game::initStars()
 {
     for (int i = 0; i < MAX_STARS; i++)
@@ -1292,17 +1409,26 @@ void Game::initStars()
         }
     }
 }
+
 void Game::render()
 {
     window.setView(window.getDefaultView());
     window.clear(sf::Color::Black);
     window.setView(gameView);
+
     GameState current = stateStack.top();
+
+    if (current == GameState::Home)
+    {
+        renderHomeScreen();
+        return;
+    }
     if (current == GameState::LevelSelect)
     {
         renderLevelSelect();
         return;
     }
+
     renderBackground();
     renderStars();
     renderPickups();
@@ -1313,34 +1439,35 @@ void Game::render()
     renderHUD();
     if (bossActive)
         renderBossHP();
+
     sf::RectangleShape vig;
     vig.setFillColor(sf::Color(4, 6, 12, 180));
-    vig.setSize({480.f, 12.f});
+    vig.setSize(sf::Vector2f(480.f, 12.f));
     vig.setPosition(0.f, 0.f);
     window.draw(vig);
     vig.setPosition(0.f, 708.f);
     window.draw(vig);
-    vig.setSize({8.f, 720.f});
+    vig.setSize(sf::Vector2f(8.f, 720.f));
     vig.setPosition(0.f, 0.f);
     window.draw(vig);
     vig.setPosition(472.f, 0.f);
     window.draw(vig);
-    if (current == GameState::Paused)
-        renderPauseOverlay();
-    if (current == GameState::GameOver)
-        renderGameOverOverlay();
-    if (current == GameState::LevelComplete)
-        renderLevelCompleteOverlay();
+
+    if (current == GameState::Paused)         renderPauseOverlay();
+    if (current == GameState::GameOver)       renderGameOverOverlay();
+    if (current == GameState::LevelComplete)  renderLevelCompleteOverlay();
 }
+
 void Game::renderBackground()
 {
-    // Each level draws its own planet through its virtual renderPlanet().
     levels[currentLevel]->renderPlanet(window);
 }
+
 void Game::renderStars()
 {
-    for (auto &s : stars)
+    for (int i = 0; i < MAX_STARS; i++)
     {
+        Star &s = stars[i];
         sf::CircleShape dot(s.size);
         dot.setOrigin(s.size, s.size);
         dot.setPosition(s.pos);
@@ -1349,34 +1476,35 @@ void Game::renderStars()
         window.draw(dot);
     }
 }
+
 void Game::renderPlayer()
 {
-    if (!player.alive)
-        return;
-    if (player.iframeTimer > 0.f)
+    if (!player.isAlive()) return;
+    if (player.getIframeTimer() > 0.f)
     {
-        if ((int)(player.iframeTimer * 10.f) % 2 == 0)
+        if ((int)(player.getIframeTimer() * 10.f) % 2 == 0)
             return;
     }
-    drawPlayerShip(player.pos, player.tilt, 0.4f, sf::Color::White);
-    if (player.shieldTimer > 0.f)
+    drawPlayerShip(player.getPos(), player.getTilt(), 0.4f, sf::Color::White);
+    if (player.getShieldTimer() > 0.f)
     {
         sf::CircleShape shield(24.f);
         shield.setOrigin(24.f, 24.f);
-        shield.setPosition(player.pos);
+        shield.setPosition(player.getPos());
         shield.setFillColor(sf::Color::Transparent);
         shield.setOutlineColor(sf::Color(60, 160, 255, 140));
         shield.setOutlineThickness(2.f);
         window.draw(shield);
         sf::CircleShape glow(28.f);
         glow.setOrigin(28.f, 28.f);
-        glow.setPosition(player.pos);
+        glow.setPosition(player.getPos());
         glow.setFillColor(sf::Color(60, 160, 255, 25));
         sf::RenderStates gs;
         gs.blendMode = sf::BlendAdd;
         window.draw(glow, gs);
     }
 }
+
 void Game::drawPlayerShip(sf::Vector2f pos, float tilt, float scale, sf::Color tint)
 {
     shipSprite.setPosition(pos);
@@ -1385,20 +1513,19 @@ void Game::drawPlayerShip(sf::Vector2f pos, float tilt, float scale, sf::Color t
     shipSprite.setColor(tint);
     window.draw(shipSprite);
 }
+
 void Game::renderEnemies()
 {
-    for (auto &e : enemies)
+    for (int i = 0; i < enemies.capacity(); i++)
     {
-        if (!e.on)
-            continue;
-        if (e.type == EnemyType::Small)
-            drawSmallEnemy(e.pos, e.angle);
-        else if (e.type == EnemyType::Medium)
-            drawMediumEnemy(e.pos, e.angle);
-        else if (e.type == EnemyType::Boss)
-            drawBossEnemy(e.pos, e.angle);
+        Enemy &e = enemies.at(i);
+        if (!e.on) continue;
+        if (e.type == EnemyType::Small)       drawSmallEnemy(e.pos, e.angle);
+        else if (e.type == EnemyType::Medium) drawMediumEnemy(e.pos, e.angle);
+        else if (e.type == EnemyType::Boss)   drawBossEnemy(e.pos, e.angle);
     }
 }
+
 void Game::drawSmallEnemy(sf::Vector2f pos, float angle)
 {
     sf::Sprite sprite;
@@ -1432,17 +1559,18 @@ void Game::drawBossEnemy(sf::Vector2f pos, float angle)
     sprite.setRotation(angle);
     window.draw(sprite);
 }
+
 void Game::renderBullets()
 {
     sf::RenderStates glowState;
     glowState.blendMode = sf::BlendAdd;
-    for (auto &b : bullets)
+    for (int i = 0; i < bullets.capacity(); i++)
     {
-        if (!b.on || !b.type)
-            continue;
+        Bullet &b = bullets.at(i);
+        if (!b.on || !b.type) continue;
         if (b.type->isPlayerBullet())
         {
-            sf::RectangleShape streak({2.f, 12.f});
+            sf::RectangleShape streak(sf::Vector2f(2.f, 12.f));
             streak.setOrigin(1.f, 6.f);
             streak.setPosition(b.pos);
             streak.setFillColor(sf::Color(150, 230, 255));
@@ -1468,7 +1596,7 @@ void Game::renderBullets()
         }
         else if (b.type == BulletType::BossBeam)
         {
-            sf::RectangleShape beam({5.f, 14.f});
+            sf::RectangleShape beam(sf::Vector2f(5.f, 14.f));
             beam.setOrigin(2.5f, 7.f);
             beam.setPosition(b.pos);
             float bangle = std::atan2(b.vel.y, b.vel.x) * 180.f / 3.14159f - 90.f;
@@ -1483,14 +1611,15 @@ void Game::renderBullets()
         }
     }
 }
+
 void Game::renderParticles()
 {
     sf::RenderStates glowState;
     glowState.blendMode = sf::BlendAdd;
-    for (auto &p : particles)
+    for (int i = 0; i < particles.capacity(); i++)
     {
-        if (!p.on)
-            continue;
+        Particle &p = particles.at(i);
+        if (!p.on) continue;
         float t = 1.f - (p.life / p.maxLife);
         sf::Color c = colorLerp(p.colorStart, p.colorEnd, t);
         float s = p.size * (1.f - t * 0.5f);
@@ -1501,14 +1630,15 @@ void Game::renderParticles()
         window.draw(dot, glowState);
     }
 }
+
 void Game::renderPickups()
 {
     sf::RenderStates glowState;
     glowState.blendMode = sf::BlendAdd;
-    for (auto &pk : pickups)
+    for (int i = 0; i < pickups.capacity(); i++)
     {
-        if (!pk.on || !pk.type)
-            continue;
+        Pickup &pk = pickups.at(i);
+        if (!pk.on || !pk.type) continue;
         sf::Color col = pk.type->getColor();
         float bobble = std::sin(pk.pulse * 5.f) * 0.2f + 1.0f;
         sf::CircleShape glow(12.f * bobble);
@@ -1528,36 +1658,35 @@ void Game::renderPickups()
         window.draw(inner, glowState);
     }
 }
+
 void Game::renderHUD()
 {
-    sf::RectangleShape hpBg({104.f, 10.f});
+    sf::RectangleShape hpBg(sf::Vector2f(104.f, 10.f));
     hpBg.setPosition(20.f, 16.f);
     hpBg.setFillColor(sf::Color(20, 20, 30));
     hpBg.setOutlineColor(sf::Color(40, 50, 70));
     hpBg.setOutlineThickness(1.f);
     window.draw(hpBg);
-    float hpPct = player.hp / player.maxHp;
+    float hpPct = player.getHp() / player.getMaxHp();
     sf::Color hpCol;
-    if (hpPct > 0.5f)
-        hpCol = sf::Color(60, 140, 255);
-    else if (hpPct > 0.25f)
-        hpCol = sf::Color(255, 200, 40);
-    else
-        hpCol = sf::Color(255, 60, 40);
-    sf::RectangleShape hpFill({100.f * hpPct, 6.f});
+    if (hpPct > 0.5f)       hpCol = sf::Color(60, 140, 255);
+    else if (hpPct > 0.25f) hpCol = sf::Color(255, 200, 40);
+    else                    hpCol = sf::Color(255, 60, 40);
+    sf::RectangleShape hpFill(sf::Vector2f(100.f * hpPct, 6.f));
     hpFill.setPosition(22.f, 18.f);
     hpFill.setFillColor(hpCol);
     window.draw(hpFill);
+
     for (int i = 0; i < 3; i++)
     {
         float lx = 24.f + i * 22.f;
         float ly = 34.f;
         sf::ConvexShape miniShip(3);
-        miniShip.setPoint(0, {0.f, -6.f});
-        miniShip.setPoint(1, {5.f, 4.f});
-        miniShip.setPoint(2, {-5.f, 4.f});
+        miniShip.setPoint(0, sf::Vector2f(0.f, -6.f));
+        miniShip.setPoint(1, sf::Vector2f(5.f, 4.f));
+        miniShip.setPoint(2, sf::Vector2f(-5.f, 4.f));
         miniShip.setPosition(lx, ly);
-        if (i < player.lives)
+        if (i < player.getLives())
             miniShip.setFillColor(sf::Color(160, 180, 210));
         else
             miniShip.setFillColor(sf::Color(40, 44, 55));
@@ -1565,34 +1694,36 @@ void Game::renderHUD()
     }
     sf::Text scoreTxt;
     scoreTxt.setFont(font);
-    scoreTxt.setString("SCORE: " + std::to_string(player.score));
+    scoreTxt.setString("SCORE: " + std::to_string(player.getScore()));
     scoreTxt.setCharacterSize(14);
     scoreTxt.setFillColor(sf::Color(180, 200, 230));
     scoreTxt.setPosition(20.f, 48.f);
     window.draw(scoreTxt);
-    sf::RectangleShape pauseBg({32.f, 32.f});
+
+    sf::RectangleShape pauseBg(sf::Vector2f(32.f, 32.f));
     pauseBg.setPosition(432.f, 14.f);
     pauseBg.setFillColor(sf::Color(30, 40, 60, 180));
     pauseBg.setOutlineColor(sf::Color(60, 80, 120));
     pauseBg.setOutlineThickness(1.f);
     window.draw(pauseBg);
-    sf::RectangleShape bar1({6.f, 16.f});
+    sf::RectangleShape bar1(sf::Vector2f(6.f, 16.f));
     bar1.setPosition(441.f, 22.f);
     bar1.setFillColor(sf::Color(100, 150, 220));
     window.draw(bar1);
-    sf::RectangleShape bar2({6.f, 16.f});
+    sf::RectangleShape bar2(sf::Vector2f(6.f, 16.f));
     bar2.setPosition(451.f, 22.f);
     bar2.setFillColor(sf::Color(100, 150, 220));
     window.draw(bar2);
 
-    for (int i = 0; i < player.power; i++)
+    for (int i = 0; i < player.getPower(); i++)
     {
-        sf::RectangleShape pip({12.f, 6.f});
+        sf::RectangleShape pip(sf::Vector2f(12.f, 6.f));
         pip.setPosition(20.f + i * 16.f, 696.f);
         pip.setFillColor(sf::Color(60, 140, 255));
         window.draw(pip);
     }
-    float chargeProgress = (float)(player.score % 500) / 500.f;
+
+    float chargeProgress = (float)(player.getScore() % 500) / 500.f;
     int segments = 24;
     float radius = 14.f;
     sf::Vector2f ringCenter(450.f, 694.f);
@@ -1614,25 +1745,26 @@ void Game::renderHUD()
         window.draw(seg);
     }
 }
+
 void Game::renderBossHP()
 {
     int bossIdx = 0;
-    for (auto &e : enemies)
+    for (int i = 0; i < enemies.capacity(); i++)
     {
-        if (!e.on || e.type != EnemyType::Boss)
-            continue;
+        Enemy &e = enemies.at(i);
+        if (!e.on || e.type != EnemyType::Boss) continue;
         float barWidth = 180.f;
         float barX = 150.f + bossIdx * 100.f;
         float barY = 8.f;
         float hpPct = e.hp / e.maxHp;
-        sf::RectangleShape bg({barWidth + 4.f, 10.f});
+        sf::RectangleShape bg(sf::Vector2f(barWidth + 4.f, 10.f));
         bg.setPosition(barX - 2.f, barY);
         bg.setFillColor(sf::Color(20, 15, 25));
         bg.setOutlineColor(sf::Color(80, 30, 30));
         bg.setOutlineThickness(1.f);
         window.draw(bg);
         sf::Color bCol = (e.phase == 0) ? sf::Color(180, 40, 40) : sf::Color(255, 100, 30);
-        sf::RectangleShape fill({barWidth * hpPct, 6.f});
+        sf::RectangleShape fill(sf::Vector2f(barWidth * hpPct, 6.f));
         fill.setPosition(barX, barY + 2.f);
         fill.setFillColor(bCol);
         window.draw(fill);
@@ -1646,10 +1778,57 @@ void Game::renderBossHP()
         bossIdx++;
     }
 }
+
+// ---- HOME SCREEN ----
+void Game::renderHomeScreen()
+{
+    window.clear(sf::Color(4, 6, 16));
+    renderStars();
+
+    // soft background planet
+    sf::CircleShape bgPlanet(140.f);
+    bgPlanet.setOrigin(140.f, 140.f);
+    bgPlanet.setPosition(80.f, 600.f);
+    bgPlanet.setFillColor(sf::Color(20, 30, 60, 150));
+    window.draw(bgPlanet);
+    sf::CircleShape bgPlanet2(90.f);
+    bgPlanet2.setOrigin(90.f, 90.f);
+    bgPlanet2.setPosition(420.f, 100.f);
+    bgPlanet2.setFillColor(sf::Color(60, 30, 80, 130));
+    window.draw(bgPlanet2);
+
+    // Title
+    drawTextCentered("SPACE", 230.f, 64, sf::Color(140, 200, 255));
+    drawTextCentered("SHOOTER", 300.f, 64, sf::Color(255, 220, 120));
+    drawTextCentered("a freshman OOP voyage", 360.f, 14, sf::Color(140, 160, 200));
+
+    // PLAY button
+    sf::RectangleShape playBtn(sf::Vector2f(140.f, 50.f));
+    playBtn.setPosition(170.f, 460.f);
+    playBtn.setFillColor(sf::Color(20, 50, 90));
+    playBtn.setOutlineColor(sf::Color(80, 160, 240));
+    playBtn.setOutlineThickness(2.f);
+    window.draw(playBtn);
+    drawTextCentered("PLAY", 485.f, 24, sf::Color(180, 220, 255));
+
+    drawTextCentered("Click PLAY  -  Enter or Space also works", 540.f, 12,
+                     sf::Color(110, 130, 170));
+
+    // Show top high score if any
+    if (!highScores.empty())
+    {
+        std::ostringstream oss;
+        oss << "Top Score: " << highScores[0];
+        drawTextCentered(oss.str(), 580.f, 13, sf::Color(255, 200, 120));
+    }
+}
+
+// ---- LEVEL SELECT ----
 void Game::renderLevelSelect()
 {
     window.clear(sf::Color(4, 6, 16));
     renderStars();
+
     sf::CircleShape bgPlanet(100.f);
     bgPlanet.setOrigin(100.f, 100.f);
     bgPlanet.setPosition(420.f, 80.f);
@@ -1662,62 +1841,46 @@ void Game::renderLevelSelect()
     sf::RenderStates gs;
     gs.blendMode = sf::BlendAdd;
     window.draw(bgAtmo, gs);
-    sf::RectangleShape header({400.f, 40.f});
+
+    sf::RectangleShape header(sf::Vector2f(400.f, 40.f));
     header.setPosition(40.f, 30.f);
     header.setFillColor(sf::Color(12, 16, 28));
     header.setOutlineColor(sf::Color(40, 60, 120));
     header.setOutlineThickness(1.5f);
     window.draw(header);
-    drawTextCentered("LEVELS", 50.f, 22, sf::Color(140, 180, 240));
-    sf::RectangleShape preview({360.f, 160.f});
+    drawTextCentered("MAIN MENU - SELECT LEVEL", 50.f, 18, sf::Color(140, 180, 240));
+
+    // Selected-level preview panel
+    sf::RectangleShape preview(sf::Vector2f(360.f, 130.f));
     preview.setPosition(60.f, 90.f);
     preview.setFillColor(sf::Color(10, 14, 24));
     preview.setOutlineColor(sf::Color(30, 45, 80));
     preview.setOutlineThickness(1.f);
     window.draw(preview);
-    Level &sel = *levels[selectedLevel];
+
+    Level *sel = levels[selectedLevel];
     sf::Text nameText;
     nameText.setFont(font);
-    nameText.setString(sel.getName());
+    nameText.setString(sel->getName());
     nameText.setCharacterSize(24);
-    nameText.setFillColor(sel.locked ? sf::Color(80, 80, 90) : sf::Color(200, 220, 255));
+    nameText.setFillColor(sel->isLocked() ? sf::Color(80, 80, 90) : sf::Color(200, 220, 255));
     nameText.setPosition(80.f, 100.f);
     window.draw(nameText);
     sf::Text descText;
     descText.setFont(font);
-    descText.setString(sel.getDesc());
+    descText.setString(sel->getDesc());
     descText.setCharacterSize(13);
     descText.setFillColor(sf::Color(120, 140, 170));
     descText.setPosition(80.f, 132.f);
     window.draw(descText);
-    drawBossEnemy({340.f, 190.f}, 0.f);
-    const char *statNames[3] = {"HP", "ATK", "DEF"};
-    int statValues[3] = {3, 2 + selectedLevel, 1 + selectedLevel};
-    for (int s = 0; s < 3; s++)
-    {
-        sf::Text statLabel;
-        statLabel.setFont(font);
-        statLabel.setString(statNames[s]);
-        statLabel.setCharacterSize(11);
-        statLabel.setFillColor(sf::Color(100, 120, 150));
-        statLabel.setPosition(80.f, 158.f + s * 22.f);
-        window.draw(statLabel);
-        for (int j = 0; j < 3; j++)
-        {
-            sf::CircleShape star(5.f, 5);
-            star.setOrigin(5.f, 5.f);
-            star.setPosition(130.f + j * 18.f, 165.f + s * 22.f);
-            if (j < statValues[s])
-                star.setFillColor(sf::Color(255, 200, 60));
-            else
-                star.setFillColor(sf::Color(40, 44, 55));
-            window.draw(star);
-        }
-    }
+    drawBossEnemy(sf::Vector2f(340.f, 175.f), 0.f);
+
+    // Story-level planets row (everything except the last "endless" entry)
     int n = (int)levels.size();
-    float planetY = 320.f;
-    float spacing = 480.f / (n + 1);
-    for (int i = 0; i < n; i++)
+    int storyCount = (n > 0) ? n - 1 : 0;
+    float planetY = 280.f;
+    float spacing = 480.f / (storyCount + 1);
+    for (int i = 0; i < storyCount; i++)
     {
         float px = spacing * (i + 1);
         float radius = (i == selectedLevel) ? 36.f : 26.f;
@@ -1732,10 +1895,8 @@ void Game::renderLevelSelect()
             window.draw(orbit);
         }
         sf::Color pCol = levels[i]->getPlanetColor();
-        if (levels[i]->locked)
-        {
+        if (levels[i]->isLocked())
             pCol = sf::Color(pCol.r / 3, pCol.g / 3, pCol.b / 3);
-        }
         sf::CircleShape planet(radius);
         planet.setOrigin(radius, radius);
         planet.setPosition(px, planetY);
@@ -1746,9 +1907,9 @@ void Game::renderLevelSelect()
         atmo.setPosition(px, planetY);
         atmo.setFillColor(sf::Color(pCol.r / 2, pCol.g / 2, pCol.b / 2, 40));
         window.draw(atmo, gs);
-        if (levels[i]->locked)
+        if (levels[i]->isLocked())
         {
-            sf::RectangleShape lockBody({14.f, 12.f});
+            sf::RectangleShape lockBody(sf::Vector2f(14.f, 12.f));
             lockBody.setOrigin(7.f, 6.f);
             lockBody.setPosition(px, planetY + 2.f);
             lockBody.setFillColor(sf::Color(80, 70, 60));
@@ -1761,32 +1922,84 @@ void Game::renderLevelSelect()
             lockArch.setOutlineThickness(2.5f);
             window.draw(lockArch);
         }
-        std::string label = levels[i]->locked ? ("-- " + levels[i]->getName()) : levels[i]->getName();
+        std::string lblStr = levels[i]->isLocked() ? ("-- " + levels[i]->getName()) : levels[i]->getName();
         sf::Text lbl;
         lbl.setFont(font);
-        lbl.setString(label);
+        lbl.setString(lblStr);
         lbl.setCharacterSize(11);
-        lbl.setFillColor(levels[i]->locked ? sf::Color(60, 60, 70) : sf::Color(160, 180, 210));
+        lbl.setFillColor(levels[i]->isLocked() ? sf::Color(60, 60, 70) : sf::Color(160, 180, 210));
         sf::FloatRect lb = lbl.getLocalBounds();
         lbl.setOrigin(lb.left + lb.width / 2.f, 0.f);
         lbl.setPosition(px, planetY + radius + 12.f);
         window.draw(lbl);
     }
-    sf::Text arrL;
-    arrL.setFont(font);
-    arrL.setString("<<");
-    arrL.setCharacterSize(20);
-    arrL.setFillColor(sf::Color(100, 140, 200));
-    arrL.setPosition(12.f, planetY - 14.f);
-    window.draw(arrL);
-    sf::Text arrR;
-    arrR.setFont(font);
-    arrR.setString(">>");
-    arrR.setCharacterSize(20);
-    arrR.setFillColor(sf::Color(100, 140, 200));
-    arrR.setPosition(444.f, planetY - 14.f);
-    window.draw(arrR);
-    sf::RectangleShape backBtn({100.f, 36.f});
+
+    // ---- ENDLESS prominent card ----
+    sf::RectangleShape endlessCard(sf::Vector2f(360.f, 110.f));
+    endlessCard.setPosition(60.f, 410.f);
+    endlessCard.setFillColor(sf::Color(40, 12, 50));
+    endlessCard.setOutlineColor(sf::Color(220, 80, 200));
+    endlessCard.setOutlineThickness(2.5f);
+    window.draw(endlessCard);
+
+    sf::CircleShape endlessGlow(80.f);
+    endlessGlow.setOrigin(80.f, 80.f);
+    endlessGlow.setPosition(120.f, 465.f);
+    endlessGlow.setFillColor(sf::Color(220, 80, 200, 30));
+    window.draw(endlessGlow, gs);
+    sf::CircleShape endlessOrb(28.f);
+    endlessOrb.setOrigin(28.f, 28.f);
+    endlessOrb.setPosition(120.f, 465.f);
+    endlessOrb.setFillColor(sf::Color(180, 60, 220));
+    window.draw(endlessOrb);
+
+    sf::Text endTitle;
+    endTitle.setFont(font);
+    endTitle.setString("ENDLESS MODE");
+    endTitle.setCharacterSize(22);
+    endTitle.setFillColor(sf::Color(255, 180, 240));
+    endTitle.setPosition(180.f, 422.f);
+    window.draw(endTitle);
+    sf::Text endDesc;
+    endDesc.setFont(font);
+    endDesc.setString("Random waves forever.");
+    endDesc.setCharacterSize(13);
+    endDesc.setFillColor(sf::Color(200, 150, 220));
+    endDesc.setPosition(180.f, 455.f);
+    window.draw(endDesc);
+    sf::Text endHint;
+    endHint.setFont(font);
+    endHint.setString("Click to start.");
+    endHint.setCharacterSize(12);
+    endHint.setFillColor(sf::Color(220, 180, 240));
+    endHint.setPosition(180.f, 488.f);
+    window.draw(endHint);
+
+    // ---- Top scores list (Sorting topic) ----
+    sf::Text scoreHeader;
+    scoreHeader.setFont(font);
+    scoreHeader.setString("HIGH SCORES");
+    scoreHeader.setCharacterSize(12);
+    scoreHeader.setFillColor(sf::Color(140, 160, 200));
+    scoreHeader.setPosition(60.f, 538.f);
+    window.draw(scoreHeader);
+    int shownScores = (int)highScores.size();
+    if (shownScores > 4) shownScores = 4;
+    for (int i = 0; i < shownScores; i++)
+    {
+        std::ostringstream oss;
+        oss << (i + 1) << ". " << highScores[i];
+        sf::Text t;
+        t.setFont(font);
+        t.setString(oss.str());
+        t.setCharacterSize(12);
+        t.setFillColor(sf::Color(180, 200, 220));
+        t.setPosition(60.f, 558.f + i * 16.f);
+        window.draw(t);
+    }
+
+    // Back / Play buttons
+    sf::RectangleShape backBtn(sf::Vector2f(100.f, 36.f));
     backBtn.setPosition(44.f, 659.f);
     backBtn.setFillColor(sf::Color(30, 25, 35));
     backBtn.setOutlineColor(sf::Color(80, 60, 70));
@@ -1799,8 +2012,9 @@ void Game::renderLevelSelect()
     backTxt.setFillColor(sf::Color(180, 150, 160));
     backTxt.setPosition(70.f, 666.f);
     window.draw(backTxt);
-    bool canPlay = !levels[selectedLevel]->locked;
-    sf::RectangleShape playBtn({100.f, 36.f});
+
+    bool canPlay = !levels[selectedLevel]->isLocked();
+    sf::RectangleShape playBtn(sf::Vector2f(100.f, 36.f));
     playBtn.setPosition(336.f, 659.f);
     playBtn.setFillColor(canPlay ? sf::Color(20, 40, 60) : sf::Color(20, 20, 25));
     playBtn.setOutlineColor(canPlay ? sf::Color(40, 100, 180) : sf::Color(40, 40, 50));
@@ -1814,12 +2028,13 @@ void Game::renderLevelSelect()
     playTxt.setPosition(365.f, 666.f);
     window.draw(playTxt);
 }
+
 void Game::renderPauseOverlay()
 {
-    sf::RectangleShape dim({480.f, 720.f});
+    sf::RectangleShape dim(sf::Vector2f(480.f, 720.f));
     dim.setFillColor(sf::Color(0, 0, 0, 140));
     window.draw(dim);
-    sf::RectangleShape panel({260.f, 120.f});
+    sf::RectangleShape panel(sf::Vector2f(260.f, 120.f));
     panel.setOrigin(130.f, 60.f);
     panel.setPosition(240.f, 340.f);
     panel.setFillColor(sf::Color(12, 16, 28));
@@ -1829,7 +2044,7 @@ void Game::renderPauseOverlay()
     drawTextCentered("PAUSED", 300.f, 28, sf::Color(140, 180, 240));
     drawTextCentered("Click or press P to resume", 335.f, 13, sf::Color(100, 120, 160));
 
-    sf::RectangleShape exitBtn({160.f, 34.f});
+    sf::RectangleShape exitBtn(sf::Vector2f(160.f, 34.f));
     exitBtn.setOrigin(80.f, 17.f);
     exitBtn.setPosition(240.f, 375.f);
     exitBtn.setFillColor(sf::Color(50, 20, 20));
@@ -1838,12 +2053,13 @@ void Game::renderPauseOverlay()
     window.draw(exitBtn);
     drawTextCentered("EXIT TO MENU", 375.f, 13, sf::Color(220, 100, 100));
 }
+
 void Game::renderGameOverOverlay()
 {
-    sf::RectangleShape dim({480.f, 720.f});
+    sf::RectangleShape dim(sf::Vector2f(480.f, 720.f));
     dim.setFillColor(sf::Color(0, 0, 0, 160));
     window.draw(dim);
-    sf::RectangleShape panel({320.f, 320.f});
+    sf::RectangleShape panel(sf::Vector2f(320.f, 320.f));
     panel.setOrigin(160.f, 160.f);
     panel.setPosition(240.f, 340.f);
     panel.setFillColor(sf::Color(14, 10, 16));
@@ -1851,17 +2067,18 @@ void Game::renderGameOverOverlay()
     panel.setOutlineThickness(2.f);
     window.draw(panel);
     drawTextCentered("GAME OVER", 210.f, 30, sf::Color(255, 80, 60));
-    drawTextCentered("Final Score: " + std::to_string(player.score), 260.f, 18, sf::Color(200, 200, 220));
+    drawTextCentered("Final Score: " + std::to_string(player.getScore()), 260.f, 18,
+                     sf::Color(200, 200, 220));
     float logY = 300.f;
     int shown = 0;
-    for (auto &ev : scoreLog)
+    for (std::list<ScoreEvent>::iterator it = scoreLog.begin(); it != scoreLog.end(); ++it)
     {
-        if (shown >= 8)
-            break;
-        std::string line = ev.description + "  +" + std::to_string(ev.points);
+        if (shown >= 8) break;
+        std::ostringstream oss;
+        oss << *it; // operator<< overload for ScoreEvent
         sf::Text t;
         t.setFont(font);
-        t.setString(line);
+        t.setString(oss.str());
         t.setCharacterSize(11);
         t.setFillColor(sf::Color(140, 150, 170));
         sf::FloatRect b = t.getLocalBounds();
@@ -1872,12 +2089,13 @@ void Game::renderGameOverOverlay()
     }
     drawTextCentered("Click to restart", 480.f, 14, sf::Color(100, 120, 160));
 }
+
 void Game::renderLevelCompleteOverlay()
 {
-    sf::RectangleShape dim({480.f, 720.f});
+    sf::RectangleShape dim(sf::Vector2f(480.f, 720.f));
     dim.setFillColor(sf::Color(0, 0, 0, 140));
     window.draw(dim);
-    sf::RectangleShape panel({280.f, 180.f});
+    sf::RectangleShape panel(sf::Vector2f(280.f, 180.f));
     panel.setOrigin(140.f, 90.f);
     panel.setPosition(240.f, 340.f);
     panel.setFillColor(sf::Color(10, 16, 24));
@@ -1886,13 +2104,86 @@ void Game::renderLevelCompleteOverlay()
     window.draw(panel);
     drawTextCentered("LEVEL COMPLETE", 290.f, 26, sf::Color(80, 220, 120));
     drawTextCentered(levels[currentLevel]->getName(), 325.f, 18, sf::Color(160, 200, 180));
-    drawTextCentered("Score: " + std::to_string(player.score), 355.f, 16, sf::Color(180, 200, 220));
+    drawTextCentered("Score: " + std::to_string(player.getScore()), 355.f, 16,
+                     sf::Color(180, 200, 220));
     drawTextCentered("Click to continue", 400.f, 13, sf::Color(100, 140, 130));
 }
+
+// ============================================================================
+// HIGH SCORE TABLE (Sorting topic — iterative insertion sort, no recursion)
+// ============================================================================
+void Game::recordHighScore(int score, int levelIndex)
+{
+    HighScore hs("Pilot", score, levelIndex);
+    highScores.push_back(hs);
+    sortHighScores();
+    // keep top 10
+    while ((int)highScores.size() > 10)
+        highScores.pop_back();
+    saveHighScores();
+}
+
+void Game::sortHighScores()
+{
+    // Iterative insertion sort using HighScore::operator< (which compares
+    // descending by score). No recursion. Sorts highest-score first.
+    int n = (int)highScores.size();
+    for (int i = 1; i < n; i++)
+    {
+        HighScore key = highScores[i];
+        int j = i - 1;
+        while (j >= 0 && key < highScores[j])
+        {
+            highScores[j + 1] = highScores[j];
+            j--;
+        }
+        highScores[j + 1] = key;
+    }
+}
+
+void Game::loadHighScores()
+{
+    highScores.clear();
+    std::ifstream in("highscores.txt");
+    if (!in.is_open()) return;
+    std::string name;
+    int score, lvl;
+    while (in >> name >> score >> lvl)
+    {
+        highScores.push_back(HighScore(name, score, lvl));
+    }
+    in.close();
+    sortHighScores();
+}
+
+void Game::saveHighScores()
+{
+    std::ofstream out("highscores.txt");
+    if (!out.is_open()) return;
+    for (int i = 0; i < (int)highScores.size(); i++)
+    {
+        out << highScores[i].getName() << " "
+            << highScores[i].getScore() << " "
+            << highScores[i].getLevelIndex() << "\n";
+    }
+    out.close();
+}
+
+// ============================================================================
+// MAIN
+// ============================================================================
 int main()
 {
-    Game game;
-    game.init();
-    game.run();
+    try
+    {
+        Game game;
+        game.init();
+        game.run();
+    }
+    catch (const std::exception &ex)
+    {
+        std::cerr << "Fatal error: " << ex.what() << "\n";
+        return 1;
+    }
     return 0;
 }
