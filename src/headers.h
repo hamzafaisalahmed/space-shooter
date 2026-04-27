@@ -48,8 +48,10 @@ inline sf::Vector2f vnorm(sf::Vector2f v)
 inline float lerp(float a, float b, float t) { return a + (b - a) * t; }
 inline sf::Color colorLerp(sf::Color a, sf::Color b, float t)
 {
-    if (t < 0.f) t = 0.f;
-    if (t > 1.f) t = 1.f;
+    if (t < 0.f)
+        t = 0.f;
+    if (t > 1.f)
+        t = 1.f;
     return sf::Color(
         (sf::Uint8)(a.r + (b.r - a.r) * t),
         (sf::Uint8)(a.g + (b.g - a.g) * t),
@@ -58,8 +60,10 @@ inline sf::Color colorLerp(sf::Color a, sf::Color b, float t)
 }
 inline float clampf(float val, float lo, float hi)
 {
-    if (val < lo) return lo;
-    if (val > hi) return hi;
+    if (val < lo)
+        return lo;
+    if (val > hi)
+        return hi;
     return val;
 }
 inline float randFloat(float lo, float hi)
@@ -69,7 +73,8 @@ inline float randFloat(float lo, float hi)
 }
 inline int randInt(int lo, int hi)
 {
-    if (hi <= lo) return lo;
+    if (hi <= lo)
+        return lo;
     return lo + rand() % (hi - lo + 1);
 }
 
@@ -81,6 +86,7 @@ class GameState
 {
 private:
     int id;
+
 public:
     GameState(int i = 0) : id(i) {}
     int getId() const { return id; }
@@ -258,6 +264,7 @@ private:
     std::string playerName;
     int score;
     int levelIndex;
+
 public:
     HighScore() : playerName("---"), score(0), levelIndex(0) {}
     HighScore(const std::string &n, int s, int l)
@@ -355,11 +362,13 @@ public:
     void addScore(int s) { score += s; }
     void increasePower()
     {
-        if (power < 3) power++;
+        if (power < 3)
+            power++;
     }
     void decreasePower()
     {
-        if (power > 1) power--;
+        if (power > 1)
+            power--;
     }
     void loseLife() { lives--; }
 
@@ -619,8 +628,8 @@ public:
 class LevelEndless : public Level
 {
 private:
-    std::vector<std::vector<sf::Vector2f> > normalPathPool;
-    std::vector<std::vector<sf::Vector2f> > bossPathPool;
+    std::vector<std::vector<sf::Vector2f>> normalPathPool;
+    std::vector<std::vector<sf::Vector2f>> bossPathPool;
     std::vector<EnemyType *> normalEnemyPool;
     std::vector<float> speedPool;
     std::vector<float> intervalPool;
@@ -661,6 +670,8 @@ private:
     sf::Texture smallEnemyTexture;
     sf::Texture mediumEnemyTexture;
     sf::Texture bossEnemyTexture;
+    sf::Texture homeplanet1;
+    sf::Texture homeplanet2;
 
     std::stack<GameState> stateStack;
 
@@ -738,7 +749,7 @@ private:
 
     // ---- High score table (Sorting topic) ----
     void recordHighScore(int score, int levelIndex);
-    void sortHighScores();   // iterative insertion sort (no recursion)
+    void sortHighScores(); // iterative insertion sort (no recursion)
     void loadHighScores();
     void saveHighScores();
 

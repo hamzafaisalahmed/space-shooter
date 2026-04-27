@@ -11,20 +11,20 @@ const GameState GameState::Paused(2);
 const GameState GameState::GameOver(3);
 const GameState GameState::LevelComplete(4);
 
-EnemyType *EnemyType::Small  = new SmallEnemyType();
+EnemyType *EnemyType::Small = new SmallEnemyType();
 EnemyType *EnemyType::Medium = new MediumEnemyType();
-EnemyType *EnemyType::Boss   = new BossEnemyType();
+EnemyType *EnemyType::Boss = new BossEnemyType();
 
-BulletType *BulletType::PlayerNorm   = new PlayerNormBullet();
-BulletType *BulletType::PlayerWide   = new PlayerWideBullet();
+BulletType *BulletType::PlayerNorm = new PlayerNormBullet();
+BulletType *BulletType::PlayerWide = new PlayerWideBullet();
 BulletType *BulletType::PlayerTriple = new PlayerTripleBullet();
-BulletType *BulletType::EnemyNorm    = new EnemyNormBullet();
-BulletType *BulletType::EnemyBurst   = new EnemyBurstBullet();
-BulletType *BulletType::BossBeam     = new BossBeamBullet();
+BulletType *BulletType::EnemyNorm = new EnemyNormBullet();
+BulletType *BulletType::EnemyBurst = new EnemyBurstBullet();
+BulletType *BulletType::BossBeam = new BossBeamBullet();
 
-PickupType *PickupType::Score  = new ScorePickupType();
+PickupType *PickupType::Score = new ScorePickupType();
 PickupType *PickupType::Health = new HealthPickupType();
-PickupType *PickupType::Power  = new PowerPickupType();
+PickupType *PickupType::Power = new PowerPickupType();
 
 // ============================================================================
 // PATH HELPERS
@@ -213,26 +213,26 @@ LevelAries::LevelAries()
 void LevelAries::buildWaves()
 {
     events.clear();
-    events.push_back(makeEvent(1.0f,  EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter()));
-    events.push_back(makeEvent(2.5f,  EnemyType::Small,  sf::Vector2f(120, -40), pathSweepLeft()));
-    events.push_back(makeEvent(2.5f,  EnemyType::Small,  sf::Vector2f(360, -40), pathSweepRight()));
-    events.push_back(makeEvent(5.0f,  EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 3));
-    events.push_back(makeEvent(8.0f,  EnemyType::Small,  sf::Vector2f(120, -40), pathLoopLeft(), 2));
-    events.push_back(makeEvent(8.0f,  EnemyType::Small,  sf::Vector2f(360, -40), pathLoopRight(), 2));
+    events.push_back(makeEvent(1.0f, EnemyType::Small, sf::Vector2f(240, -40), pathSweepCenter()));
+    events.push_back(makeEvent(2.5f, EnemyType::Small, sf::Vector2f(120, -40), pathSweepLeft()));
+    events.push_back(makeEvent(2.5f, EnemyType::Small, sf::Vector2f(360, -40), pathSweepRight()));
+    events.push_back(makeEvent(5.0f, EnemyType::Small, sf::Vector2f(240, -40), pathSweepCenter(), 3));
+    events.push_back(makeEvent(8.0f, EnemyType::Small, sf::Vector2f(120, -40), pathLoopLeft(), 2));
+    events.push_back(makeEvent(8.0f, EnemyType::Small, sf::Vector2f(360, -40), pathLoopRight(), 2));
     events.push_back(makeEvent(11.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathDiveBomb()));
-    events.push_back(makeEvent(14.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 4));
+    events.push_back(makeEvent(14.0f, EnemyType::Small, sf::Vector2f(240, -40), pathSweepCenter(), 4));
     events.push_back(makeEvent(14.5f, EnemyType::Medium, sf::Vector2f(120, -40), pathSweepLeft()));
-    events.push_back(makeEvent(18.0f, EnemyType::Small,  sf::Vector2f(60, -40),  pathZPattern()));
-    events.push_back(makeEvent(18.2f, EnemyType::Small,  sf::Vector2f(420, -40), pathZPatternRight()));
-    events.push_back(makeEvent(21.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 5, 50.f));
+    events.push_back(makeEvent(18.0f, EnemyType::Small, sf::Vector2f(60, -40), pathZPattern()));
+    events.push_back(makeEvent(18.2f, EnemyType::Small, sf::Vector2f(420, -40), pathZPatternRight()));
+    events.push_back(makeEvent(21.0f, EnemyType::Small, sf::Vector2f(240, -40), pathSweepCenter(), 5, 50.f));
     events.push_back(makeEvent(24.0f, EnemyType::Medium, sf::Vector2f(200, -40), pathSweepCenter(), 2, 80.f));
-    events.push_back(makeEvent(27.0f, EnemyType::Small,  sf::Vector2f(120, -40), pathSweepLeft(), 3));
-    events.push_back(makeEvent(27.0f, EnemyType::Small,  sf::Vector2f(360, -40), pathSweepRight(), 3));
+    events.push_back(makeEvent(27.0f, EnemyType::Small, sf::Vector2f(120, -40), pathSweepLeft(), 3));
+    events.push_back(makeEvent(27.0f, EnemyType::Small, sf::Vector2f(360, -40), pathSweepRight(), 3));
     events.push_back(makeEvent(31.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathDiveBomb()));
-    events.push_back(makeEvent(31.3f, EnemyType::Small,  sf::Vector2f(120, -40), pathSweepLeft(), 2));
-    events.push_back(makeEvent(36.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 5, 45.f));
+    events.push_back(makeEvent(31.3f, EnemyType::Small, sf::Vector2f(120, -40), pathSweepLeft(), 2));
+    events.push_back(makeEvent(36.0f, EnemyType::Small, sf::Vector2f(240, -40), pathSweepCenter(), 5, 45.f));
     events.push_back(makeEvent(38.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathSweepCenter(), 2, 80.f));
-    events.push_back(makeEvent(43.0f, EnemyType::Boss,   sf::Vector2f(240, -80), pathBossEnter()));
+    events.push_back(makeEvent(43.0f, EnemyType::Boss, sf::Vector2f(240, -80), pathBossEnter()));
 }
 
 // ============================================================================
@@ -248,32 +248,32 @@ LevelTaurus::LevelTaurus()
 void LevelTaurus::buildWaves()
 {
     events.clear();
-    events.push_back(makeEvent(1.0f,  EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 3));
-    events.push_back(makeEvent(3.0f,  EnemyType::Small,  sf::Vector2f(120, -40), pathSweepLeft(), 2));
-    events.push_back(makeEvent(3.0f,  EnemyType::Small,  sf::Vector2f(360, -40), pathSweepRight(), 2));
-    events.push_back(makeEvent(6.0f,  EnemyType::Medium, sf::Vector2f(240, -40), pathSweepCenter()));
-    events.push_back(makeEvent(6.0f,  EnemyType::Small,  sf::Vector2f(60, -40),  pathZPattern(), 2));
-    events.push_back(makeEvent(9.0f,  EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 5, 45.f));
+    events.push_back(makeEvent(1.0f, EnemyType::Small, sf::Vector2f(240, -40), pathSweepCenter(), 3));
+    events.push_back(makeEvent(3.0f, EnemyType::Small, sf::Vector2f(120, -40), pathSweepLeft(), 2));
+    events.push_back(makeEvent(3.0f, EnemyType::Small, sf::Vector2f(360, -40), pathSweepRight(), 2));
+    events.push_back(makeEvent(6.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathSweepCenter()));
+    events.push_back(makeEvent(6.0f, EnemyType::Small, sf::Vector2f(60, -40), pathZPattern(), 2));
+    events.push_back(makeEvent(9.0f, EnemyType::Small, sf::Vector2f(240, -40), pathSweepCenter(), 5, 45.f));
     events.push_back(makeEvent(12.0f, EnemyType::Medium, sf::Vector2f(160, -40), pathSweepLeft()));
     events.push_back(makeEvent(12.0f, EnemyType::Medium, sf::Vector2f(320, -40), pathSweepRight()));
     events.push_back(makeEvent(15.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathDiveBomb()));
-    events.push_back(makeEvent(15.0f, EnemyType::Small,  sf::Vector2f(120, -40), pathLoopLeft(), 3));
-    events.push_back(makeEvent(18.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 4));
+    events.push_back(makeEvent(15.0f, EnemyType::Small, sf::Vector2f(120, -40), pathLoopLeft(), 3));
+    events.push_back(makeEvent(18.0f, EnemyType::Small, sf::Vector2f(240, -40), pathSweepCenter(), 4));
     events.push_back(makeEvent(18.0f, EnemyType::Medium, sf::Vector2f(360, -40), pathSweepRight()));
     events.push_back(makeEvent(22.0f, EnemyType::Medium, sf::Vector2f(160, -40), pathSweepCenter()));
     events.push_back(makeEvent(22.0f, EnemyType::Medium, sf::Vector2f(320, -40), pathSweepCenter()));
-    events.push_back(makeEvent(26.0f, EnemyType::Medium, sf::Vector2f(60, -40),  pathZPattern()));
+    events.push_back(makeEvent(26.0f, EnemyType::Medium, sf::Vector2f(60, -40), pathZPattern()));
     events.push_back(makeEvent(26.0f, EnemyType::Medium, sf::Vector2f(420, -40), pathZPatternRight()));
-    events.push_back(makeEvent(30.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 5, 40.f));
+    events.push_back(makeEvent(30.0f, EnemyType::Small, sf::Vector2f(240, -40), pathSweepCenter(), 5, 40.f));
     events.push_back(makeEvent(30.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathDiveBomb()));
-    events.push_back(makeEvent(34.0f, EnemyType::Small,  sf::Vector2f(120, -40), pathSweepLeft(), 3));
-    events.push_back(makeEvent(34.0f, EnemyType::Small,  sf::Vector2f(360, -40), pathSweepRight(), 3));
+    events.push_back(makeEvent(34.0f, EnemyType::Small, sf::Vector2f(120, -40), pathSweepLeft(), 3));
+    events.push_back(makeEvent(34.0f, EnemyType::Small, sf::Vector2f(360, -40), pathSweepRight(), 3));
     events.push_back(makeEvent(38.0f, EnemyType::Medium, sf::Vector2f(200, -40), pathSweepCenter(), 3, 60.f));
-    events.push_back(makeEvent(42.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 4));
+    events.push_back(makeEvent(42.0f, EnemyType::Small, sf::Vector2f(240, -40), pathSweepCenter(), 4));
     events.push_back(makeEvent(42.0f, EnemyType::Medium, sf::Vector2f(120, -40), pathLoopLeft()));
-    events.push_back(makeEvent(46.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 5, 45.f));
+    events.push_back(makeEvent(46.0f, EnemyType::Small, sf::Vector2f(240, -40), pathSweepCenter(), 5, 45.f));
     events.push_back(makeEvent(46.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathDiveBomb()));
-    events.push_back(makeEvent(54.0f, EnemyType::Boss,   sf::Vector2f(240, -80), pathBossEnter()));
+    events.push_back(makeEvent(54.0f, EnemyType::Boss, sf::Vector2f(240, -80), pathBossEnter()));
 }
 
 // ============================================================================
@@ -289,41 +289,41 @@ LevelGemini::LevelGemini()
 void LevelGemini::buildWaves()
 {
     events.clear();
-    events.push_back(makeEvent(1.0f,  EnemyType::Medium, sf::Vector2f(240, -40), pathSweepCenter(), 2, 80.f));
-    events.push_back(makeEvent(3.0f,  EnemyType::Small,  sf::Vector2f(120, -40), pathSweepLeft(), 3));
-    events.push_back(makeEvent(3.0f,  EnemyType::Small,  sf::Vector2f(360, -40), pathSweepRight(), 3));
-    events.push_back(makeEvent(6.0f,  EnemyType::Medium, sf::Vector2f(60, -40),  pathZPattern()));
-    events.push_back(makeEvent(6.0f,  EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 4));
+    events.push_back(makeEvent(1.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathSweepCenter(), 2, 80.f));
+    events.push_back(makeEvent(3.0f, EnemyType::Small, sf::Vector2f(120, -40), pathSweepLeft(), 3));
+    events.push_back(makeEvent(3.0f, EnemyType::Small, sf::Vector2f(360, -40), pathSweepRight(), 3));
+    events.push_back(makeEvent(6.0f, EnemyType::Medium, sf::Vector2f(60, -40), pathZPattern()));
+    events.push_back(makeEvent(6.0f, EnemyType::Small, sf::Vector2f(240, -40), pathSweepCenter(), 4));
     events.push_back(makeEvent(10.0f, EnemyType::Medium, sf::Vector2f(160, -40), pathDiveBomb()));
     events.push_back(makeEvent(10.0f, EnemyType::Medium, sf::Vector2f(320, -40), pathDiveBomb()));
-    events.push_back(makeEvent(10.0f, EnemyType::Small,  sf::Vector2f(120, -40), pathLoopLeft(), 2));
-    events.push_back(makeEvent(14.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 5, 42.f));
+    events.push_back(makeEvent(10.0f, EnemyType::Small, sf::Vector2f(120, -40), pathLoopLeft(), 2));
+    events.push_back(makeEvent(14.0f, EnemyType::Small, sf::Vector2f(240, -40), pathSweepCenter(), 5, 42.f));
     events.push_back(makeEvent(14.0f, EnemyType::Medium, sf::Vector2f(120, -40), pathSweepLeft()));
     events.push_back(makeEvent(14.0f, EnemyType::Medium, sf::Vector2f(360, -40), pathSweepRight()));
-    events.push_back(makeEvent(18.0f, EnemyType::Small,  sf::Vector2f(60, -40),  pathZPattern(), 2));
-    events.push_back(makeEvent(18.0f, EnemyType::Small,  sf::Vector2f(420, -40), pathZPatternRight(), 2));
+    events.push_back(makeEvent(18.0f, EnemyType::Small, sf::Vector2f(60, -40), pathZPattern(), 2));
+    events.push_back(makeEvent(18.0f, EnemyType::Small, sf::Vector2f(420, -40), pathZPatternRight(), 2));
     events.push_back(makeEvent(20.0f, EnemyType::Medium, sf::Vector2f(160, -40), pathSweepCenter()));
     events.push_back(makeEvent(20.0f, EnemyType::Medium, sf::Vector2f(320, -40), pathSweepCenter()));
     events.push_back(makeEvent(20.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathDiveBomb()));
-    events.push_back(makeEvent(24.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 5, 45.f));
+    events.push_back(makeEvent(24.0f, EnemyType::Small, sf::Vector2f(240, -40), pathSweepCenter(), 5, 45.f));
     events.push_back(makeEvent(24.0f, EnemyType::Medium, sf::Vector2f(120, -40), pathLoopLeft()));
     events.push_back(makeEvent(28.0f, EnemyType::Medium, sf::Vector2f(200, -40), pathSweepCenter(), 3, 60.f));
-    events.push_back(makeEvent(28.0f, EnemyType::Small,  sf::Vector2f(60, -40),  pathZPattern(), 3));
+    events.push_back(makeEvent(28.0f, EnemyType::Small, sf::Vector2f(60, -40), pathZPattern(), 3));
     events.push_back(makeEvent(32.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathDiveBomb()));
     events.push_back(makeEvent(32.0f, EnemyType::Medium, sf::Vector2f(120, -40), pathSweepLeft()));
     events.push_back(makeEvent(32.0f, EnemyType::Medium, sf::Vector2f(360, -40), pathSweepRight()));
-    events.push_back(makeEvent(36.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 5, 40.f));
+    events.push_back(makeEvent(36.0f, EnemyType::Small, sf::Vector2f(240, -40), pathSweepCenter(), 5, 40.f));
     events.push_back(makeEvent(36.0f, EnemyType::Medium, sf::Vector2f(160, -40), pathLoopLeft(), 2));
     events.push_back(makeEvent(40.0f, EnemyType::Medium, sf::Vector2f(200, -40), pathSweepCenter(), 3, 70.f));
-    events.push_back(makeEvent(40.0f, EnemyType::Small,  sf::Vector2f(420, -40), pathZPatternRight(), 3));
-    events.push_back(makeEvent(44.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 5, 42.f));
+    events.push_back(makeEvent(40.0f, EnemyType::Small, sf::Vector2f(420, -40), pathZPatternRight(), 3));
+    events.push_back(makeEvent(44.0f, EnemyType::Small, sf::Vector2f(240, -40), pathSweepCenter(), 5, 42.f));
     events.push_back(makeEvent(44.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathDiveBomb()));
     events.push_back(makeEvent(48.0f, EnemyType::Medium, sf::Vector2f(160, -40), pathSweepCenter(), 2, 80.f));
-    events.push_back(makeEvent(48.0f, EnemyType::Small,  sf::Vector2f(120, -40), pathSweepLeft(), 3));
-    events.push_back(makeEvent(52.0f, EnemyType::Small,  sf::Vector2f(240, -40), pathSweepCenter(), 4));
+    events.push_back(makeEvent(48.0f, EnemyType::Small, sf::Vector2f(120, -40), pathSweepLeft(), 3));
+    events.push_back(makeEvent(52.0f, EnemyType::Small, sf::Vector2f(240, -40), pathSweepCenter(), 4));
     events.push_back(makeEvent(52.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathDiveBomb()));
-    events.push_back(makeEvent(57.0f, EnemyType::Boss,   sf::Vector2f(160, -80), pathBossEnterLeft()));
-    events.push_back(makeEvent(70.0f, EnemyType::Boss,   sf::Vector2f(320, -80), pathBossEnterRight()));
+    events.push_back(makeEvent(57.0f, EnemyType::Boss, sf::Vector2f(160, -80), pathBossEnterLeft()));
+    events.push_back(makeEvent(70.0f, EnemyType::Boss, sf::Vector2f(320, -80), pathBossEnterRight()));
 }
 
 // ============================================================================
@@ -550,12 +550,39 @@ void Game::init()
     sf::FloatRect bounds = shipSprite.getLocalBounds();
     shipSprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
 
-    try { loadTextureOrThrow(smallEnemyTexture,  "assets/textures/alien1.png"); }
-    catch (const AssetLoadException &ex) { std::cerr << "Asset warning: " << ex.what() << "\n"; }
-    try { loadTextureOrThrow(mediumEnemyTexture, "assets/textures/alien2.png"); }
-    catch (const AssetLoadException &ex) { std::cerr << "Asset warning: " << ex.what() << "\n"; }
-    try { loadTextureOrThrow(bossEnemyTexture,   "assets/textures/boss1.png"); }
-    catch (const AssetLoadException &ex) { std::cerr << "Asset warning: " << ex.what() << "\n"; }
+    try
+    {
+        loadTextureOrThrow(smallEnemyTexture, "assets/textures/alien1.png");
+    }
+    catch (const AssetLoadException &ex)
+    {
+        std::cerr << "Asset warning: " << ex.what() << "\n";
+    }
+    try
+    {
+        loadTextureOrThrow(mediumEnemyTexture, "assets/textures/alien2.png");
+    }
+    catch (const AssetLoadException &ex)
+    {
+        std::cerr << "Asset warning: " << ex.what() << "\n";
+    }
+    try
+    {
+        loadTextureOrThrow(bossEnemyTexture, "assets/textures/boss1.png");
+    }
+    catch (const AssetLoadException &ex)
+    {
+        std::cerr << "Asset warning: " << ex.what() << "\n";
+    }
+    try
+    {
+        loadTextureOrThrow(homeplanet1, "assets/textures/planet1.png");
+        loadTextureOrThrow(homeplanet2, "assets/textures/planet2.png");
+    }
+    catch (const AssetLoadException &ex)
+    {
+        std::cerr << "Asset warning: " << ex.what() << "\n";
+    }
 
     bullets.clearAll();
     enemies.clearAll();
@@ -719,7 +746,10 @@ void Game::handleEvents()
             }
             else if (current == GameState::GameOver)
             {
-                try { startLevel(currentLevel); }
+                try
+                {
+                    startLevel(currentLevel);
+                }
                 catch (const InvalidLevelException &ex)
                 {
                     std::cerr << "Restart failed: " << ex.what() << "\n";
@@ -988,13 +1018,16 @@ void Game::checkCollisions()
     for (int bi = 0; bi < bullets.capacity(); bi++)
     {
         Bullet &b = bullets.at(bi);
-        if (!b.on) continue;
-        if (!b.type || !b.type->isPlayerBullet()) continue;
+        if (!b.on)
+            continue;
+        if (!b.type || !b.type->isPlayerBullet())
+            continue;
 
         for (int ei = 0; ei < enemies.capacity(); ei++)
         {
             Enemy &e = enemies.at(ei);
-            if (!e.on) continue;
+            if (!e.on)
+                continue;
             float eRadius = e.type ? e.type->getRadius() : 16.f;
             float dist = vlen(b.pos - e.pos);
             if (dist < 4.f + eRadius)
@@ -1055,8 +1088,10 @@ void Game::checkCollisions()
         for (int bi = 0; bi < bullets.capacity(); bi++)
         {
             Bullet &b = bullets.at(bi);
-            if (!b.on) continue;
-            if (!b.type || b.type->isPlayerBullet()) continue;
+            if (!b.on)
+                continue;
+            if (!b.type || b.type->isPlayerBullet())
+                continue;
             float dist = vlen(b.pos - player.getPos());
             if (dist < 5.f + 18.f)
             {
@@ -1097,7 +1132,8 @@ void Game::checkCollisions()
         for (int ei = 0; ei < enemies.capacity(); ei++)
         {
             Enemy &e = enemies.at(ei);
-            if (!e.on) continue;
+            if (!e.on)
+                continue;
             float eRadius = e.type ? e.type->getRadius() : 16.f;
             float dist = vlen(e.pos - player.getPos());
             if (dist < eRadius + 18.f)
@@ -1136,7 +1172,8 @@ void Game::checkCollisions()
     for (int pi = 0; pi < pickups.capacity(); pi++)
     {
         Pickup &pk = pickups.at(pi);
-        if (!pk.on) continue;
+        if (!pk.on)
+            continue;
         float dist = vlen(pk.pos - player.getPos());
         if (dist < 32.f + 18.f)
         {
@@ -1200,7 +1237,8 @@ void Game::checkSpawns(float dt)
 void Game::spawnEnemyFromJob(const SpawnJob &job)
 {
     Enemy *e = enemies.alloc();
-    if (!e) return;
+    if (!e)
+        return;
     e->on = true;
     e->type = job.etype;
     e->pos = job.startPos;
@@ -1325,7 +1363,8 @@ void Game::spawnExplosion(sf::Vector2f pos, sf::Color cStart, sf::Color cEnd, in
     for (int i = 0; i < count; i++)
     {
         Particle *p = particles.alloc();
-        if (!p) break;
+        if (!p)
+            break;
         p->on = true;
         p->pos = pos + sf::Vector2f(randFloat(-6.f, 6.f), randFloat(-6.f, 6.f));
         float angle = randFloat(0.f, 6.2832f);
@@ -1342,7 +1381,8 @@ void Game::spawnExplosion(sf::Vector2f pos, sf::Color cStart, sf::Color cEnd, in
 void Game::spawnPickup(sf::Vector2f pos, PickupType *ptype)
 {
     Pickup *pk = pickups.alloc();
-    if (!pk) return;
+    if (!pk)
+        return;
     pk->on = true;
     pk->pos = pos;
     pk->vel = sf::Vector2f(randFloat(-30.f, 30.f), randFloat(-50.f, -10.f));
@@ -1357,10 +1397,13 @@ bool Game::isLevelClear()
         return false;
     std::vector<SpawnEvent> &evs = levels[currentLevel]->getEvents();
     for (int i = 0; i < (int)evs.size(); i++)
-        if (!evs[i].fired) return false;
-    if (!spawnQueue.empty()) return false;
+        if (!evs[i].fired)
+            return false;
+    if (!spawnQueue.empty())
+        return false;
     for (int i = 0; i < enemies.capacity(); i++)
-        if (enemies.at(i).on) return false;
+        if (enemies.at(i).on)
+            return false;
     return true;
 }
 
@@ -1453,9 +1496,12 @@ void Game::render()
     vig.setPosition(472.f, 0.f);
     window.draw(vig);
 
-    if (current == GameState::Paused)         renderPauseOverlay();
-    if (current == GameState::GameOver)       renderGameOverOverlay();
-    if (current == GameState::LevelComplete)  renderLevelCompleteOverlay();
+    if (current == GameState::Paused)
+        renderPauseOverlay();
+    if (current == GameState::GameOver)
+        renderGameOverOverlay();
+    if (current == GameState::LevelComplete)
+        renderLevelCompleteOverlay();
 }
 
 void Game::renderBackground()
@@ -1479,7 +1525,8 @@ void Game::renderStars()
 
 void Game::renderPlayer()
 {
-    if (!player.isAlive()) return;
+    if (!player.isAlive())
+        return;
     if (player.getIframeTimer() > 0.f)
     {
         if ((int)(player.getIframeTimer() * 10.f) % 2 == 0)
@@ -1519,10 +1566,14 @@ void Game::renderEnemies()
     for (int i = 0; i < enemies.capacity(); i++)
     {
         Enemy &e = enemies.at(i);
-        if (!e.on) continue;
-        if (e.type == EnemyType::Small)       drawSmallEnemy(e.pos, e.angle);
-        else if (e.type == EnemyType::Medium) drawMediumEnemy(e.pos, e.angle);
-        else if (e.type == EnemyType::Boss)   drawBossEnemy(e.pos, e.angle);
+        if (!e.on)
+            continue;
+        if (e.type == EnemyType::Small)
+            drawSmallEnemy(e.pos, e.angle);
+        else if (e.type == EnemyType::Medium)
+            drawMediumEnemy(e.pos, e.angle);
+        else if (e.type == EnemyType::Boss)
+            drawBossEnemy(e.pos, e.angle);
     }
 }
 
@@ -1567,7 +1618,8 @@ void Game::renderBullets()
     for (int i = 0; i < bullets.capacity(); i++)
     {
         Bullet &b = bullets.at(i);
-        if (!b.on || !b.type) continue;
+        if (!b.on || !b.type)
+            continue;
         if (b.type->isPlayerBullet())
         {
             sf::RectangleShape streak(sf::Vector2f(2.f, 12.f));
@@ -1619,7 +1671,8 @@ void Game::renderParticles()
     for (int i = 0; i < particles.capacity(); i++)
     {
         Particle &p = particles.at(i);
-        if (!p.on) continue;
+        if (!p.on)
+            continue;
         float t = 1.f - (p.life / p.maxLife);
         sf::Color c = colorLerp(p.colorStart, p.colorEnd, t);
         float s = p.size * (1.f - t * 0.5f);
@@ -1638,7 +1691,8 @@ void Game::renderPickups()
     for (int i = 0; i < pickups.capacity(); i++)
     {
         Pickup &pk = pickups.at(i);
-        if (!pk.on || !pk.type) continue;
+        if (!pk.on || !pk.type)
+            continue;
         sf::Color col = pk.type->getColor();
         float bobble = std::sin(pk.pulse * 5.f) * 0.2f + 1.0f;
         sf::CircleShape glow(12.f * bobble);
@@ -1669,9 +1723,12 @@ void Game::renderHUD()
     window.draw(hpBg);
     float hpPct = player.getHp() / player.getMaxHp();
     sf::Color hpCol;
-    if (hpPct > 0.5f)       hpCol = sf::Color(60, 140, 255);
-    else if (hpPct > 0.25f) hpCol = sf::Color(255, 200, 40);
-    else                    hpCol = sf::Color(255, 60, 40);
+    if (hpPct > 0.5f)
+        hpCol = sf::Color(60, 140, 255);
+    else if (hpPct > 0.25f)
+        hpCol = sf::Color(255, 200, 40);
+    else
+        hpCol = sf::Color(255, 60, 40);
     sf::RectangleShape hpFill(sf::Vector2f(100.f * hpPct, 6.f));
     hpFill.setPosition(22.f, 18.f);
     hpFill.setFillColor(hpCol);
@@ -1752,7 +1809,8 @@ void Game::renderBossHP()
     for (int i = 0; i < enemies.capacity(); i++)
     {
         Enemy &e = enemies.at(i);
-        if (!e.on || e.type != EnemyType::Boss) continue;
+        if (!e.on || e.type != EnemyType::Boss)
+            continue;
         float barWidth = 180.f;
         float barX = 150.f + bossIdx * 100.f;
         float barY = 8.f;
@@ -1785,22 +1843,38 @@ void Game::renderHomeScreen()
     window.clear(sf::Color(4, 6, 16));
     renderStars();
 
-    // soft background planet
-    sf::CircleShape bgPlanet(140.f);
-    bgPlanet.setOrigin(140.f, 140.f);
-    bgPlanet.setPosition(80.f, 600.f);
-    bgPlanet.setFillColor(sf::Color(20, 30, 60, 150));
-    window.draw(bgPlanet);
-    sf::CircleShape bgPlanet2(90.f);
-    bgPlanet2.setOrigin(90.f, 90.f);
-    bgPlanet2.setPosition(420.f, 100.f);
-    bgPlanet2.setFillColor(sf::Color(60, 30, 80, 130));
-    window.draw(bgPlanet2);
+    sf::Sprite p1(homeplanet1);
+    p1.setOrigin(homeplanet1.getSize().x / 2.f, homeplanet1.getSize().y / 2.f);
+    p1.setPosition(80.f, 600.f);
+    p1.setScale(280.f / homeplanet1.getSize().x, 280.f / homeplanet1.getSize().x);
+    p1.setColor(sf::Color(255, 255, 255, 180));
+    window.draw(p1);
+
+    // Atmosphere Glow for Planet 1
+    sf::CircleShape glow1(145.f); // Slightly larger than planet
+    glow1.setOrigin(145.f, 145.f);
+    glow1.setPosition(80.f, 600.f);
+    glow1.setFillColor(sf::Color(80, 160, 240, 40)); // Soft Blue
+    window.draw(glow1, sf::BlendAdd);
+
+    // --- Planet 2 (Top Right) ---
+    sf::Sprite p2(homeplanet2);
+    p2.setOrigin(homeplanet2.getSize().x / 2.f, homeplanet2.getSize().y / 2.f);
+    p2.setPosition(420.f, 100.f);
+    p2.setScale(180.f / homeplanet2.getSize().x, 180.f / homeplanet2.getSize().x);
+    window.draw(p2);
+
+    // Atmosphere Glow for Planet 2
+    sf::CircleShape glow2(95.f);
+    glow2.setOrigin(95.f, 95.f);
+    glow2.setPosition(420.f, 100.f);
+    glow2.setFillColor(sf::Color(150, 50, 200, 30)); // Soft Purple
+    window.draw(glow2, sf::BlendAdd);
 
     // Title
-    drawTextCentered("SPACE", 230.f, 64, sf::Color(140, 200, 255));
-    drawTextCentered("SHOOTER", 300.f, 64, sf::Color(255, 220, 120));
-    drawTextCentered("a freshman OOP voyage", 360.f, 14, sf::Color(140, 160, 200));
+    drawTextCentered("DEEPSPACE", 230.f, 64, sf::Color(140, 200, 255));
+    drawTextCentered("DEFENDERS", 300.f, 64, sf::Color(255, 220, 120));
+    drawTextCentered("Clear the skies...Before the skies clear us", 360.f, 14, sf::Color(140, 160, 200));
 
     // PLAY button
     sf::RectangleShape playBtn(sf::Vector2f(140.f, 50.f));
@@ -1811,7 +1885,7 @@ void Game::renderHomeScreen()
     window.draw(playBtn);
     drawTextCentered("PLAY", 485.f, 24, sf::Color(180, 220, 255));
 
-    drawTextCentered("Click PLAY  -  Enter or Space also works", 540.f, 12,
+    drawTextCentered("Click PLAY to start", 540.f, 12,
                      sf::Color(110, 130, 170));
 
     // Show top high score if any
@@ -1984,7 +2058,8 @@ void Game::renderLevelSelect()
     scoreHeader.setPosition(60.f, 538.f);
     window.draw(scoreHeader);
     int shownScores = (int)highScores.size();
-    if (shownScores > 4) shownScores = 4;
+    if (shownScores > 4)
+        shownScores = 4;
     for (int i = 0; i < shownScores; i++)
     {
         std::ostringstream oss;
@@ -2073,7 +2148,8 @@ void Game::renderGameOverOverlay()
     int shown = 0;
     for (std::list<ScoreEvent>::iterator it = scoreLog.begin(); it != scoreLog.end(); ++it)
     {
-        if (shown >= 8) break;
+        if (shown >= 8)
+            break;
         std::ostringstream oss;
         oss << *it; // operator<< overload for ScoreEvent
         sf::Text t;
@@ -2145,7 +2221,8 @@ void Game::loadHighScores()
 {
     highScores.clear();
     std::ifstream in("highscores.txt");
-    if (!in.is_open()) return;
+    if (!in.is_open())
+        return;
     std::string name;
     int score, lvl;
     while (in >> name >> score >> lvl)
@@ -2159,7 +2236,8 @@ void Game::loadHighScores()
 void Game::saveHighScores()
 {
     std::ofstream out("highscores.txt");
-    if (!out.is_open()) return;
+    if (!out.is_open())
+        return;
     for (int i = 0; i < (int)highScores.size(); i++)
     {
         out << highScores[i].getName() << " "

@@ -46,4 +46,3 @@ add_custom_command(TARGET SpaceShooter POST_BUILD
         "$<TARGET_FILE_DIR:SpaceShooter>/assets"
     COMMENT "Updating assets in build directory..."
 )
-
