@@ -15,7 +15,19 @@ find_package(SFML 2.6 COMPONENTS graphics window system REQUIRED)
 # ============================================================
 # GAME EXECUTABLE
 # ============================================================
-add_executable(SpaceShooter src/main.cpp)
+add_executable(SpaceShooter
+    src/main.cpp
+    src/Game.cpp
+    src/Level.cpp
+    src/GameState.cpp
+    src/EnemyType.cpp
+    src/BulletType.cpp
+    src/PickupType.cpp
+    src/Exceptions.cpp
+    src/ScoreEvent.cpp
+    src/HighScore.cpp
+    src/Player.cpp
+)
 
 target_link_libraries(SpaceShooter
     PRIVATE
@@ -46,4 +58,3 @@ add_custom_command(TARGET SpaceShooter POST_BUILD
         "$<TARGET_FILE_DIR:SpaceShooter>/assets"
     COMMENT "Updating assets in build directory..."
 )
-
