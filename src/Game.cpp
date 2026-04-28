@@ -1278,21 +1278,6 @@ void Game::renderHUD()
     hpFill.setFillColor(hpCol);
     window.draw(hpFill);
 
-    for (int i = 0; i < 3; i++)
-    {
-        float lx = 24.f + i * 22.f;
-        float ly = 34.f;
-        sf::ConvexShape miniShip(3);
-        miniShip.setPoint(0, sf::Vector2f(0.f, -6.f));
-        miniShip.setPoint(1, sf::Vector2f(5.f, 4.f));
-        miniShip.setPoint(2, sf::Vector2f(-5.f, 4.f));
-        miniShip.setPosition(lx, ly);
-        if (i < player.getLives())
-            miniShip.setFillColor(sf::Color(160, 180, 210));
-        else
-            miniShip.setFillColor(sf::Color(40, 44, 55));
-        window.draw(miniShip);
-    }
     sf::Text scoreTxt;
     scoreTxt.setFont(font);
     scoreTxt.setString("SCORE: " + std::to_string(player.getScore()));
