@@ -1,5 +1,6 @@
 # space-shooter
 oop fp
+<<<<<<< HEAD
 planned changes:
 simplify code to use stuff done in class
 make background stars move somehow
@@ -9,3 +10,5 @@ add a recursive function
 add merge sort implementation for scores
 add a function that uses template
 check for operator overloading (if not there then add)
+=======
+>>>>>>> origin/main
