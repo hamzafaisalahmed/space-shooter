@@ -1,3 +1,0 @@
-C:/CODING_PROJECTS/SpaceShooter/build/debug/CMakeFiles/SpaceShooter.dir
-C:/CODING_PROJECTS/SpaceShooter/build/debug/CMakeFiles/edit_cache.dir
-C:/CODING_PROJECTS/SpaceShooter/build/debug/CMakeFiles/rebuild_cache.dir
