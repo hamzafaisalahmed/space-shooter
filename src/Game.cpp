@@ -132,6 +132,18 @@ void Game::init()
     {
         std::cerr << "Asset warning: " << ex.what() << "\n";
     }
+    try
+    {
+        loadTextureOrThrow(pauseIcon, "assets/textures/pause.png");
+    }
+    catch (const AssetLoadException &ex)
+    {
+        std::cerr << "Asset warning: " << ex.what() << "\n";
+    }
+
+    pauseSprite.setTexture(pauseIcon);
+    pauseSprite.setPosition(432.f, 14.f);
+    pauseSprite.setScale(0.08f, 0.08f);
 
     bullets.clearAll();
     enemies.clearAll();
@@ -257,8 +269,6 @@ void Game::handleEvents()
                     {
                         if (selectedLevel < 0 || selectedLevel >= (int)levels.size())
                             throw InvalidLevelException("No level selected");
-                        if (levels[selectedLevel]->isLocked())
-                            throw InvalidLevelException("Level is locked");
                         startLevel(selectedLevel);
                     }
                     catch (const InvalidLevelException &ex)
@@ -303,10 +313,6 @@ void Game::handleEvents()
             }
             else if (current == GameState::LevelComplete)
             {
-                if (currentLevel + 1 < (int)levels.size())
-                {
-                    levels[currentLevel + 1]->unlock();
-                }
                 while (!stateStack.empty())
                     stateStack.pop();
                 stateStack.push(GameState::Home);
@@ -317,14 +323,6 @@ void Game::handleEvents()
                 sf::FloatRect pauseBtn(430.f, 12.f, 36.f, 36.f);
                 if (pauseBtn.contains(mp))
                     stateStack.push(GameState::Paused);
-                sf::FloatRect exitBtn(430.f, 48.f, 36.f, 36.f);
-                if (exitBtn.contains(mp))
-                {
-                    while (!stateStack.empty())
-                        stateStack.pop();
-                    stateStack.push(GameState::Home);
-                    stateStack.push(GameState::LevelSelect);
-                }
             }
         }
     }
@@ -1286,50 +1284,7 @@ void Game::renderHUD()
     scoreTxt.setPosition(20.f, 48.f);
     window.draw(scoreTxt);
 
-    sf::RectangleShape pauseBg(sf::Vector2f(32.f, 32.f));
-    pauseBg.setPosition(432.f, 14.f);
-    pauseBg.setFillColor(sf::Color(30, 40, 60, 180));
-    pauseBg.setOutlineColor(sf::Color(60, 80, 120));
-    pauseBg.setOutlineThickness(1.f);
-    window.draw(pauseBg);
-    sf::RectangleShape bar1(sf::Vector2f(6.f, 16.f));
-    bar1.setPosition(441.f, 22.f);
-    bar1.setFillColor(sf::Color(100, 150, 220));
-    window.draw(bar1);
-    sf::RectangleShape bar2(sf::Vector2f(6.f, 16.f));
-    bar2.setPosition(451.f, 22.f);
-    bar2.setFillColor(sf::Color(100, 150, 220));
-    window.draw(bar2);
-
-    for (int i = 0; i < player.getPower(); i++)
-    {
-        sf::RectangleShape pip(sf::Vector2f(12.f, 6.f));
-        pip.setPosition(20.f + i * 16.f, 696.f);
-        pip.setFillColor(sf::Color(60, 140, 255));
-        window.draw(pip);
-    }
-
-    float chargeProgress = (float)(player.getScore() % 500) / 500.f;
-    int segments = 24;
-    float radius = 14.f;
-    sf::Vector2f ringCenter(450.f, 694.f);
-    int filledSegments = (int)(chargeProgress * segments);
-    for (int i = 0; i < segments; i++)
-    {
-        float a1 = (float)i / segments * 6.2832f - 1.5708f;
-        float a2 = (float)(i + 1) / segments * 6.2832f - 1.5708f;
-        sf::ConvexShape seg(4);
-        float r1 = radius - 3.f, r2 = radius;
-        seg.setPoint(0, ringCenter + sf::Vector2f(std::cos(a1) * r1, std::sin(a1) * r1));
-        seg.setPoint(1, ringCenter + sf::Vector2f(std::cos(a1) * r2, std::sin(a1) * r2));
-        seg.setPoint(2, ringCenter + sf::Vector2f(std::cos(a2) * r2, std::sin(a2) * r2));
-        seg.setPoint(3, ringCenter + sf::Vector2f(std::cos(a2) * r1, std::sin(a2) * r1));
-        if (i < filledSegments)
-            seg.setFillColor(sf::Color(60, 140, 255, 200));
-        else
-            seg.setFillColor(sf::Color(30, 40, 60, 100));
-        window.draw(seg);
-    }
+    window.draw(pauseSprite);
 }
 
 void Game::renderBossHP()
@@ -1457,7 +1412,6 @@ void Game::renderLevelSelect()
     nameText.setFont(font);
     nameText.setString(sel->getName());
     nameText.setCharacterSize(24);
-    nameText.setFillColor(sel->isLocked() ? sf::Color(80, 80, 90) : sf::Color(200, 220, 255));
     nameText.setPosition(80.f, 100.f);
     window.draw(nameText);
     sf::Text descText;
@@ -1488,43 +1442,11 @@ void Game::renderLevelSelect()
             window.draw(orbit);
         }
         sf::Color pCol = levels[i]->getPlanetColor();
-        if (levels[i]->isLocked())
-            pCol = sf::Color(pCol.r / 3, pCol.g / 3, pCol.b / 3);
         sf::CircleShape planet(radius);
         planet.setOrigin(radius, radius);
         planet.setPosition(px, planetY);
         planet.setFillColor(pCol);
         window.draw(planet);
-        sf::CircleShape atmo(radius + 6.f);
-        atmo.setOrigin(radius + 6.f, radius + 6.f);
-        atmo.setPosition(px, planetY);
-        atmo.setFillColor(sf::Color(pCol.r / 2, pCol.g / 2, pCol.b / 2, 40));
-        window.draw(atmo, gs);
-        if (levels[i]->isLocked())
-        {
-            sf::RectangleShape lockBody(sf::Vector2f(14.f, 12.f));
-            lockBody.setOrigin(7.f, 6.f);
-            lockBody.setPosition(px, planetY + 2.f);
-            lockBody.setFillColor(sf::Color(80, 70, 60));
-            window.draw(lockBody);
-            sf::CircleShape lockArch(6.f);
-            lockArch.setOrigin(6.f, 6.f);
-            lockArch.setPosition(px, planetY - 8.f);
-            lockArch.setFillColor(sf::Color::Transparent);
-            lockArch.setOutlineColor(sf::Color(80, 70, 60));
-            lockArch.setOutlineThickness(2.5f);
-            window.draw(lockArch);
-        }
-        std::string lblStr = levels[i]->isLocked() ? ("-- " + levels[i]->getName()) : levels[i]->getName();
-        sf::Text lbl;
-        lbl.setFont(font);
-        lbl.setString(lblStr);
-        lbl.setCharacterSize(11);
-        lbl.setFillColor(levels[i]->isLocked() ? sf::Color(60, 60, 70) : sf::Color(160, 180, 210));
-        sf::FloatRect lb = lbl.getLocalBounds();
-        lbl.setOrigin(lb.left + lb.width / 2.f, 0.f);
-        lbl.setPosition(px, planetY + radius + 12.f);
-        window.draw(lbl);
     }
 
     sf::RectangleShape endlessCard(sf::Vector2f(360.f, 110.f));
@@ -1604,18 +1526,17 @@ void Game::renderLevelSelect()
     backTxt.setPosition(70.f, 666.f);
     window.draw(backTxt);
 
-    bool canPlay = !levels[selectedLevel]->isLocked();
     sf::RectangleShape playBtn(sf::Vector2f(100.f, 36.f));
     playBtn.setPosition(336.f, 659.f);
-    playBtn.setFillColor(canPlay ? sf::Color(20, 40, 60) : sf::Color(20, 20, 25));
-    playBtn.setOutlineColor(canPlay ? sf::Color(40, 100, 180) : sf::Color(40, 40, 50));
+    playBtn.setFillColor(sf::Color(20, 40, 60));
+    playBtn.setOutlineColor(sf::Color(40, 100, 180));
     playBtn.setOutlineThickness(1.5f);
     window.draw(playBtn);
     sf::Text playTxt;
     playTxt.setFont(font);
     playTxt.setString("PLAY");
     playTxt.setCharacterSize(15);
-    playTxt.setFillColor(canPlay ? sf::Color(100, 180, 255) : sf::Color(50, 50, 60));
+    playTxt.setFillColor(sf::Color(100, 180, 255));
     playTxt.setPosition(365.f, 666.f);
     window.draw(playTxt);
 }

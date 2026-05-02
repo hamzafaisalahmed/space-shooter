@@ -184,7 +184,6 @@ LevelAries::LevelAries()
     name = "ARIES";
     desc = "The Beginning";
     planetColor = sf::Color(180, 120, 60);
-    locked = false;
 }
 
 void LevelAries::buildWaves()
@@ -217,7 +216,6 @@ LevelTaurus::LevelTaurus()
     name = "TAURUS";
     desc = "The Challenge";
     planetColor = sf::Color(80, 60, 180);
-    locked = false;
 }
 
 void LevelTaurus::buildWaves()
@@ -256,7 +254,6 @@ LevelGemini::LevelGemini()
     name = "GEMINI";
     desc = "The Final Stand";
     planetColor = sf::Color(30, 120, 50);
-    locked = true;
 }
 
 void LevelGemini::buildWaves()
@@ -305,7 +302,6 @@ LevelEndless::LevelEndless()
 {
     name = "ENDLESS";
     desc = "Pure Chaos";
-    locked = false;
 
     normalPathPool.push_back(pathSweepCenter());
     normalPathPool.push_back(pathSweepLeft());

@@ -14,19 +14,16 @@ protected:
     std::string name;
     std::string desc;
     sf::Color planetColor;
-    bool locked;
     std::vector<SpawnEvent> events;
     sf::Texture planetTexture;
     bool planetLoaded;
 
 public:
-    Level() : planetColor(sf::Color::White), locked(true), planetLoaded(false) {}
+    Level() : planetColor(sf::Color::White), planetLoaded(false) {}
     virtual ~Level() {}
 
     std::string getName() const { return name; }
     std::string getDesc() const { return desc; }
-    bool isLocked() const { return locked; }
-    void unlock() { locked = false; }
     std::vector<SpawnEvent> &getEvents() { return events; }
 
     virtual float getDuration() const { return 60.f; }

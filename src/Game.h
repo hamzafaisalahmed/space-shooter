@@ -28,6 +28,8 @@ private:
     sf::Texture bossEnemyTexture;
     sf::Texture homeplanet1;
     sf::Texture homeplanet2;
+    sf::Texture pauseIcon;
+    sf::Sprite pauseSprite;
 
     std::stack<GameState> stateStack;
 
