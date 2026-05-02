@@ -86,8 +86,6 @@ private:
 public:
     LevelEndless();
     float getDuration() const { return 99999.f; }
-    std::string getPlanetTexturePath() const { return planetTexturePool[chosenPlanet]; }
-    sf::Color getPlanetColor() const { return planetColorPool[chosenPlanet]; }
     bool isEndless() const { return true; }
     void buildWaves();
     void updateEndless(float dt, float levelTimer,

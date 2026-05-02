@@ -2,4 +2,3 @@
 
 PickupType *PickupType::Score = new ScorePickupType();
 PickupType *PickupType::Health = new HealthPickupType();
-PickupType *PickupType::Power = new PowerPickupType();

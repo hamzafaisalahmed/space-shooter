@@ -393,16 +393,6 @@ void Game::update(float dt)
     if (player.getShieldTimer() > 0.f)
         player.tickShield(dt);
 
-    if (player.getPower() > 1)
-    {
-        player.tickPowerTimer(dt);
-        if (player.getPowerTimer() <= 0.f)
-        {
-            player.decreasePower();
-            if (player.getPower() > 1)
-                player.setPowerTimer(8.0f);
-        }
-    }
     player.tickShootTimer(dt);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && player.getShootTimer() <= 0.f)
     {
@@ -727,12 +717,6 @@ void Game::checkCollisions()
             {
                 player.heal(25.f);
             }
-            else if (pk.type == PickupType::Power)
-            {
-                player.increasePower();
-                player.setPowerTimer(8.0f);
-                player.setShieldTimer(8.0f);
-            }
         }
     }
 }
@@ -798,47 +782,15 @@ void Game::spawnEnemyFromJob(const SpawnJob &job)
 
 void Game::spawnPlayerBullet()
 {
-    if (player.getPower() == 1)
+
+    Bullet *b = bullets.alloc();
+    if (b)
     {
-        Bullet *b = bullets.alloc();
-        if (b)
-        {
-            b->on = true;
-            b->pos = player.getPos() + sf::Vector2f(0.f, -20.f);
-            b->vel = sf::Vector2f(0.f, -600.f);
-            b->dmg = 20.f;
-            b->type = BulletType::PlayerNorm;
-        }
-    }
-    else if (player.getPower() == 2)
-    {
-        for (int i = -1; i <= 1; i += 2)
-        {
-            Bullet *b = bullets.alloc();
-            if (b)
-            {
-                b->on = true;
-                b->pos = player.getPos() + sf::Vector2f(i * 7.f, -20.f);
-                b->vel = sf::Vector2f(0.f, -600.f);
-                b->dmg = 20.f;
-                b->type = BulletType::PlayerWide;
-            }
-        }
-    }
-    else
-    {
-        for (int i = -1; i <= 1; i++)
-        {
-            Bullet *b = bullets.alloc();
-            if (b)
-            {
-                b->on = true;
-                b->pos = player.getPos() + sf::Vector2f(i * 12.f, -20.f);
-                b->vel = sf::Vector2f(i * 40.f, -600.f);
-                b->dmg = 20.f;
-                b->type = BulletType::PlayerTriple;
-            }
-        }
+        b->on = true;
+        b->pos = player.getPos() + sf::Vector2f(0.f, -20.f);
+        b->vel = sf::Vector2f(0.f, -600.f);
+        b->dmg = 20.f;
+        b->type = BulletType::PlayerNorm;
     }
 }
 
@@ -1378,20 +1330,7 @@ void Game::renderLevelSelect()
 {
     window.clear(sf::Color(4, 6, 16));
     renderStars();
-
-    sf::CircleShape bgPlanet(100.f);
-    bgPlanet.setOrigin(100.f, 100.f);
-    bgPlanet.setPosition(420.f, 80.f);
-    bgPlanet.setFillColor(sf::Color(20, 25, 45, 100));
-    window.draw(bgPlanet);
-    sf::CircleShape bgAtmo(115.f);
-    bgAtmo.setOrigin(115.f, 115.f);
-    bgAtmo.setPosition(420.f, 80.f);
-    bgAtmo.setFillColor(sf::Color(30, 40, 80, 30));
-    sf::RenderStates gs;
-    gs.blendMode = sf::BlendAdd;
-    window.draw(bgAtmo, gs);
-
+    // --- Header ---
     sf::RectangleShape header(sf::Vector2f(400.f, 40.f));
     header.setPosition(40.f, 30.f);
     header.setFillColor(sf::Color(12, 16, 28));
@@ -1400,6 +1339,7 @@ void Game::renderLevelSelect()
     window.draw(header);
     drawTextCentered("MAIN MENU - SELECT LEVEL", 50.f, 18, sf::Color(140, 180, 240));
 
+    // --- Level Preview Box (Boss removed, text centered) ---
     sf::RectangleShape preview(sf::Vector2f(360.f, 130.f));
     preview.setPosition(60.f, 90.f);
     preview.setFillColor(sf::Color(10, 14, 24));
@@ -1407,30 +1347,24 @@ void Game::renderLevelSelect()
     preview.setOutlineThickness(1.f);
     window.draw(preview);
 
-    Level *sel = levels[selectedLevel];
-    sf::Text nameText;
-    nameText.setFont(font);
-    nameText.setString(sel->getName());
-    nameText.setCharacterSize(24);
-    nameText.setPosition(80.f, 100.f);
-    window.draw(nameText);
-    sf::Text descText;
-    descText.setFont(font);
-    descText.setString(sel->getDesc());
-    descText.setCharacterSize(13);
-    descText.setFillColor(sf::Color(120, 140, 170));
-    descText.setPosition(80.f, 132.f);
-    window.draw(descText);
-    drawBossEnemy(sf::Vector2f(340.f, 175.f), 0.f);
+    // Ensure we don't go out of bounds if selectedLevel is invalid
+    if (selectedLevel >= 0 && selectedLevel < (int)levels.size())
+    {
+        Level *sel = levels[selectedLevel];
+        drawTextCentered(sel->getName(), 120.f, 24, sf::Color::White);
+        drawTextCentered(sel->getDesc(), 160.f, 13, sf::Color(120, 140, 170));
+    }
 
-    int n = (int)levels.size();
-    int storyCount = (n > 0) ? n - 1 : 0;
+    // --- 3 Level Circles ---
     float planetY = 280.f;
-    float spacing = 480.f / (storyCount + 1);
-    for (int i = 0; i < storyCount; i++)
+    float spacing = 480.f / 4.f;                           // Divides screen by 4 to evenly space exactly 3 elements
+    int numLevelsToDraw = std::min(3, (int)levels.size()); // Safely draw up to 3 levels
+
+    for (int i = 0; i < numLevelsToDraw; i++)
     {
         float px = spacing * (i + 1);
         float radius = (i == selectedLevel) ? 36.f : 26.f;
+
         if (i == selectedLevel)
         {
             sf::CircleShape orbit(46.f);
@@ -1441,6 +1375,7 @@ void Game::renderLevelSelect()
             orbit.setOutlineThickness(1.5f);
             window.draw(orbit);
         }
+
         sf::Color pCol = levels[i]->getPlanetColor();
         sf::CircleShape planet(radius);
         planet.setOrigin(radius, radius);
@@ -1449,53 +1384,27 @@ void Game::renderLevelSelect()
         window.draw(planet);
     }
 
-    sf::RectangleShape endlessCard(sf::Vector2f(360.f, 110.f));
+    // --- Endless Mode Card (Orbs removed, acts as a button) ---
+    sf::RectangleShape endlessCard(sf::Vector2f(360.f, 80.f)); // Slightly thinner without the orb
     endlessCard.setPosition(60.f, 410.f);
     endlessCard.setFillColor(sf::Color(40, 12, 50));
     endlessCard.setOutlineColor(sf::Color(220, 80, 200));
     endlessCard.setOutlineThickness(2.5f);
     window.draw(endlessCard);
 
-    sf::CircleShape endlessGlow(80.f);
-    endlessGlow.setOrigin(80.f, 80.f);
-    endlessGlow.setPosition(120.f, 465.f);
-    endlessGlow.setFillColor(sf::Color(220, 80, 200, 30));
-    window.draw(endlessGlow, gs);
-    sf::CircleShape endlessOrb(28.f);
-    endlessOrb.setOrigin(28.f, 28.f);
-    endlessOrb.setPosition(120.f, 465.f);
-    endlessOrb.setFillColor(sf::Color(180, 60, 220));
-    window.draw(endlessOrb);
+    // Centered Endless text to make it look like a unified UI button
+    drawTextCentered("ENDLESS MODE", 430.f, 20, sf::Color(255, 180, 240));
+    drawTextCentered("Unlimited waves. Click to start.", 460.f, 13, sf::Color(200, 150, 220));
 
-    sf::Text endTitle;
-    endTitle.setFont(font);
-    endTitle.setString("ENDLESS MODE");
-    endTitle.setCharacterSize(22);
-    endTitle.setFillColor(sf::Color(255, 180, 240));
-    endTitle.setPosition(180.f, 422.f);
-    window.draw(endTitle);
-    sf::Text endDesc;
-    endDesc.setFont(font);
-    endDesc.setString("Random waves forever.");
-    endDesc.setCharacterSize(13);
-    endDesc.setFillColor(sf::Color(200, 150, 220));
-    endDesc.setPosition(180.f, 455.f);
-    window.draw(endDesc);
-    sf::Text endHint;
-    endHint.setFont(font);
-    endHint.setString("Click to start.");
-    endHint.setCharacterSize(12);
-    endHint.setFillColor(sf::Color(220, 180, 240));
-    endHint.setPosition(180.f, 488.f);
-    window.draw(endHint);
-
+    // --- High Scores (Kept as requested) ---
     sf::Text scoreHeader;
     scoreHeader.setFont(font);
     scoreHeader.setString("HIGH SCORES");
     scoreHeader.setCharacterSize(12);
     scoreHeader.setFillColor(sf::Color(140, 160, 200));
-    scoreHeader.setPosition(60.f, 538.f);
+    scoreHeader.setPosition(60.f, 528.f);
     window.draw(scoreHeader);
+
     int shownScores = (int)highScores.size();
     if (shownScores > 4)
         shownScores = 4;
@@ -1508,16 +1417,18 @@ void Game::renderLevelSelect()
         t.setString(oss.str());
         t.setCharacterSize(12);
         t.setFillColor(sf::Color(180, 200, 220));
-        t.setPosition(60.f, 558.f + i * 16.f);
+        t.setPosition(60.f, 548.f + i * 16.f);
         window.draw(t);
     }
 
+    // --- Navigation Buttons (Kept as requested) ---
     sf::RectangleShape backBtn(sf::Vector2f(100.f, 36.f));
     backBtn.setPosition(44.f, 659.f);
     backBtn.setFillColor(sf::Color(30, 25, 35));
     backBtn.setOutlineColor(sf::Color(80, 60, 70));
     backBtn.setOutlineThickness(1.f);
     window.draw(backBtn);
+
     sf::Text backTxt;
     backTxt.setFont(font);
     backTxt.setString("BACK");
@@ -1532,6 +1443,7 @@ void Game::renderLevelSelect()
     playBtn.setOutlineColor(sf::Color(40, 100, 180));
     playBtn.setOutlineThickness(1.5f);
     window.draw(playBtn);
+
     sf::Text playTxt;
     playTxt.setFont(font);
     playTxt.setString("PLAY");
@@ -1568,41 +1480,28 @@ void Game::renderPauseOverlay()
 
 void Game::renderGameOverOverlay()
 {
+    // 1. Dim the background
     sf::RectangleShape dim(sf::Vector2f(480.f, 720.f));
     dim.setFillColor(sf::Color(0, 0, 0, 160));
     window.draw(dim);
-    sf::RectangleShape panel(sf::Vector2f(320.f, 320.f));
-    panel.setOrigin(160.f, 160.f);
+
+    // 2. Draw the central panel
+    sf::RectangleShape panel(sf::Vector2f(320.f, 200.f)); // Reduced height since log is gone
+    panel.setOrigin(160.f, 100.f);
     panel.setPosition(240.f, 340.f);
     panel.setFillColor(sf::Color(14, 10, 16));
     panel.setOutlineColor(sf::Color(120, 40, 40));
     panel.setOutlineThickness(2.f);
     window.draw(panel);
-    drawTextCentered("GAME OVER", 210.f, 30, sf::Color(255, 80, 60));
-    drawTextCentered("Final Score: " + std::to_string(player.getScore()), 260.f, 18,
-                     sf::Color(200, 200, 220));
-    float logY = 300.f;
-    int shown = 0;
-    for (std::list<ScoreEvent>::iterator it = scoreLog.begin(); it != scoreLog.end(); ++it)
-    {
-        if (shown >= 8)
-            break;
-        std::ostringstream oss;
-        oss << *it;
-        sf::Text t;
-        t.setFont(font);
-        t.setString(oss.str());
-        t.setCharacterSize(11);
-        t.setFillColor(sf::Color(140, 150, 170));
-        sf::FloatRect b = t.getLocalBounds();
-        t.setOrigin(b.left + b.width / 2.f, 0.f);
-        t.setPosition(240.f, logY + shown * 18.f);
-        window.draw(t);
-        shown++;
-    }
-    drawTextCentered("Click to restart", 480.f, 14, sf::Color(100, 120, 160));
-}
 
+    // 3. Draw Header and Final Score
+    drawTextCentered("GAME OVER", 280.f, 30, sf::Color(255, 80, 60));
+    drawTextCentered("Final Score: " + std::to_string(player.getScore()), 330.f, 18,
+                     sf::Color(200, 200, 220));
+
+    // 4. Interaction hint
+    drawTextCentered("Click to restart", 400.f, 14, sf::Color(100, 120, 160));
+}
 void Game::renderLevelCompleteOverlay()
 {
     sf::RectangleShape dim(sf::Vector2f(480.f, 720.f));

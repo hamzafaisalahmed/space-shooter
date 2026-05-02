@@ -21,20 +21,6 @@ public:
     bool isPlayerBullet() const { return true; }
 };
 
-class PlayerWideBullet : public BulletType
-{
-public:
-    int getId() const { return 1; }
-    bool isPlayerBullet() const { return true; }
-};
-
-class PlayerTripleBullet : public BulletType
-{
-public:
-    int getId() const { return 2; }
-    bool isPlayerBullet() const { return true; }
-};
-
 class EnemyNormBullet : public BulletType
 {
 public:

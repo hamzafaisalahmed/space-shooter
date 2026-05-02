@@ -141,7 +141,6 @@ void Level::loadPlanet()
 
 void Level::renderPlanet(sf::RenderWindow &window)
 {
-    sf::Color planetCol = getPlanetColor();
     if (planetLoaded)
     {
         sf::Sprite sprite(planetTexture);
@@ -153,29 +152,6 @@ void Level::renderPlanet(sf::RenderWindow &window)
         sprite.setScale(scale, scale);
         sprite.setPosition(360.f, 150.f);
         window.draw(sprite);
-
-        sf::CircleShape atmo(140.f);
-        atmo.setOrigin(140.f, 140.f);
-        atmo.setPosition(360.f, 150.f);
-        atmo.setFillColor(sf::Color(planetCol.r / 2, planetCol.g / 2, planetCol.b / 2, 25));
-        sf::RenderStates glowState;
-        glowState.blendMode = sf::BlendAdd;
-        window.draw(atmo, glowState);
-    }
-    else
-    {
-        sf::CircleShape planet(120.f);
-        planet.setOrigin(120.f, 120.f);
-        planet.setPosition(360.f, 150.f);
-        planet.setFillColor(sf::Color(planetCol.r / 3, planetCol.g / 3, planetCol.b / 3, 60));
-        window.draw(planet);
-        sf::CircleShape atmo(140.f);
-        atmo.setOrigin(140.f, 140.f);
-        atmo.setPosition(360.f, 150.f);
-        atmo.setFillColor(sf::Color(planetCol.r / 2, planetCol.g / 2, planetCol.b / 2, 25));
-        sf::RenderStates glowState;
-        glowState.blendMode = sf::BlendAdd;
-        window.draw(atmo, glowState);
     }
 }
 
@@ -331,22 +307,11 @@ LevelEndless::LevelEndless()
     intervalPool.push_back(1.5f);
     intervalPool.push_back(1.8f);
     intervalPool.push_back(2.2f);
-
-    planetColorPool.push_back(sf::Color(180, 120, 60));
-    planetColorPool.push_back(sf::Color(80, 60, 180));
-    planetColorPool.push_back(sf::Color(30, 120, 50));
-
-    planetTexturePool.push_back("assets/textures/planet1.png");
-    planetTexturePool.push_back("assets/textures/planet2.png");
-    planetTexturePool.push_back("assets/textures/planet3.png");
-
-    chosenPlanet = randInt(0, (int)planetTexturePool.size() - 1);
 }
 
 void LevelEndless::buildWaves()
 {
     events.clear();
-    chosenPlanet = randInt(0, (int)planetTexturePool.size() - 1);
     rollNextCycle();
     spawnTimer = 0.f;
 }
