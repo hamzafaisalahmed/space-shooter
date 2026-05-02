@@ -23,10 +23,6 @@ add_executable(SpaceShooter
     src/EnemyType.cpp
     src/BulletType.cpp
     src/PickupType.cpp
-    src/Exceptions.cpp
-    src/ScoreEvent.cpp
-    src/HighScore.cpp
-    src/Player.cpp
 )
 
 target_link_libraries(SpaceShooter
