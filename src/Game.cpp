@@ -579,6 +579,7 @@ void Game::checkCollisions()
                         cStart = sf::Color(255, 160, 30);
                         cEnd = sf::Color(200, 40, 10, 0);
                         label = "Small enemy";
+                        spawnExplosion(e.pos, cStart, cEnd, pCount, 1);
                     }
                     else if (e.type == EnemyType::Medium)
                     {
@@ -586,6 +587,7 @@ void Game::checkCollisions()
                         cEnd = sf::Color(20, 150, 50, 0);
                         pCount = 18;
                         label = "Medium enemy";
+                        spawnExplosion(e.pos, cStart, cEnd, pCount, 2);
                     }
                     else
                     {
@@ -593,8 +595,8 @@ void Game::checkCollisions()
                         cEnd = sf::Color(80, 20, 20, 0);
                         pCount = 40;
                         label = "BOSS";
+                        spawnExplosion(e.pos, cStart, cEnd, pCount, 5);
                     }
-                    spawnExplosion(e.pos, cStart, cEnd, pCount);
                     player += e.scoreValue;
                     scoreLog.push_front(ScoreEvent(label, e.scoreValue, levelTimer));
                     spawnPickup(e.pos, PickupType::Score);
@@ -850,8 +852,11 @@ void Game::spawnEnemyBullet(Enemy &e)
     }
 }
 
-void Game::spawnExplosion(sf::Vector2f pos, sf::Color cStart, sf::Color cEnd, int count)
+void Game::spawnExplosion(sf::Vector2f pos, sf::Color cStart, sf::Color cEnd, int count, int depth)
 {
+    if (depth <= 0 || count <= 0)
+        return;
+
     for (int i = 0; i < count; i++)
     {
         Particle *p = particles.alloc();
@@ -867,6 +872,12 @@ void Game::spawnExplosion(sf::Vector2f pos, sf::Color cStart, sf::Color cEnd, in
         p->maxLife = randFloat(0.3f, 0.8f);
         p->life = p->maxLife;
         p->size = randFloat(1.5f, 4.f);
+    }
+
+    for (int i = 0; i < 3; i++)
+    {
+        sf::Vector2f offset(randFloat(-25.f, 25.f), randFloat(-25.f, 25.f));
+        spawnExplosion(pos + offset, cStart, cEnd, count / 2, depth - 1);
     }
 }
 

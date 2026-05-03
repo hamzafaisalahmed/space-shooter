@@ -66,7 +66,7 @@ private:
 
     void checkCollisions();
     void checkSpawns(float dt);
-    void spawnExplosion(sf::Vector2f pos, sf::Color cStart, sf::Color cEnd, int count);
+    void spawnExplosion(sf::Vector2f pos, sf::Color cStart, sf::Color cEnd, int count, int depth = 1);
     void spawnPickup(sf::Vector2f pos, PickupType *ptype);
 
     void spawnPlayerBullet();
