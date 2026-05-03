@@ -11,8 +11,6 @@
 #include "Player.h"
 #include "GameData.h"
 #include "Level.h"
-#include "ScoreEvent.h"
-#include "HighScore.h"
 #include "Utils.h"
 
 class Game
@@ -48,8 +46,6 @@ private:
     float levelTimer;
 
     std::queue<SpawnJob> spawnQueue;
-    std::list<ScoreEvent> scoreLog;
-    std::vector<HighScore> highScores;
 
     float bgY;
     bool bossActive;
@@ -99,11 +95,6 @@ private:
     void drawTextCentered(const std::string &str, float y, int size, sf::Color col);
     bool isLevelClear();
     int countActiveEnemies();
-
-    void recordHighScore(int score, int levelIndex);
-    void sortHighScores();
-    void loadHighScores();
-    void saveHighScores();
 
 public:
     Game();

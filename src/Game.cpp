@@ -152,7 +152,6 @@ void Game::init()
 
     buildLevels();
     initStars();
-    loadHighScores();
 
     stateStack.push(GameState::Home);
 }
@@ -349,7 +348,6 @@ void Game::startLevel(int index)
     for (int i = 0; i < (int)evs.size(); i++)
         evs[i].fired = false;
 
-    scoreLog.clear();
     resetPlayer();
 
     while (!stateStack.empty())
@@ -541,7 +539,6 @@ void Game::update(float dt)
     checkCollisions();
     if (isLevelClear())
     {
-        recordHighScore(player.getScore(), currentLevel);
         stateStack.push(GameState::LevelComplete);
     }
 }
@@ -598,7 +595,6 @@ void Game::checkCollisions()
                         spawnExplosion(e.pos, cStart, cEnd, pCount, 5);
                     }
                     player += e.scoreValue;
-                    scoreLog.push_front(ScoreEvent(label, e.scoreValue, levelTimer));
                     spawnPickup(e.pos, PickupType::Score);
                     if (e.type == EnemyType::Medium && e.hp < 40.f)
                         spawnPickup(e.pos + sf::Vector2f(15.f, 0.f), PickupType::Health);
@@ -646,7 +642,6 @@ void Game::checkCollisions()
                         if (player.getLives() <= 0)
                         {
                             player.setAlive(false);
-                            recordHighScore(player.getScore(), currentLevel);
                             stateStack.push(GameState::GameOver);
                         }
                         else
@@ -687,7 +682,6 @@ void Game::checkCollisions()
                         if (player.getLives() <= 0)
                         {
                             player.setAlive(false);
-                            recordHighScore(player.getScore(), currentLevel);
                             stateStack.push(GameState::GameOver);
                         }
                         else
@@ -713,7 +707,6 @@ void Game::checkCollisions()
             if (pk.type == PickupType::Score)
             {
                 player += 25;
-                scoreLog.push_front(ScoreEvent("Score orb", 25, levelTimer));
             }
             else if (pk.type == PickupType::Health)
             {
@@ -1328,13 +1321,6 @@ void Game::renderHomeScreen()
 
     drawTextCentered("Click PLAY to start", 540.f, 12,
                      sf::Color(110, 130, 170));
-
-    if (!highScores.empty())
-    {
-        std::ostringstream oss;
-        oss << "Top Score: " << highScores[0];
-        drawTextCentered(oss.str(), 580.f, 13, sf::Color(255, 200, 120));
-    }
 }
 
 void Game::renderLevelSelect()
@@ -1406,31 +1392,6 @@ void Game::renderLevelSelect()
     // Centered Endless text to make it look like a unified UI button
     drawTextCentered("ENDLESS MODE", 430.f, 20, sf::Color(255, 180, 240));
     drawTextCentered("Unlimited waves. Click to start.", 460.f, 13, sf::Color(200, 150, 220));
-
-    // --- High Scores (Kept as requested) ---
-    sf::Text scoreHeader;
-    scoreHeader.setFont(font);
-    scoreHeader.setString("HIGH SCORES");
-    scoreHeader.setCharacterSize(12);
-    scoreHeader.setFillColor(sf::Color(140, 160, 200));
-    scoreHeader.setPosition(60.f, 528.f);
-    window.draw(scoreHeader);
-
-    int shownScores = (int)highScores.size();
-    if (shownScores > 4)
-        shownScores = 4;
-    for (int i = 0; i < shownScores; i++)
-    {
-        std::ostringstream oss;
-        oss << (i + 1) << ". " << highScores[i];
-        sf::Text t;
-        t.setFont(font);
-        t.setString(oss.str());
-        t.setCharacterSize(12);
-        t.setFillColor(sf::Color(180, 200, 220));
-        t.setPosition(60.f, 548.f + i * 16.f);
-        window.draw(t);
-    }
 
     // --- Navigation Buttons (Kept as requested) ---
     sf::RectangleShape backBtn(sf::Vector2f(100.f, 36.f));
@@ -1530,60 +1491,4 @@ void Game::renderLevelCompleteOverlay()
     drawTextCentered("Score: " + std::to_string(player.getScore()), 355.f, 16,
                      sf::Color(180, 200, 220));
     drawTextCentered("Click to continue", 400.f, 13, sf::Color(100, 140, 130));
-}
-
-void Game::recordHighScore(int score, int levelIndex)
-{
-    HighScore hs("Pilot", score, levelIndex);
-    highScores.push_back(hs);
-    sortHighScores();
-    while ((int)highScores.size() > 10)
-        highScores.pop_back();
-    saveHighScores();
-}
-
-void Game::sortHighScores()
-{
-    int n = (int)highScores.size();
-    for (int i = 1; i < n; i++)
-    {
-        HighScore key = highScores[i];
-        int j = i - 1;
-        while (j >= 0 && key < highScores[j])
-        {
-            highScores[j + 1] = highScores[j];
-            j--;
-        }
-        highScores[j + 1] = key;
-    }
-}
-
-void Game::loadHighScores()
-{
-    highScores.clear();
-    std::ifstream in("highscores.txt");
-    if (!in.is_open())
-        return;
-    std::string name;
-    int score, lvl;
-    while (in >> name >> score >> lvl)
-    {
-        highScores.push_back(HighScore(name, score, lvl));
-    }
-    in.close();
-    sortHighScores();
-}
-
-void Game::saveHighScores()
-{
-    std::ofstream out("highscores.txt");
-    if (!out.is_open())
-        return;
-    for (int i = 0; i < (int)highScores.size(); i++)
-    {
-        out << highScores[i].getName() << " "
-            << highScores[i].getScore() << " "
-            << highScores[i].getLevelIndex() << "\n";
-    }
-    out.close();
 }

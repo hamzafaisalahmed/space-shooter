@@ -283,8 +283,6 @@ CMakeFiles/SpaceShooter.dir/src/main.cpp.obj: \
  C:\CODING_PROJECTS\SpaceShooter\src\EnemyType.h \
  C:\CODING_PROJECTS\SpaceShooter\src\PickupType.h \
  C:\CODING_PROJECTS\SpaceShooter\src\Level.h \
- C:\CODING_PROJECTS\SpaceShooter\src\ScoreEvent.h \
  C:/msys64/ucrt64/include/c++/15.2.0/iostream \
  C:/msys64/ucrt64/include/c++/15.2.0/istream \
- C:/msys64/ucrt64/include/c++/15.2.0/bits/istream.tcc \
- C:\CODING_PROJECTS\SpaceShooter\src\HighScore.h
+ C:/msys64/ucrt64/include/c++/15.2.0/bits/istream.tcc
