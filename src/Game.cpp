@@ -26,9 +26,9 @@ void Game::buildLevels()
         delete levels[i];
     levels.clear();
 
-    levels.push_back(new LevelAries());
-    levels.push_back(new LevelTaurus());
-    levels.push_back(new LevelGemini());
+    levels.push_back(new LevelOne());
+    levels.push_back(new LevelTwo());
+    levels.push_back(new LevelThree());
     levels.push_back(new LevelEndless());
 
     for (int i = 0; i < (int)levels.size(); i++)
@@ -127,6 +127,7 @@ void Game::init()
     {
         loadTextureOrThrow(homeplanet1, "assets/textures/planet1.png");
         loadTextureOrThrow(homeplanet2, "assets/textures/planet2.png");
+        loadTextureOrThrow(homeplanet3, "assets/textures/planet3.png");
     }
     catch (const AssetLoadException &ex)
     {
@@ -1352,37 +1353,34 @@ void Game::renderLevelSelect()
         drawTextCentered(sel->getDesc(), 160.f, 13, sf::Color(120, 140, 170));
     }
 
-    // --- 3 Level Circles ---
     float planetY = 280.f;
-    float spacing = 480.f / 4.f;                           // Divides screen by 4 to evenly space exactly 3 elements
-    int numLevelsToDraw = std::min(3, (int)levels.size()); // Safely draw up to 3 levels
+    float spacing = 120.f; // Simple fixed spacing between planets
 
-    for (int i = 0; i < numLevelsToDraw; i++)
+    // Since you only have 3 levels, we can just loop exactly 3 times
+    for (int i = 0; i < 3; i++)
     {
         float px = spacing * (i + 1);
-        float radius = (i == selectedLevel) ? 36.f : 26.f;
 
-        if (i == selectedLevel)
-        {
-            sf::CircleShape orbit(46.f);
-            orbit.setOrigin(46.f, 46.f);
-            orbit.setPosition(px, planetY);
-            orbit.setFillColor(sf::Color::Transparent);
-            orbit.setOutlineColor(sf::Color(255, 200, 40, 80));
-            orbit.setOutlineThickness(1.5f);
-            window.draw(orbit);
-        }
+        sf::Sprite planetSprite;
+        if (i == 0)
+            planetSprite.setTexture(homeplanet1);
+        if (i == 1)
+            planetSprite.setTexture(homeplanet2);
+        if (i == 2)
+            planetSprite.setTexture(homeplanet3);
 
-        sf::Color pCol = levels[i]->getPlanetColor();
-        sf::CircleShape planet(radius);
-        planet.setOrigin(radius, radius);
-        planet.setPosition(px, planetY);
-        planet.setFillColor(pCol);
-        window.draw(planet);
+        // 3. Set the size (Selected planet is bigger)
+        sf::FloatRect bounds = planetSprite.getLocalBounds();
+        planetSprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f); // Center it
+
+        float targetSize = (i == selectedLevel) ? 72.f : 52.f;
+        planetSprite.setScale(targetSize / bounds.width, targetSize / bounds.height);
+
+        // 4. Position and draw (No color tinting!)
+        planetSprite.setPosition(px, planetY);
+        window.draw(planetSprite);
     }
-
-    // --- Endless Mode Card (Orbs removed, acts as a button) ---
-    sf::RectangleShape endlessCard(sf::Vector2f(360.f, 80.f)); // Slightly thinner without the orb
+    sf::RectangleShape endlessCard(sf::Vector2f(360.f, 80.f));
     endlessCard.setPosition(60.f, 410.f);
     endlessCard.setFillColor(sf::Color(40, 12, 50));
     endlessCard.setOutlineColor(sf::Color(220, 80, 200));
@@ -1424,7 +1422,6 @@ void Game::renderLevelSelect()
     playTxt.setPosition(365.f, 666.f);
     window.draw(playTxt);
 }
-
 void Game::renderPauseOverlay()
 {
     sf::RectangleShape dim(sf::Vector2f(480.f, 720.f));

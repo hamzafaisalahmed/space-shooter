@@ -155,14 +155,13 @@ void Level::renderPlanet(sf::RenderWindow &window)
     }
 }
 
-LevelAries::LevelAries()
+LevelOne::LevelOne()
 {
-    name = "ARIES";
-    desc = "The Beginning";
-    planetColor = sf::Color(180, 120, 60);
+    name = "HOME INVASION";
+    desc = "Fight off the invaders and protect Earth!";
 }
 
-void LevelAries::buildWaves()
+void LevelOne::buildWaves()
 {
     events.clear();
     events.push_back(makeEvent(1.0f, EnemyType::Small, sf::Vector2f(240, -40), pathSweepCenter(), 1, 55.f, 0.25f));
@@ -187,14 +186,13 @@ void LevelAries::buildWaves()
     events.push_back(makeEvent(43.0f, EnemyType::Boss, sf::Vector2f(240, -80), pathBossEnter(), 1, 55.f, 0.25f));
 }
 
-LevelTaurus::LevelTaurus()
+LevelTwo::LevelTwo()
 {
-    name = "TAURUS";
-    desc = "The Challenge";
-    planetColor = sf::Color(80, 60, 180);
+    name = "SURPRISE ASSAULT";
+    desc = "Keep pushing forward and capture their base!";
 }
 
-void LevelTaurus::buildWaves()
+void LevelTwo::buildWaves()
 {
     events.clear();
     events.push_back(makeEvent(1.0f, EnemyType::Small, sf::Vector2f(240, -40), pathSweepCenter(), 3, 55.f, 0.25f));
@@ -225,14 +223,13 @@ void LevelTaurus::buildWaves()
     events.push_back(makeEvent(54.0f, EnemyType::Boss, sf::Vector2f(240, -80), pathBossEnter(), 1, 55.f, 0.25f));
 }
 
-LevelGemini::LevelGemini()
+LevelThree::LevelThree()
 {
-    name = "GEMINI";
-    desc = "The Final Stand";
-    planetColor = sf::Color(30, 120, 50);
+    name = "THE FINAL BATTLE";
+    desc = "We found their homeworld! Lets end this war!";
 }
 
-void LevelGemini::buildWaves()
+void LevelThree::buildWaves()
 {
     events.clear();
     events.push_back(makeEvent(1.0f, EnemyType::Medium, sf::Vector2f(240, -40), pathSweepCenter(), 2, 80.f, 0.25f));

@@ -13,56 +13,52 @@ class Level
 protected:
     std::string name;
     std::string desc;
-    sf::Color planetColor;
     std::vector<SpawnEvent> events;
     sf::Texture planetTexture;
     bool planetLoaded;
 
 public:
-    Level() : planetColor(sf::Color::White), planetLoaded(false) {}
+    Level() : planetLoaded(false) {}
     virtual ~Level() {}
 
     std::string getName() const { return name; }
     std::string getDesc() const { return desc; }
     std::vector<SpawnEvent> &getEvents() { return events; }
 
-    virtual float getDuration() const { return 60.f; }
-    virtual sf::Color getPlanetColor() const { return planetColor; }
-    virtual std::string getPlanetTexturePath() const { return ""; }
+    virtual float getDuration() const = 0;
+    virtual std::string getPlanetTexturePath() const = 0;
     virtual void buildWaves() = 0;
     virtual bool isEndless() const { return false; }
-    virtual void updateEndless(float /*dt*/, float /*levelTimer*/,
-                               std::queue<SpawnJob> & /*q*/, int /*activeEnemies*/,
-                               bool /*bossOnScreen*/) {}
+    virtual void updateEndless(float, float, std::queue<SpawnJob> &, int, bool) {} // only used by endless level, but kept here so can be accessed by parent class pointer
     virtual void renderPlanet(sf::RenderWindow &window);
     void loadPlanet();
 };
 
-class LevelAries : public Level
+class LevelOne : public Level
 {
 public:
-    LevelAries();
-    float getDuration() const { return 55.f; }
-    std::string getPlanetTexturePath() const { return "assets/textures/planet1.png"; }
-    void buildWaves();
+    LevelOne();
+    float getDuration() const override { return 55.f; }
+    std::string getPlanetTexturePath() const override { return "assets/textures/planet1.png"; }
+    void buildWaves() override;
 };
 
-class LevelTaurus : public Level
+class LevelTwo : public Level
 {
 public:
-    LevelTaurus();
-    float getDuration() const { return 65.f; }
-    std::string getPlanetTexturePath() const { return "assets/textures/planet2.png"; }
-    void buildWaves();
+    LevelTwo();
+    float getDuration() const override { return 65.f; }
+    std::string getPlanetTexturePath() const override { return "assets/textures/planet2.png"; }
+    void buildWaves() override;
 };
 
-class LevelGemini : public Level
+class LevelThree : public Level
 {
 public:
-    LevelGemini();
-    float getDuration() const { return 80.f; }
-    std::string getPlanetTexturePath() const { return "assets/textures/planet3.png"; }
-    void buildWaves();
+    LevelThree();
+    float getDuration() const override { return 80.f; }
+    std::string getPlanetTexturePath() const override { return "assets/textures/planet3.png"; }
+    void buildWaves() override;
 };
 
 class LevelEndless : public Level
@@ -85,11 +81,12 @@ private:
 
 public:
     LevelEndless();
-    float getDuration() const { return 99999.f; }
-    bool isEndless() const { return true; }
-    void buildWaves();
+    std::string getPlanetTexturePath() const override { return ""; }
+    float getDuration() const override { return 99999.f; }
+    bool isEndless() const override { return true; }
+    void buildWaves() override;
     void updateEndless(float dt, float levelTimer,
                        std::queue<SpawnJob> &q, int activeEnemies,
-                       bool bossOnScreen);
+                       bool bossOnScreen) override;
     void rollNextCycle();
 };

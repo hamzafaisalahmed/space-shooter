@@ -2,10 +2,14 @@
 
 class BulletType
 {
+    int id;
+    bool playerBullet;
+
 public:
+    BulletType(int id, bool playerBullet) : id(id), playerBullet(playerBullet) {}
     virtual ~BulletType() {}
-    virtual int getId() const = 0;
-    virtual bool isPlayerBullet() const = 0;
+    int getId() const { return id; }
+    bool isPlayerBullet() const { return playerBullet; }
     static BulletType *PlayerNorm;
     static BulletType *PlayerWide;
     static BulletType *PlayerTriple;
@@ -17,27 +21,23 @@ public:
 class PlayerNormBullet : public BulletType
 {
 public:
-    int getId() const { return 0; }
-    bool isPlayerBullet() const { return true; }
+    PlayerNormBullet() : BulletType(0, true) {}
 };
 
 class EnemyNormBullet : public BulletType
 {
 public:
-    int getId() const { return 3; }
-    bool isPlayerBullet() const { return false; }
+    EnemyNormBullet() : BulletType(3, false) {}
 };
 
 class EnemyBurstBullet : public BulletType
 {
 public:
-    int getId() const { return 4; }
-    bool isPlayerBullet() const { return false; }
+    EnemyBurstBullet() : BulletType(4, false) {}
 };
 
 class BossBeamBullet : public BulletType
 {
 public:
-    int getId() const { return 5; }
-    bool isPlayerBullet() const { return false; }
+    BossBeamBullet() : BulletType(5, false) {}
 };

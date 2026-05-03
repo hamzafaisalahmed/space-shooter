@@ -4,10 +4,14 @@
 
 class PickupType
 {
+    int id;
+    sf::Color color;
+
 public:
+    PickupType(int id, sf::Color color) : id(id), color(color) {}
     virtual ~PickupType() {}
-    virtual int getId() const = 0;
-    virtual sf::Color getColor() const = 0;
+    int getId() const { return id; }
+    sf::Color getColor() const { return color; }
     static PickupType *Score;
     static PickupType *Health;
 };
@@ -15,13 +19,11 @@ public:
 class ScorePickupType : public PickupType
 {
 public:
-    int getId() const { return 0; }
-    sf::Color getColor() const { return sf::Color(60, 120, 255); }
+    ScorePickupType() : PickupType(0, sf::Color(60, 120, 255)) {}
 };
 
 class HealthPickupType : public PickupType
 {
 public:
-    int getId() const { return 1; }
-    sf::Color getColor() const { return sf::Color(60, 220, 80); }
+    HealthPickupType() : PickupType(1, sf::Color(60, 220, 80)) {}
 };
