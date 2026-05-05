@@ -257,7 +257,6 @@ CMakeFiles/SpaceShooter.dir/src/main.cpp.obj: \
  C:/msys64/ucrt64/include/c++/15.2.0/queue \
  C:/msys64/ucrt64/include/c++/15.2.0/bits/stl_queue.h \
  C:\CODING_PROJECTS\SpaceShooter\src\GameState.h \
- C:\CODING_PROJECTS\SpaceShooter\src\Exceptions.h \
  C:\CODING_PROJECTS\SpaceShooter\src\Player.h \
  C:\CODING_PROJECTS\SpaceShooter\src\Utils.h \
  C:/msys64/ucrt64/include/c++/15.2.0/cmath \

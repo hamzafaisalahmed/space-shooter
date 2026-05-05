@@ -30,13 +30,12 @@ struct Enemy
     int pathIndex;
     float angle;
     float pulse;
-    int phase;
     int scoreValue;
     float moveSpeed;
     Enemy()
         : pos(0.f, 0.f), vel(0.f, 0.f), hp(30.f), maxHp(30.f), type(0),
           on(false), shootTimer(0.f), shootInterval(2.2f),
-          pathIndex(0), angle(0.f), pulse(0.f), phase(0),
+          pathIndex(0), angle(0.f), pulse(0.f),
           scoreValue(50), moveSpeed(200.f) {}
 };
 

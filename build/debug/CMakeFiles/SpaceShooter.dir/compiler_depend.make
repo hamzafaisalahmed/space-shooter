@@ -300,7 +300,6 @@ CMakeFiles/SpaceShooter.dir/src/Game.cpp.obj: C:/CODING_PROJECTS/SpaceShooter/sr
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/syslimits.h \
   C:/CODING_PROJECTS/SpaceShooter/src/BulletType.h \
   C:/CODING_PROJECTS/SpaceShooter/src/EnemyType.h \
-  C:/CODING_PROJECTS/SpaceShooter/src/Exceptions.h \
   C:/CODING_PROJECTS/SpaceShooter/src/Game.h \
   C:/CODING_PROJECTS/SpaceShooter/src/GameData.h \
   C:/CODING_PROJECTS/SpaceShooter/src/GameState.h \
@@ -883,7 +882,6 @@ CMakeFiles/SpaceShooter.dir/src/main.cpp.obj: C:/CODING_PROJECTS/SpaceShooter/sr
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/syslimits.h \
   C:/CODING_PROJECTS/SpaceShooter/src/BulletType.h \
   C:/CODING_PROJECTS/SpaceShooter/src/EnemyType.h \
-  C:/CODING_PROJECTS/SpaceShooter/src/Exceptions.h \
   C:/CODING_PROJECTS/SpaceShooter/src/Game.h \
   C:/CODING_PROJECTS/SpaceShooter/src/GameData.h \
   C:/CODING_PROJECTS/SpaceShooter/src/GameState.h \
@@ -1487,8 +1485,6 @@ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/stddef.h:
 C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/stdint.h:
 
 C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/syslimits.h:
-
-C:/CODING_PROJECTS/SpaceShooter/src/Exceptions.h:
 
 C:/CODING_PROJECTS/SpaceShooter/src/Game.h:
 

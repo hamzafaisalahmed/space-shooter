@@ -7,7 +7,6 @@
 #include <queue>
 #include <string>
 #include "GameState.h"
-#include "Exceptions.h"
 #include "Player.h"
 #include "GameData.h"
 #include "Level.h"
@@ -81,7 +80,7 @@ private:
     void renderGameOverOverlay();
     void renderLevelCompleteOverlay();
 
-    void drawPlayerShip(sf::Vector2f pos, float tilt, float scale, sf::Color tint);
+    void drawPlayerShip(sf::Vector2f pos, float tilt, float scale);
     void drawSmallEnemy(sf::Vector2f pos, float angle);
     void drawMediumEnemy(sf::Vector2f pos, float angle);
     void drawBossEnemy(sf::Vector2f pos, float angle);

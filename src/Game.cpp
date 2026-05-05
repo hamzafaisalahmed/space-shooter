@@ -6,6 +6,19 @@
 #include <iostream>
 #include <sstream>
 #include <ctime>
+#include <stdexcept>
+
+class AssetLoadException : public std::runtime_error
+{
+public:
+    AssetLoadException() : std::runtime_error("Failed to load asset") {}
+};
+
+class InvalidLevelException : public std::runtime_error
+{
+public:
+    InvalidLevelException() : std::runtime_error("Invalid level") {}
+};
 
 Game::Game()
     : currentLevel(0), selectedLevel(0), levelTimer(0.f),
@@ -43,7 +56,7 @@ void Game::loadFontOrThrow(const std::string &path)
     {
         if (!font.loadFromFile("ProFontWindows.ttf"))
         {
-            throw AssetLoadException("Could not load font: " + path);
+            throw AssetLoadException();
         }
     }
 }
@@ -52,7 +65,7 @@ void Game::loadTextureOrThrow(sf::Texture &tex, const std::string &path)
 {
     if (!tex.loadFromFile(path))
     {
-        throw AssetLoadException("Could not load texture: " + path);
+        throw AssetLoadException();
     }
 }
 
@@ -256,7 +269,7 @@ void Game::handleEvents()
 void Game::startLevel(int index)
 {
     if (index < 0 || index >= (int)levels.size())
-        throw InvalidLevelException("startLevel: index out of range");
+        throw InvalidLevelException();
 
     currentLevel = index;
     levelTimer = 0.f;
@@ -384,17 +397,12 @@ void Game::update(float dt)
                 continue;
             }
         }
-        if (e.type == EnemyType::Boss && e.phase == 0 && e.hp < e.maxHp * 0.4f)
-        {
-            e.phase = 1;
-            spawnExplosion(e.pos, sf::Color(80, 100, 255), sf::Color(20, 40, 120, 0), 16);
-        }
         e.shootTimer -= dt;
         if (e.shootTimer <= 0.f)
         {
             spawnEnemyBullet(e);
             if (e.type == EnemyType::Boss)
-                e.shootTimer = (e.phase == 0) ? 0.8f : 0.6f;
+                e.shootTimer = 0.6f;
             else
                 e.shootTimer = e.shootInterval;
         }
@@ -637,7 +645,6 @@ void Game::spawnEnemyFromJob(const SpawnJob &job)
     e->pathIndex = 0;
     e->angle = 0.f;
     e->pulse = 0.f;
-    e->phase = 0;
     e->scoreValue = job.scoreValue;
     e->moveSpeed = job.moveSpeed;
 }
@@ -692,21 +699,22 @@ void Game::spawnEnemyBullet(Enemy &e)
     }
     else if (e.type == EnemyType::Boss)
     {
-        int numShots = (e.phase == 0) ? 5 : 8;
-        float spread = 0.22f;
-        float bulletSpeed = (e.phase == 0) ? 220.f : 280.f;
-        for (int i = 0; i < numShots; i++)
+        // Start 0.7 radians to the left of the base angle
+        sf::Vector2f diff = player.getPos() - e.pos;
+        float aimAngle = std::atan2(diff.y, diff.x);
+
+        for (int i = 0; i < 8; i++)
         {
-            float a = baseAngle + (i - (numShots - 1) / 2.f) * spread;
-            sf::Vector2f dir(std::cos(a), std::sin(a));
-            Bullet *b = bullets.alloc();
-            if (b)
+            // Simply add 0.2 radians for each bullet in the fan
+            float a = aimAngle + (i * 0.2f);
+
+            if (Bullet *b = bullets.alloc())
             {
                 b->on = true;
                 b->pos = e.pos;
-                b->vel = dir * bulletSpeed;
+                b->vel = sf::Vector2f(std::cos(a), std::sin(a)) * 220.f;
                 b->dmg = 12.f;
-                b->type = (i == numShots / 2) ? BulletType::BossBeam : BulletType::EnemyBurst;
+                b->type = (i % 2) ? BulletType::BossBeam : BulletType::EnemyBurst;
             }
         }
     }
@@ -866,32 +874,14 @@ void Game::renderPlayer()
         if ((int)(player.getIframeTimer() * 10.f) % 2 == 0)
             return;
     }
-    drawPlayerShip(player.getPos(), player.getTilt(), 0.4f, sf::Color::White);
-    if (player.getShieldTimer() > 0.f)
-    {
-        sf::CircleShape shield(24.f);
-        shield.setOrigin(24.f, 24.f);
-        shield.setPosition(player.getPos());
-        shield.setFillColor(sf::Color::Transparent);
-        shield.setOutlineColor(sf::Color(60, 160, 255, 140));
-        shield.setOutlineThickness(2.f);
-        window.draw(shield);
-        sf::CircleShape glow(28.f);
-        glow.setOrigin(28.f, 28.f);
-        glow.setPosition(player.getPos());
-        glow.setFillColor(sf::Color(60, 160, 255, 25));
-        sf::RenderStates gs;
-        gs.blendMode = sf::BlendAdd;
-        window.draw(glow, gs);
-    }
+    drawPlayerShip(player.getPos(), player.getTilt(), 0.4f);
 }
 
-void Game::drawPlayerShip(sf::Vector2f pos, float tilt, float scale, sf::Color tint)
+void Game::drawPlayerShip(sf::Vector2f pos, float tilt, float scale)
 {
     shipSprite.setPosition(pos);
     shipSprite.setRotation(tilt);
     shipSprite.setScale(scale, scale);
-    shipSprite.setColor(tint);
     window.draw(shipSprite);
 }
 
@@ -941,7 +931,7 @@ void Game::drawBossEnemy(sf::Vector2f pos, float angle)
     sprite.setTexture(bossEnemyTexture);
     sf::FloatRect bounds = sprite.getLocalBounds();
     sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
-    sprite.setScale(0.1f, 0.1f);
+    sprite.setScale(0.4f, 0.4f);
     sprite.setPosition(pos);
     sprite.setRotation(angle);
     window.draw(sprite);
@@ -1054,35 +1044,37 @@ void Game::renderHUD()
 
 void Game::renderBossHP()
 {
-    int bossIdx = 0;
+    if (!bossActive)
+        return;
+
     for (int i = 0; i < enemies.capacity(); i++)
     {
         Enemy &e = enemies.at(i);
-        if (!e.on || e.type != EnemyType::Boss)
-            continue;
-        float barWidth = 180.f;
-        float barX = 150.f + bossIdx * 100.f;
-        float barY = 8.f;
-        float hpPct = e.hp / e.maxHp;
-        sf::RectangleShape bg(sf::Vector2f(barWidth + 4.f, 10.f));
-        bg.setPosition(barX - 2.f, barY);
-        bg.setFillColor(sf::Color(20, 15, 25));
-        bg.setOutlineColor(sf::Color(80, 30, 30));
-        bg.setOutlineThickness(1.f);
-        window.draw(bg);
-        sf::Color bCol = (e.phase == 0) ? sf::Color(180, 40, 40) : sf::Color(255, 100, 30);
-        sf::RectangleShape fill(sf::Vector2f(barWidth * hpPct, 6.f));
-        fill.setPosition(barX, barY + 2.f);
-        fill.setFillColor(bCol);
-        window.draw(fill);
-        sf::Text label;
-        label.setFont(font);
-        label.setString("BOSS");
-        label.setCharacterSize(9);
-        label.setFillColor(sf::Color(200, 100, 100));
-        label.setPosition(barX + barWidth / 2.f - 14.f, barY - 2.f);
-        window.draw(label);
-        bossIdx++;
+        if (e.on && e.type == EnemyType::Boss)
+        {
+            float hpPct = std::max(0.f, e.hp / e.maxHp);
+
+            // 1. Background Bar (Centered at 240)
+            sf::RectangleShape bg(sf::Vector2f(200.f, 10.f));
+            bg.setOrigin(100.f, 5.f);
+            bg.setPosition(240.f, 20.f);
+            bg.setFillColor(sf::Color(20, 15, 25));
+            bg.setOutlineColor(sf::Color(80, 30, 30));
+            bg.setOutlineThickness(1.f);
+            window.draw(bg);
+
+            // 2. Health Fill
+            sf::RectangleShape fill(sf::Vector2f(200.f * hpPct, 10.f));
+            fill.setOrigin(100.f, 5.f);
+            fill.setPosition(240.f, 20.f);
+            fill.setFillColor(sf::Color(180, 40, 40));
+            window.draw(fill);
+
+            // 3. Simple Label
+            drawTextCentered("BOSS", 35.f, 12, sf::Color(200, 100, 100));
+
+            return; // Found the boss, stop searching
+        }
     }
 }
 
@@ -1095,7 +1087,6 @@ void Game::renderHomeScreen()
     p1.setOrigin(homeplanet1.getSize().x / 2.f, homeplanet1.getSize().y / 2.f);
     p1.setPosition(80.f, 600.f);
     p1.setScale(280.f / homeplanet1.getSize().x, 280.f / homeplanet1.getSize().x);
-    p1.setColor(sf::Color(255, 255, 255, 180));
     window.draw(p1);
 
     sf::Sprite p2(homeplanet2);
