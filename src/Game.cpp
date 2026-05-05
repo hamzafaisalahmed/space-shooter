@@ -1012,31 +1012,33 @@ void Game::renderParticles()
 
 void Game::renderHUD()
 {
+    // 1. Health Bar
     sf::RectangleShape hpBg(sf::Vector2f(104.f, 10.f));
     hpBg.setPosition(20.f, 16.f);
     hpBg.setFillColor(sf::Color(20, 20, 30));
-    hpBg.setOutlineColor(sf::Color(40, 50, 70));
-    hpBg.setOutlineThickness(1.f);
     window.draw(hpBg);
-    float hpPct = player.getHp() / player.getMaxHp();
-    sf::Color hpCol;
-    if (hpPct > 0.5f)
-        hpCol = sf::Color(60, 140, 255);
-    else if (hpPct > 0.25f)
-        hpCol = sf::Color(255, 200, 40);
-    else
-        hpCol = sf::Color(255, 60, 40);
+
+    float hpPct = std::max(0.f, player.getHp() / player.getMaxHp());
     sf::RectangleShape hpFill(sf::Vector2f(100.f * hpPct, 6.f));
     hpFill.setPosition(22.f, 18.f);
-    hpFill.setFillColor(hpCol);
+    hpFill.setFillColor(sf::Color(60, 140, 255));
     window.draw(hpFill);
 
+    // 2. Lives (Simplified: between HP and Score)
+    shipSprite.setRotation(0.f);
+    shipSprite.setScale(0.1f, 0.1f);
+    for (int i = 0; i < player.getLives(); i++)
+    {
+        shipSprite.setPosition(25.f + (i * 22.f), 38.f);
+        window.draw(shipSprite);
+    }
+
+    // 3. Score
     sf::Text scoreTxt;
     scoreTxt.setFont(font);
     scoreTxt.setString("SCORE: " + std::to_string(player.getScore()));
     scoreTxt.setCharacterSize(14);
-    scoreTxt.setFillColor(sf::Color(180, 200, 230));
-    scoreTxt.setPosition(20.f, 48.f);
+    scoreTxt.setPosition(20.f, 58.f);
     window.draw(scoreTxt);
 
     window.draw(pauseSprite);

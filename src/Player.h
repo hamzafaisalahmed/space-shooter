@@ -22,7 +22,7 @@ private:
 public:
     Player()
         : pos(240.f, 600.f), hp(100.f), maxHp(100.f), speed(310.f),
-          lives(1), score(0),
+          lives(3), score(0),
           shootTimer(0.f), shootInterval(0.10f),
           iframeTimer(0.f), shieldTimer(0.f), tilt(0.f), alive(true) {}
 
@@ -76,7 +76,7 @@ public:
         tilt = 0.f;
         alive = true;
         score = 0;
-        lives = 1;
+        lives = 3;
     }
 
     Player &operator+=(int scoreBonus)
