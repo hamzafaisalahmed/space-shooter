@@ -29,7 +29,6 @@ void Game::buildLevels()
     levels.push_back(new LevelOne());
     levels.push_back(new LevelTwo());
     levels.push_back(new LevelThree());
-    levels.push_back(new LevelEndless());
 
     for (int i = 0; i < (int)levels.size(); i++)
     {
@@ -80,67 +79,23 @@ void Game::init()
     try
     {
         loadFontOrThrow("assets/fonts/ProFontWindows.ttf");
-    }
-    catch (const AssetLoadException &ex)
-    {
-        std::cerr << "Asset warning: " << ex.what() << "\n";
-    }
-
-    try
-    {
         loadTextureOrThrow(shipTexture, "assets/textures/spaceship.png");
-        shipSprite.setScale(0.05f, 0.05f);
-    }
-    catch (const AssetLoadException &ex)
-    {
-        std::cerr << "Asset warning: " << ex.what() << "\n";
-    }
-    shipSprite.setTexture(shipTexture);
-    sf::FloatRect bounds = shipSprite.getLocalBounds();
-    shipSprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
-
-    try
-    {
         loadTextureOrThrow(smallEnemyTexture, "assets/textures/alien1.png");
-    }
-    catch (const AssetLoadException &ex)
-    {
-        std::cerr << "Asset warning: " << ex.what() << "\n";
-    }
-    try
-    {
         loadTextureOrThrow(mediumEnemyTexture, "assets/textures/alien2.png");
-    }
-    catch (const AssetLoadException &ex)
-    {
-        std::cerr << "Asset warning: " << ex.what() << "\n";
-    }
-    try
-    {
         loadTextureOrThrow(bossEnemyTexture, "assets/textures/boss1.png");
-    }
-    catch (const AssetLoadException &ex)
-    {
-        std::cerr << "Asset warning: " << ex.what() << "\n";
-    }
-    try
-    {
         loadTextureOrThrow(homeplanet1, "assets/textures/planet1.png");
         loadTextureOrThrow(homeplanet2, "assets/textures/planet2.png");
         loadTextureOrThrow(homeplanet3, "assets/textures/planet3.png");
-    }
-    catch (const AssetLoadException &ex)
-    {
-        std::cerr << "Asset warning: " << ex.what() << "\n";
-    }
-    try
-    {
         loadTextureOrThrow(pauseIcon, "assets/textures/pause.png");
     }
     catch (const AssetLoadException &ex)
     {
         std::cerr << "Asset warning: " << ex.what() << "\n";
     }
+    shipSprite.setScale(0.05f, 0.05f);
+    shipSprite.setTexture(shipTexture);
+    sf::FloatRect bounds = shipSprite.getLocalBounds();
+    shipSprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
 
     pauseSprite.setTexture(pauseIcon);
     pauseSprite.setPosition(432.f, 14.f);
@@ -222,62 +177,33 @@ void Game::handleEvents()
             }
             else if (current == GameState::LevelSelect)
             {
-                int n = (int)levels.size();
-                int storyCount = (n > 0) ? n - 1 : 0;
+                // Planet layout constants (must match renderLevelSelect)
                 float planetY = 280.f;
-                float spacing = 480.f / (storyCount + 1);
+                float spacing = 120.f;
+                float hitRadius = 60.f; // Increased to match larger planets
 
-                for (int i = 0; i < storyCount; i++)
+                for (int i = 0; i < 3; i++)
                 {
                     float px = spacing * (i + 1);
+                    // Calculate distance from mouse to planet center
                     float dist = std::hypot(mp.x - px, mp.y - planetY);
-                    if (dist < 50.f)
+
+                    if (dist < hitRadius)
                     {
-                        try
-                        {
-                            if (i < 0 || i >= (int)levels.size())
-                                throw InvalidLevelException("Selected level out of range");
-                            selectedLevel = i;
-                        }
-                        catch (const InvalidLevelException &ex)
-                        {
-                            std::cerr << "Selection error: " << ex.what() << "\n";
-                        }
+                        selectedLevel = i;
+                        break; // Found the planet, stop checking
                     }
                 }
 
-                sf::FloatRect endlessCard(60.f, 410.f, 360.f, 110.f);
-                if (endlessCard.contains(mp))
+                // Play Button
+                sf::FloatRect playRect(336.f, 659.f, 100.f, 36.f);
+                if (playRect.contains(mp) && selectedLevel >= 0)
                 {
-                    try
-                    {
-                        if (n <= 0)
-                            throw InvalidLevelException("No levels available");
-                        selectedLevel = n - 1;
-                        startLevel(selectedLevel);
-                    }
-                    catch (const InvalidLevelException &ex)
-                    {
-                        std::cerr << "Cannot start endless: " << ex.what() << "\n";
-                    }
+                    startLevel(selectedLevel);
                 }
 
-                sf::FloatRect playRect(330.f, 657.f, 110.f, 40.f);
-                if (playRect.contains(mp))
-                {
-                    try
-                    {
-                        if (selectedLevel < 0 || selectedLevel >= (int)levels.size())
-                            throw InvalidLevelException("No level selected");
-                        startLevel(selectedLevel);
-                    }
-                    catch (const InvalidLevelException &ex)
-                    {
-                        std::cerr << "Cannot start level: " << ex.what() << "\n";
-                    }
-                }
-
-                sf::FloatRect backRect(40.f, 657.f, 110.f, 40.f);
+                // Back Button
+                sf::FloatRect backRect(44.f, 659.f, 100.f, 36.f);
                 if (backRect.contains(mp))
                 {
                     stateStack.pop();
@@ -400,12 +326,6 @@ void Game::update(float dt)
     }
 
     checkSpawns(dt);
-
-    if (levels[currentLevel]->isEndless())
-    {
-        levels[currentLevel]->updateEndless(dt, levelTimer, spawnQueue,
-                                            countActiveEnemies(), bossActive);
-    }
 
     while (!spawnQueue.empty())
     {
@@ -886,8 +806,6 @@ void Game::spawnPickup(sf::Vector2f pos, PickupType *ptype)
 
 bool Game::isLevelClear()
 {
-    if (levels[currentLevel]->isEndless())
-        return false;
     std::vector<SpawnEvent> &evs = levels[currentLevel]->getEvents();
     for (int i = 0; i < (int)evs.size(); i++)
         if (!evs[i].fired)
@@ -1324,44 +1242,32 @@ void Game::renderLevelSelect()
         drawTextCentered(sel->getDesc(), 160.f, 13, sf::Color(120, 140, 170));
     }
 
+    // --- 3 Planet Levels ---
     float planetY = 280.f;
-    float spacing = 120.f; // Simple fixed spacing between planets
+    float spacing = 120.f;
 
-    // Since you only have 3 levels, we can just loop exactly 3 times
     for (int i = 0; i < 3; i++)
     {
         float px = spacing * (i + 1);
-
         sf::Sprite planetSprite;
+
         if (i == 0)
             planetSprite.setTexture(homeplanet1);
-        if (i == 1)
+        else if (i == 1)
             planetSprite.setTexture(homeplanet2);
-        if (i == 2)
+        else if (i == 2)
             planetSprite.setTexture(homeplanet3);
 
-        // 3. Set the size (Selected planet is bigger)
         sf::FloatRect bounds = planetSprite.getLocalBounds();
-        planetSprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f); // Center it
+        planetSprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
 
-        float targetSize = (i == selectedLevel) ? 72.f : 52.f;
+        // Bigger Sizes: 100px if selected, 75px if not
+        float targetSize = (i == selectedLevel) ? 100.f : 75.f;
         planetSprite.setScale(targetSize / bounds.width, targetSize / bounds.height);
 
-        // 4. Position and draw (No color tinting!)
         planetSprite.setPosition(px, planetY);
         window.draw(planetSprite);
     }
-    sf::RectangleShape endlessCard(sf::Vector2f(360.f, 80.f));
-    endlessCard.setPosition(60.f, 410.f);
-    endlessCard.setFillColor(sf::Color(40, 12, 50));
-    endlessCard.setOutlineColor(sf::Color(220, 80, 200));
-    endlessCard.setOutlineThickness(2.5f);
-    window.draw(endlessCard);
-
-    // Centered Endless text to make it look like a unified UI button
-    drawTextCentered("ENDLESS MODE", 430.f, 20, sf::Color(255, 180, 240));
-    drawTextCentered("Unlimited waves. Click to start.", 460.f, 13, sf::Color(200, 150, 220));
-
     // --- Navigation Buttons (Kept as requested) ---
     sf::RectangleShape backBtn(sf::Vector2f(100.f, 36.f));
     backBtn.setPosition(44.f, 659.f);
