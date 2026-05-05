@@ -11,8 +11,6 @@ public:
     int getId() const { return id; }
     bool isPlayerBullet() const { return playerBullet; }
     static BulletType *PlayerNorm;
-    static BulletType *PlayerWide;
-    static BulletType *PlayerTriple;
     static BulletType *EnemyNorm;
     static BulletType *EnemyBurst;
     static BulletType *BossBeam;
