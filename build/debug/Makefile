@@ -248,30 +248,6 @@ src/Level.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\SpaceShooter.dir\build.make CMakeFiles/SpaceShooter.dir/src/Level.cpp.s
 .PHONY : src/Level.cpp.s
 
-src/PickupType.obj: src/PickupType.cpp.obj
-.PHONY : src/PickupType.obj
-
-# target to build an object file
-src/PickupType.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\SpaceShooter.dir\build.make CMakeFiles/SpaceShooter.dir/src/PickupType.cpp.obj
-.PHONY : src/PickupType.cpp.obj
-
-src/PickupType.i: src/PickupType.cpp.i
-.PHONY : src/PickupType.i
-
-# target to preprocess a source file
-src/PickupType.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\SpaceShooter.dir\build.make CMakeFiles/SpaceShooter.dir/src/PickupType.cpp.i
-.PHONY : src/PickupType.cpp.i
-
-src/PickupType.s: src/PickupType.cpp.s
-.PHONY : src/PickupType.s
-
-# target to generate assembly for a file
-src/PickupType.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\SpaceShooter.dir\build.make CMakeFiles/SpaceShooter.dir/src/PickupType.cpp.s
-.PHONY : src/PickupType.cpp.s
-
 src/main.obj: src/main.cpp.obj
 .PHONY : src/main.obj
 
@@ -320,9 +296,6 @@ help:
 	@echo ... src/Level.obj
 	@echo ... src/Level.i
 	@echo ... src/Level.s
-	@echo ... src/PickupType.obj
-	@echo ... src/PickupType.i
-	@echo ... src/PickupType.s
 	@echo ... src/main.obj
 	@echo ... src/main.i
 	@echo ... src/main.s

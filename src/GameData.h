@@ -6,8 +6,6 @@
 #include <vector>
 #include "BulletType.h"
 #include "EnemyType.h"
-#include "PickupType.h"
-
 struct Bullet
 {
     sf::Vector2f pos;
@@ -58,18 +56,6 @@ struct Particle
           life(0.f), maxLife(0.f), size(3.f), on(false) {}
 };
 
-struct Pickup
-{
-    sf::Vector2f pos;
-    sf::Vector2f vel;
-    PickupType *type;
-    float life;
-    float pulse;
-    bool on;
-    Pickup() : pos(0.f, 0.f), vel(0.f, 0.f), type(0),
-               life(8.f), pulse(0.f), on(false) {}
-};
-
 struct SpawnEvent
 {
     float time;
@@ -114,7 +100,6 @@ struct Star
 const int MAX_BULLETS = 700;
 const int MAX_ENEMIES = 80;
 const int MAX_PARTICLES = 1000;
-const int MAX_PICKUPS = 64;
 const int MAX_STARS = 200;
 
 template <class T, int N>

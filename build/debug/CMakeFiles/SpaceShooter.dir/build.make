@@ -155,20 +155,6 @@ CMakeFiles/SpaceShooter.dir/src/BulletType.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/SpaceShooter.dir/src/BulletType.cpp.s"
 	C:\msys64\ucrt64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\CODING_PROJECTS\SpaceShooter\src\BulletType.cpp -o CMakeFiles\SpaceShooter.dir\src\BulletType.cpp.s
 
-CMakeFiles/SpaceShooter.dir/src/PickupType.cpp.obj: CMakeFiles/SpaceShooter.dir/flags.make
-CMakeFiles/SpaceShooter.dir/src/PickupType.cpp.obj: C:/CODING_PROJECTS/SpaceShooter/src/PickupType.cpp
-CMakeFiles/SpaceShooter.dir/src/PickupType.cpp.obj: CMakeFiles/SpaceShooter.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\CODING_PROJECTS\SpaceShooter\build\debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/SpaceShooter.dir/src/PickupType.cpp.obj"
-	C:\msys64\ucrt64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/SpaceShooter.dir/src/PickupType.cpp.obj -MF CMakeFiles\SpaceShooter.dir\src\PickupType.cpp.obj.d -o CMakeFiles\SpaceShooter.dir\src\PickupType.cpp.obj -c C:\CODING_PROJECTS\SpaceShooter\src\PickupType.cpp
-
-CMakeFiles/SpaceShooter.dir/src/PickupType.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/SpaceShooter.dir/src/PickupType.cpp.i"
-	C:\msys64\ucrt64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\CODING_PROJECTS\SpaceShooter\src\PickupType.cpp > CMakeFiles\SpaceShooter.dir\src\PickupType.cpp.i
-
-CMakeFiles/SpaceShooter.dir/src/PickupType.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/SpaceShooter.dir/src/PickupType.cpp.s"
-	C:\msys64\ucrt64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\CODING_PROJECTS\SpaceShooter\src\PickupType.cpp -o CMakeFiles\SpaceShooter.dir\src\PickupType.cpp.s
-
 # Object files for target SpaceShooter
 SpaceShooter_OBJECTS = \
 "CMakeFiles/SpaceShooter.dir/src/main.cpp.obj" \
@@ -176,8 +162,7 @@ SpaceShooter_OBJECTS = \
 "CMakeFiles/SpaceShooter.dir/src/Level.cpp.obj" \
 "CMakeFiles/SpaceShooter.dir/src/GameState.cpp.obj" \
 "CMakeFiles/SpaceShooter.dir/src/EnemyType.cpp.obj" \
-"CMakeFiles/SpaceShooter.dir/src/BulletType.cpp.obj" \
-"CMakeFiles/SpaceShooter.dir/src/PickupType.cpp.obj"
+"CMakeFiles/SpaceShooter.dir/src/BulletType.cpp.obj"
 
 # External object files for target SpaceShooter
 SpaceShooter_EXTERNAL_OBJECTS =
@@ -188,7 +173,6 @@ SpaceShooter.exe: CMakeFiles/SpaceShooter.dir/src/Level.cpp.obj
 SpaceShooter.exe: CMakeFiles/SpaceShooter.dir/src/GameState.cpp.obj
 SpaceShooter.exe: CMakeFiles/SpaceShooter.dir/src/EnemyType.cpp.obj
 SpaceShooter.exe: CMakeFiles/SpaceShooter.dir/src/BulletType.cpp.obj
-SpaceShooter.exe: CMakeFiles/SpaceShooter.dir/src/PickupType.cpp.obj
 SpaceShooter.exe: CMakeFiles/SpaceShooter.dir/build.make
 SpaceShooter.exe: C:/msys64/ucrt64/lib/libsfml-graphics.dll.a
 SpaceShooter.exe: C:/msys64/ucrt64/lib/libsfml-window.dll.a
@@ -196,7 +180,7 @@ SpaceShooter.exe: C:/msys64/ucrt64/lib/libsfml-system.dll.a
 SpaceShooter.exe: CMakeFiles/SpaceShooter.dir/linkLibs.rsp
 SpaceShooter.exe: CMakeFiles/SpaceShooter.dir/objects1.rsp
 SpaceShooter.exe: CMakeFiles/SpaceShooter.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\CODING_PROJECTS\SpaceShooter\build\debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable SpaceShooter.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\CODING_PROJECTS\SpaceShooter\build\debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable SpaceShooter.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\SpaceShooter.dir\link.txt --verbose=$(VERBOSE)
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold "Updating assets in build directory..."
 	"C:\Program Files\CMake\bin\cmake.exe" -E copy_directory C:/CODING_PROJECTS/SpaceShooter/assets C:/CODING_PROJECTS/SpaceShooter/build/debug/assets

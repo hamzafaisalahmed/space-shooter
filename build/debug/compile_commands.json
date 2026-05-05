@@ -34,11 +34,5 @@
   "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -std=c++17 -Wall -o CMakeFiles\\SpaceShooter.dir\\src\\BulletType.cpp.obj -c C:\\CODING_PROJECTS\\SpaceShooter\\src\\BulletType.cpp",
   "file": "C:/CODING_PROJECTS/SpaceShooter/src/BulletType.cpp",
   "output": "CMakeFiles/SpaceShooter.dir/src/BulletType.cpp.obj"
-},
-{
-  "directory": "C:/CODING_PROJECTS/SpaceShooter/build/debug",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -std=c++17 -Wall -o CMakeFiles\\SpaceShooter.dir\\src\\PickupType.cpp.obj -c C:\\CODING_PROJECTS\\SpaceShooter\\src\\PickupType.cpp",
-  "file": "C:/CODING_PROJECTS/SpaceShooter/src/PickupType.cpp",
-  "output": "CMakeFiles/SpaceShooter.dir/src/PickupType.cpp.obj"
 }
 ]

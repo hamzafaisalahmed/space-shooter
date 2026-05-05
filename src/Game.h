@@ -37,8 +37,6 @@ private:
     ObjectPool<Bullet, MAX_BULLETS> bullets;
     ObjectPool<Enemy, MAX_ENEMIES> enemies;
     ObjectPool<Particle, MAX_PARTICLES> particles;
-    ObjectPool<Pickup, MAX_PICKUPS> pickups;
-
     std::array<Star, MAX_STARS> stars;
 
     std::vector<Level *> levels;
@@ -64,7 +62,6 @@ private:
     void checkCollisions();
     void checkSpawns(float dt);
     void spawnExplosion(sf::Vector2f pos, sf::Color cStart, sf::Color cEnd, int count, int depth = 1);
-    void spawnPickup(sf::Vector2f pos, PickupType *ptype);
 
     void spawnPlayerBullet();
     void spawnEnemyBullet(Enemy &e);
@@ -76,7 +73,6 @@ private:
     void renderEnemies();
     void renderBullets();
     void renderParticles();
-    void renderPickups();
     void renderHUD();
     void renderBossHP();
     void renderHomeScreen();

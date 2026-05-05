@@ -104,7 +104,6 @@ void Game::init()
     bullets.clearAll();
     enemies.clearAll();
     particles.clearAll();
-    pickups.clearAll();
 
     buildLevels();
     initStars();
@@ -266,7 +265,6 @@ void Game::startLevel(int index)
     bullets.clearAll();
     enemies.clearAll();
     particles.clearAll();
-    pickups.clearAll();
     while (!spawnQueue.empty())
         spawnQueue.pop();
 
@@ -427,22 +425,6 @@ void Game::update(float dt)
         p.vel *= 0.97f;
     }
 
-    for (int i = 0; i < pickups.capacity(); i++)
-    {
-        Pickup &pk = pickups.at(i);
-        if (!pk.on)
-            continue;
-        pk.life -= dt;
-        pk.pulse += dt;
-        if (pk.life <= 0.f)
-        {
-            pk.on = false;
-            continue;
-        }
-        pk.pos += pk.vel * dt;
-        pk.vel.y += 20.f * dt;
-    }
-
     bgY += 60.f * dt;
     if (bgY >= 1440.f)
         bgY -= 1440.f;
@@ -512,18 +494,6 @@ void Game::checkCollisions()
                         spawnExplosion(e.pos, cStart, cEnd, pCount, 5);
                     }
                     player += e.scoreValue;
-                    spawnPickup(e.pos, PickupType::Score);
-                    if (e.type == EnemyType::Medium && e.hp < 40.f)
-                        spawnPickup(e.pos + sf::Vector2f(15.f, 0.f), PickupType::Health);
-                    if (e.type == EnemyType::Boss)
-                    {
-                        for (int k = 0; k < 8; k++)
-                        {
-                            sf::Vector2f offset(randFloat(-40.f, 40.f), randFloat(-40.f, 40.f));
-                            PickupType *pt = (k % 3 == 0) ? PickupType::Health : PickupType::Score;
-                            spawnPickup(e.pos + offset, pt);
-                        }
-                    }
                 }
                 break;
             }
@@ -608,26 +578,6 @@ void Game::checkCollisions()
                         }
                     }
                 }
-            }
-        }
-    }
-
-    for (int pi = 0; pi < pickups.capacity(); pi++)
-    {
-        Pickup &pk = pickups.at(pi);
-        if (!pk.on)
-            continue;
-        float dist = vlen(pk.pos - player.getPos());
-        if (dist < 32.f + 18.f)
-        {
-            pk.on = false;
-            if (pk.type == PickupType::Score)
-            {
-                player += 25;
-            }
-            else if (pk.type == PickupType::Health)
-            {
-                player.heal(25.f);
             }
         }
     }
@@ -791,19 +741,6 @@ void Game::spawnExplosion(sf::Vector2f pos, sf::Color cStart, sf::Color cEnd, in
     }
 }
 
-void Game::spawnPickup(sf::Vector2f pos, PickupType *ptype)
-{
-    Pickup *pk = pickups.alloc();
-    if (!pk)
-        return;
-    pk->on = true;
-    pk->pos = pos;
-    pk->vel = sf::Vector2f(randFloat(-30.f, 30.f), randFloat(-50.f, -10.f));
-    pk->type = ptype;
-    pk->life = 8.f;
-    pk->pulse = 0.f;
-}
-
 bool Game::isLevelClear()
 {
     std::vector<SpawnEvent> &evs = levels[currentLevel]->getEvents();
@@ -885,7 +822,6 @@ void Game::render()
 
     renderBackground();
     renderStars();
-    renderPickups();
     renderEnemies();
     renderBullets();
     renderParticles();
@@ -1081,35 +1017,6 @@ void Game::renderParticles()
         dot.setPosition(p.pos);
         dot.setFillColor(c);
         window.draw(dot, glowState);
-    }
-}
-
-void Game::renderPickups()
-{
-    sf::RenderStates glowState;
-    glowState.blendMode = sf::BlendAdd;
-    for (int i = 0; i < pickups.capacity(); i++)
-    {
-        Pickup &pk = pickups.at(i);
-        if (!pk.on || !pk.type)
-            continue;
-        sf::Color col = pk.type->getColor();
-        float bobble = std::sin(pk.pulse * 5.f) * 0.2f + 1.0f;
-        sf::CircleShape glow(12.f * bobble);
-        glow.setOrigin(12.f * bobble, 12.f * bobble);
-        glow.setPosition(pk.pos);
-        glow.setFillColor(sf::Color(col.r, col.g, col.b, 30));
-        window.draw(glow, glowState);
-        sf::CircleShape orb(6.f * bobble);
-        orb.setOrigin(6.f * bobble, 6.f * bobble);
-        orb.setPosition(pk.pos);
-        orb.setFillColor(sf::Color(col.r, col.g, col.b, 200));
-        window.draw(orb);
-        sf::CircleShape inner(3.f * bobble);
-        inner.setOrigin(3.f * bobble, 3.f * bobble);
-        inner.setPosition(pk.pos + sf::Vector2f(-1.f, -1.f));
-        inner.setFillColor(sf::Color(255, 255, 255, 100));
-        window.draw(inner, glowState);
     }
 }
 

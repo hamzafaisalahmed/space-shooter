@@ -9,8 +9,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/SpaceShooter.dir/src/GameState.cpp.obj.d"
   "CMakeFiles/SpaceShooter.dir/src/Level.cpp.obj"
   "CMakeFiles/SpaceShooter.dir/src/Level.cpp.obj.d"
-  "CMakeFiles/SpaceShooter.dir/src/PickupType.cpp.obj"
-  "CMakeFiles/SpaceShooter.dir/src/PickupType.cpp.obj.d"
   "CMakeFiles/SpaceShooter.dir/src/main.cpp.obj"
   "CMakeFiles/SpaceShooter.dir/src/main.cpp.obj.d"
   "SpaceShooter.exe"

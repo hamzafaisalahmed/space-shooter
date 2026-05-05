@@ -13,7 +13,6 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/CODING_PROJECTS/SpaceShooter/src/Game.cpp" "CMakeFiles/SpaceShooter.dir/src/Game.cpp.obj" "gcc" "CMakeFiles/SpaceShooter.dir/src/Game.cpp.obj.d"
   "C:/CODING_PROJECTS/SpaceShooter/src/GameState.cpp" "CMakeFiles/SpaceShooter.dir/src/GameState.cpp.obj" "gcc" "CMakeFiles/SpaceShooter.dir/src/GameState.cpp.obj.d"
   "C:/CODING_PROJECTS/SpaceShooter/src/Level.cpp" "CMakeFiles/SpaceShooter.dir/src/Level.cpp.obj" "gcc" "CMakeFiles/SpaceShooter.dir/src/Level.cpp.obj.d"
-  "C:/CODING_PROJECTS/SpaceShooter/src/PickupType.cpp" "CMakeFiles/SpaceShooter.dir/src/PickupType.cpp.obj" "gcc" "CMakeFiles/SpaceShooter.dir/src/PickupType.cpp.obj.d"
   "C:/CODING_PROJECTS/SpaceShooter/src/main.cpp" "CMakeFiles/SpaceShooter.dir/src/main.cpp.obj" "gcc" "CMakeFiles/SpaceShooter.dir/src/main.cpp.obj.d"
   )
 

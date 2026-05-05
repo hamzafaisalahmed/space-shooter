@@ -22,7 +22,6 @@ add_executable(SpaceShooter
     src/GameState.cpp
     src/EnemyType.cpp
     src/BulletType.cpp
-    src/PickupType.cpp
 )
 
 target_link_libraries(SpaceShooter

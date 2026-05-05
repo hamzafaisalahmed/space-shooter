@@ -281,7 +281,6 @@ CMakeFiles/SpaceShooter.dir/src/main.cpp.obj: \
  C:/msys64/ucrt64/include/c++/15.2.0/compare \
  C:\CODING_PROJECTS\SpaceShooter\src\BulletType.h \
  C:\CODING_PROJECTS\SpaceShooter\src\EnemyType.h \
- C:\CODING_PROJECTS\SpaceShooter\src\PickupType.h \
  C:\CODING_PROJECTS\SpaceShooter\src\Level.h \
  C:/msys64/ucrt64/include/c++/15.2.0/iostream \
  C:/msys64/ucrt64/include/c++/15.2.0/istream \
