@@ -571,12 +571,10 @@ void Game::checkCollisions()
                     e.on = false;
                     sf::Color cStart, cEnd;
                     int pCount = 12;
-                    std::string label;
                     if (e.type == EnemyType::Small)
                     {
                         cStart = sf::Color(255, 160, 30);
                         cEnd = sf::Color(200, 40, 10, 0);
-                        label = "Small enemy";
                         spawnExplosion(e.pos, cStart, cEnd, pCount, 1);
                     }
                     else if (e.type == EnemyType::Medium)
@@ -584,7 +582,6 @@ void Game::checkCollisions()
                         cStart = sf::Color(80, 255, 120);
                         cEnd = sf::Color(20, 150, 50, 0);
                         pCount = 18;
-                        label = "Medium enemy";
                         spawnExplosion(e.pos, cStart, cEnd, pCount, 2);
                     }
                     else
@@ -592,7 +589,6 @@ void Game::checkCollisions()
                         cStart = sf::Color(255, 80, 80);
                         cEnd = sf::Color(80, 20, 20, 0);
                         pCount = 40;
-                        label = "BOSS";
                         spawnExplosion(e.pos, cStart, cEnd, pCount, 5);
                     }
                     player += e.scoreValue;
@@ -980,19 +976,6 @@ void Game::render()
     if (bossActive)
         renderBossHP();
 
-    sf::RectangleShape vig;
-    vig.setFillColor(sf::Color(4, 6, 12, 180));
-    vig.setSize(sf::Vector2f(480.f, 12.f));
-    vig.setPosition(0.f, 0.f);
-    window.draw(vig);
-    vig.setPosition(0.f, 708.f);
-    window.draw(vig);
-    vig.setSize(sf::Vector2f(8.f, 720.f));
-    vig.setPosition(0.f, 0.f);
-    window.draw(vig);
-    vig.setPosition(472.f, 0.f);
-    window.draw(vig);
-
     if (current == GameState::Paused)
         renderPauseOverlay();
     if (current == GameState::GameOver)
@@ -1290,23 +1273,11 @@ void Game::renderHomeScreen()
     p1.setColor(sf::Color(255, 255, 255, 180));
     window.draw(p1);
 
-    sf::CircleShape glow1(145.f);
-    glow1.setOrigin(145.f, 145.f);
-    glow1.setPosition(80.f, 600.f);
-    glow1.setFillColor(sf::Color(80, 160, 240, 40));
-    window.draw(glow1, sf::BlendAdd);
-
     sf::Sprite p2(homeplanet2);
     p2.setOrigin(homeplanet2.getSize().x / 2.f, homeplanet2.getSize().y / 2.f);
     p2.setPosition(420.f, 100.f);
     p2.setScale(180.f / homeplanet2.getSize().x, 180.f / homeplanet2.getSize().x);
     window.draw(p2);
-
-    sf::CircleShape glow2(95.f);
-    glow2.setOrigin(95.f, 95.f);
-    glow2.setPosition(420.f, 100.f);
-    glow2.setFillColor(sf::Color(150, 50, 200, 30));
-    window.draw(glow2, sf::BlendAdd);
 
     drawTextCentered("DEEPSPACE", 230.f, 64, sf::Color(140, 200, 255));
     drawTextCentered("DEFENDERS", 300.f, 64, sf::Color(255, 220, 120));
