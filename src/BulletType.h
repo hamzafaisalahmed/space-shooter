@@ -39,3 +39,33 @@ class BossBeamBullet : public BulletType
 public:
     BossBeamBullet() : BulletType(5, false) {}
 };
+
+class BulletTypeRegistry
+{
+private:
+    PlayerNormBullet playerNorm;
+    EnemyNormBullet enemyNorm;
+    EnemyBurstBullet enemyBurst;
+    BossBeamBullet bossBeam;
+
+public:
+    BulletTypeRegistry()
+    {
+        BulletType::PlayerNorm = &playerNorm;
+        BulletType::EnemyNorm = &enemyNorm;
+        BulletType::EnemyBurst = &enemyBurst;
+        BulletType::BossBeam = &bossBeam;
+    }
+
+    ~BulletTypeRegistry()
+    {
+        BulletType::PlayerNorm = nullptr;
+        BulletType::EnemyNorm = nullptr;
+        BulletType::EnemyBurst = nullptr;
+        BulletType::BossBeam = nullptr;
+    }
+
+    // preventing copying
+    BulletTypeRegistry(const BulletTypeRegistry &) = delete;
+    BulletTypeRegistry &operator=(const BulletTypeRegistry &) = delete;
+};

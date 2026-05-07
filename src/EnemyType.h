@@ -47,3 +47,30 @@ public:
     BossEnemyType()
         : EnemyType(1200.f, 0.8f, 2000, 80.f, 60.f, 2) {}
 };
+
+class EnemyTypeRegistry
+{
+private:
+    SmallEnemyType small;
+    MediumEnemyType medium;
+    BossEnemyType boss;
+
+public:
+    EnemyTypeRegistry()
+    {
+        EnemyType::Small = &small;
+        EnemyType::Medium = &medium;
+        EnemyType::Boss = &boss;
+    }
+
+    ~EnemyTypeRegistry()
+    {
+        EnemyType::Small = nullptr;
+        EnemyType::Medium = nullptr;
+        EnemyType::Boss = nullptr;
+    }
+
+    // Prevent copying
+    EnemyTypeRegistry(const EnemyTypeRegistry &) = delete;
+    EnemyTypeRegistry &operator=(const EnemyTypeRegistry &) = delete;
+};
