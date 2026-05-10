@@ -395,10 +395,7 @@ void Game::update(float dt)
         if (e.shootTimer <= 0.f)
         {
             spawnEnemyBullet(e);
-            if (e.type == EnemyType::Boss)
-                e.shootTimer = 0.6f;
-            else
-                e.shootTimer = e.shootInterval;
+            e.shootTimer = e.shootInterval;
         }
     }
 
