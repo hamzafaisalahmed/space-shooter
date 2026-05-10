@@ -19,9 +19,6 @@ add_executable(SpaceShooter
     src/main.cpp
     src/Game.cpp
     src/Level.cpp
-    src/GameState.cpp
-    src/EnemyType.cpp
-    src/BulletType.cpp
 )
 
 target_link_libraries(SpaceShooter

@@ -16,23 +16,5 @@
   "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -std=c++17 -Wall -o CMakeFiles\\SpaceShooter.dir\\src\\Level.cpp.obj -c C:\\CODING_PROJECTS\\SpaceShooter\\src\\Level.cpp",
   "file": "C:/CODING_PROJECTS/SpaceShooter/src/Level.cpp",
   "output": "CMakeFiles/SpaceShooter.dir/src/Level.cpp.obj"
-},
-{
-  "directory": "C:/CODING_PROJECTS/SpaceShooter/build/debug",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -std=c++17 -Wall -o CMakeFiles\\SpaceShooter.dir\\src\\GameState.cpp.obj -c C:\\CODING_PROJECTS\\SpaceShooter\\src\\GameState.cpp",
-  "file": "C:/CODING_PROJECTS/SpaceShooter/src/GameState.cpp",
-  "output": "CMakeFiles/SpaceShooter.dir/src/GameState.cpp.obj"
-},
-{
-  "directory": "C:/CODING_PROJECTS/SpaceShooter/build/debug",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -std=c++17 -Wall -o CMakeFiles\\SpaceShooter.dir\\src\\EnemyType.cpp.obj -c C:\\CODING_PROJECTS\\SpaceShooter\\src\\EnemyType.cpp",
-  "file": "C:/CODING_PROJECTS/SpaceShooter/src/EnemyType.cpp",
-  "output": "CMakeFiles/SpaceShooter.dir/src/EnemyType.cpp.obj"
-},
-{
-  "directory": "C:/CODING_PROJECTS/SpaceShooter/build/debug",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -std=c++17 -Wall -o CMakeFiles\\SpaceShooter.dir\\src\\BulletType.cpp.obj -c C:\\CODING_PROJECTS\\SpaceShooter\\src\\BulletType.cpp",
-  "file": "C:/CODING_PROJECTS/SpaceShooter/src/BulletType.cpp",
-  "output": "CMakeFiles/SpaceShooter.dir/src/BulletType.cpp.obj"
 }
 ]

@@ -128,54 +128,6 @@ SpaceShooter/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\SpaceShooter.dir\build.make CMakeFiles/SpaceShooter.dir/build
 .PHONY : SpaceShooter/fast
 
-src/BulletType.obj: src/BulletType.cpp.obj
-.PHONY : src/BulletType.obj
-
-# target to build an object file
-src/BulletType.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\SpaceShooter.dir\build.make CMakeFiles/SpaceShooter.dir/src/BulletType.cpp.obj
-.PHONY : src/BulletType.cpp.obj
-
-src/BulletType.i: src/BulletType.cpp.i
-.PHONY : src/BulletType.i
-
-# target to preprocess a source file
-src/BulletType.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\SpaceShooter.dir\build.make CMakeFiles/SpaceShooter.dir/src/BulletType.cpp.i
-.PHONY : src/BulletType.cpp.i
-
-src/BulletType.s: src/BulletType.cpp.s
-.PHONY : src/BulletType.s
-
-# target to generate assembly for a file
-src/BulletType.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\SpaceShooter.dir\build.make CMakeFiles/SpaceShooter.dir/src/BulletType.cpp.s
-.PHONY : src/BulletType.cpp.s
-
-src/EnemyType.obj: src/EnemyType.cpp.obj
-.PHONY : src/EnemyType.obj
-
-# target to build an object file
-src/EnemyType.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\SpaceShooter.dir\build.make CMakeFiles/SpaceShooter.dir/src/EnemyType.cpp.obj
-.PHONY : src/EnemyType.cpp.obj
-
-src/EnemyType.i: src/EnemyType.cpp.i
-.PHONY : src/EnemyType.i
-
-# target to preprocess a source file
-src/EnemyType.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\SpaceShooter.dir\build.make CMakeFiles/SpaceShooter.dir/src/EnemyType.cpp.i
-.PHONY : src/EnemyType.cpp.i
-
-src/EnemyType.s: src/EnemyType.cpp.s
-.PHONY : src/EnemyType.s
-
-# target to generate assembly for a file
-src/EnemyType.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\SpaceShooter.dir\build.make CMakeFiles/SpaceShooter.dir/src/EnemyType.cpp.s
-.PHONY : src/EnemyType.cpp.s
-
 src/Game.obj: src/Game.cpp.obj
 .PHONY : src/Game.obj
 
@@ -199,30 +151,6 @@ src/Game.s: src/Game.cpp.s
 src/Game.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\SpaceShooter.dir\build.make CMakeFiles/SpaceShooter.dir/src/Game.cpp.s
 .PHONY : src/Game.cpp.s
-
-src/GameState.obj: src/GameState.cpp.obj
-.PHONY : src/GameState.obj
-
-# target to build an object file
-src/GameState.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\SpaceShooter.dir\build.make CMakeFiles/SpaceShooter.dir/src/GameState.cpp.obj
-.PHONY : src/GameState.cpp.obj
-
-src/GameState.i: src/GameState.cpp.i
-.PHONY : src/GameState.i
-
-# target to preprocess a source file
-src/GameState.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\SpaceShooter.dir\build.make CMakeFiles/SpaceShooter.dir/src/GameState.cpp.i
-.PHONY : src/GameState.cpp.i
-
-src/GameState.s: src/GameState.cpp.s
-.PHONY : src/GameState.s
-
-# target to generate assembly for a file
-src/GameState.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\SpaceShooter.dir\build.make CMakeFiles/SpaceShooter.dir/src/GameState.cpp.s
-.PHONY : src/GameState.cpp.s
 
 src/Level.obj: src/Level.cpp.obj
 .PHONY : src/Level.obj
@@ -281,18 +209,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... SpaceShooter
-	@echo ... src/BulletType.obj
-	@echo ... src/BulletType.i
-	@echo ... src/BulletType.s
-	@echo ... src/EnemyType.obj
-	@echo ... src/EnemyType.i
-	@echo ... src/EnemyType.s
 	@echo ... src/Game.obj
 	@echo ... src/Game.i
 	@echo ... src/Game.s
-	@echo ... src/GameState.obj
-	@echo ... src/GameState.i
-	@echo ... src/GameState.s
 	@echo ... src/Level.obj
 	@echo ... src/Level.i
 	@echo ... src/Level.s
