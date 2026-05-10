@@ -69,6 +69,10 @@ private:
     void spawnEnemyBullet(Enemy &e);
     void spawnEnemyFromJob(const SpawnJob &job);
 
+    void buildLevels();
+    bool isLevelClear();
+    int countActiveEnemies();
+
     // RENDER METHODS
     void renderBackground();
     void renderStars();
@@ -89,13 +93,8 @@ private:
     void drawSmallEnemy(sf::Vector2f pos, float angle);
     void drawMediumEnemy(sf::Vector2f pos, float angle);
     void drawBossEnemy(sf::Vector2f pos, float angle);
-
-    void initStars();
-    void buildLevels();
-
     void drawTextCentered(const std::string &str, float y, int size, sf::Color col);
-    bool isLevelClear();
-    int countActiveEnemies();
+    void initStars();
 
 public:
     Game();

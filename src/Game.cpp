@@ -33,42 +33,6 @@ Game::~Game()
     levels.clear();
 }
 
-void Game::buildLevels()
-{
-    for (int i = 0; i < (int)levels.size(); i++)
-        delete levels[i];
-    levels.clear();
-
-    levels.push_back(new LevelOne());
-    levels.push_back(new LevelTwo());
-    levels.push_back(new LevelThree());
-
-    for (int i = 0; i < (int)levels.size(); i++)
-    {
-        levels[i]->buildWaves();
-        levels[i]->loadPlanet();
-    }
-}
-
-void Game::loadFontOrThrow(const std::string &path)
-{
-    if (!font.loadFromFile(path))
-    {
-        if (!font.loadFromFile("ProFontWindows.ttf"))
-        {
-            throw AssetLoadException();
-        }
-    }
-}
-
-void Game::loadTextureOrThrow(sf::Texture &tex, const std::string &path)
-{
-    if (!tex.loadFromFile(path))
-    {
-        throw AssetLoadException();
-    }
-}
-
 void Game::init()
 {
     std::srand((unsigned)std::time(0));
@@ -151,6 +115,23 @@ void Game::run()
         }
         render();
         window.display();
+    }
+}
+
+void Game::buildLevels()
+{
+    for (int i = 0; i < (int)levels.size(); i++)
+        delete levels[i];
+    levels.clear();
+
+    levels.push_back(new LevelOne());
+    levels.push_back(new LevelTwo());
+    levels.push_back(new LevelThree());
+
+    for (int i = 0; i < (int)levels.size(); i++)
+    {
+        levels[i]->buildWaves();
+        levels[i]->loadPlanet();
     }
 }
 
@@ -302,11 +283,6 @@ void Game::startLevel(int index)
     while (!stateStack.empty())
         stateStack.pop();
     stateStack.push(GameState::Playing);
-}
-
-void Game::resetPlayer()
-{
-    player.resetForLevel();
 }
 
 void Game::update(float dt)
@@ -788,4 +764,28 @@ bool Game::isLevelClear()
 int Game::countActiveEnemies()
 {
     return enemies.countActive();
+}
+
+void Game::resetPlayer()
+{
+    player.resetForLevel();
+}
+
+void Game::loadFontOrThrow(const std::string &path)
+{
+    if (!font.loadFromFile(path))
+    {
+        if (!font.loadFromFile("ProFontWindows.ttf"))
+        {
+            throw AssetLoadException();
+        }
+    }
+}
+
+void Game::loadTextureOrThrow(sf::Texture &tex, const std::string &path)
+{
+    if (!tex.loadFromFile(path))
+    {
+        throw AssetLoadException();
+    }
 }
