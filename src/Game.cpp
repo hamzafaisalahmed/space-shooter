@@ -2,9 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <algorithm>
 #include <cmath>
-#include <fstream>
 #include <iostream>
-#include <sstream>
 #include <ctime>
 #include <stdexcept>
 

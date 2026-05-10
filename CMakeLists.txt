@@ -10,7 +10,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Install first if you haven't:
 #   pacman -S mingw-w64-ucrt-x86_64-sfml
 # ============================================================
-find_package(SFML 2.6 COMPONENTS graphics window system REQUIRED)
+find_package(SFML 2.6 COMPONENTS graphics window system audio REQUIRED)
 
 # ============================================================
 # GAME EXECUTABLE
