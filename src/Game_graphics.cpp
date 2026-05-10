@@ -8,6 +8,34 @@
 #include <ctime>
 #include <stdexcept>
 
+void Game::initStars()
+{
+    for (int i = 0; i < MAX_STARS; i++)
+    {
+        stars[i].pos.x = randFloat(0.f, 480.f);
+        stars[i].pos.y = randFloat(0.f, 720.f);
+        int layer = i % 3;
+        if (layer == 0)
+        {
+            stars[i].speed = 20.f;
+            stars[i].brightness = 0.3f;
+            stars[i].size = 1.0f;
+        }
+        else if (layer == 1)
+        {
+            stars[i].speed = 45.f;
+            stars[i].brightness = 0.5f;
+            stars[i].size = 1.3f;
+        }
+        else
+        {
+            stars[i].speed = 80.f;
+            stars[i].brightness = 0.8f;
+            stars[i].size = 1.8f;
+        }
+    }
+}
+
 void Game::renderBullets()
 {
     sf::RenderStates glowState;
