@@ -12,8 +12,6 @@ private:
     float speed;
     int lives;
     int score;
-    int power;
-    float powerTimer;
     float shootTimer;
     float shootInterval;
     float iframeTimer;
@@ -24,7 +22,7 @@ private:
 public:
     Player()
         : pos(240.f, 600.f), hp(100.f), maxHp(100.f), speed(310.f),
-          lives(1), score(0), power(1), powerTimer(0.f),
+          lives(3), score(0),
           shootTimer(0.f), shootInterval(0.10f),
           iframeTimer(0.f), shieldTimer(0.f), tilt(0.f), alive(true) {}
 
@@ -34,8 +32,6 @@ public:
     float getSpeed() const { return speed; }
     int getLives() const { return lives; }
     int getScore() const { return score; }
-    int getPower() const { return power; }
-    float getPowerTimer() const { return powerTimer; }
     float getShootTimer() const { return shootTimer; }
     float getShootInterval() const { return shootInterval; }
     float getIframeTimer() const { return iframeTimer; }
@@ -48,7 +44,6 @@ public:
     void setShootTimer(float t) { shootTimer = t; }
     void setIframeTimer(float t) { iframeTimer = t; }
     void setShieldTimer(float t) { shieldTimer = t; }
-    void setPowerTimer(float t) { powerTimer = t; }
     void setAlive(bool a) { alive = a; }
 
     void move(sf::Vector2f delta) { pos += delta; }
@@ -62,20 +57,8 @@ public:
     {
         hp = (hp + h > maxHp) ? maxHp : (hp + h);
     }
-    void addScore(int s) { score += s; }
-    void increasePower()
-    {
-        if (power < 3)
-            power++;
-    }
-    void decreasePower()
-    {
-        if (power > 1)
-            power--;
-    }
     void loseLife() { lives--; }
 
-    void tickPowerTimer(float dt) { powerTimer -= dt; }
     void tickShootTimer(float dt) { shootTimer -= dt; }
     void tickIframe(float dt) { iframeTimer -= dt; }
     void tickShield(float dt) { shieldTimer -= dt; }
@@ -85,15 +68,13 @@ public:
         pos = sf::Vector2f(240.f, 600.f);
         hp = maxHp;
         speed = 310.f;
-        power = 1;
-        powerTimer = 0.f;
         shootTimer = 0.f;
         iframeTimer = 0.f;
         shieldTimer = 0.f;
         tilt = 0.f;
         alive = true;
         score = 0;
-        lives = 1;
+        lives = 3;
     }
 
     Player &operator+=(int scoreBonus)

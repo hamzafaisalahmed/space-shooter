@@ -10,7 +10,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Install first if you haven't:
 #   pacman -S mingw-w64-ucrt-x86_64-sfml
 # ============================================================
-find_package(SFML 2.6 COMPONENTS graphics window system REQUIRED)
+find_package(SFML 2.6 COMPONENTS graphics window system audio REQUIRED)
 
 # ============================================================
 # GAME EXECUTABLE
@@ -19,14 +19,7 @@ add_executable(SpaceShooter
     src/main.cpp
     src/Game.cpp
     src/Level.cpp
-    src/GameState.cpp
-    src/EnemyType.cpp
-    src/BulletType.cpp
-    src/PickupType.cpp
-    src/Exceptions.cpp
-    src/ScoreEvent.cpp
-    src/HighScore.cpp
-    src/Player.cpp
+    src/Game_graphics.cpp
 )
 
 target_link_libraries(SpaceShooter
@@ -34,6 +27,7 @@ target_link_libraries(SpaceShooter
         sfml-graphics
         sfml-window
         sfml-system
+        sfml-audio
         opengl32
         winmm
         gdi32

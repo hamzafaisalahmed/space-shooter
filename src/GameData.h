@@ -6,8 +6,6 @@
 #include <vector>
 #include "BulletType.h"
 #include "EnemyType.h"
-#include "PickupType.h"
-
 struct Bullet
 {
     sf::Vector2f pos;
@@ -15,7 +13,7 @@ struct Bullet
     float dmg;
     BulletType *type;
     bool on;
-    Bullet() : pos(0.f, 0.f), vel(0.f, 0.f), dmg(20.f), type(0), on(false) {}
+    Bullet() : pos(0.f, 0.f), vel(0.f, 0.f), dmg(20.f), type(nullptr), on(false) {}
 };
 
 struct Enemy
@@ -32,13 +30,12 @@ struct Enemy
     int pathIndex;
     float angle;
     float pulse;
-    int phase;
     int scoreValue;
     float moveSpeed;
     Enemy()
-        : pos(0.f, 0.f), vel(0.f, 0.f), hp(30.f), maxHp(30.f), type(0),
+        : pos(0.f, 0.f), vel(0.f, 0.f), hp(30.f), maxHp(30.f), type(nullptr),
           on(false), shootTimer(0.f), shootInterval(2.2f),
-          pathIndex(0), angle(0.f), pulse(0.f), phase(0),
+          pathIndex(0), angle(0.f), pulse(0.f),
           scoreValue(50), moveSpeed(200.f) {}
 };
 
@@ -58,18 +55,6 @@ struct Particle
           life(0.f), maxLife(0.f), size(3.f), on(false) {}
 };
 
-struct Pickup
-{
-    sf::Vector2f pos;
-    sf::Vector2f vel;
-    PickupType *type;
-    float life;
-    float pulse;
-    bool on;
-    Pickup() : pos(0.f, 0.f), vel(0.f, 0.f), type(0),
-               life(8.f), pulse(0.f), on(false) {}
-};
-
 struct SpawnEvent
 {
     float time;
@@ -81,7 +66,7 @@ struct SpawnEvent
     float delay;
     bool fired;
     SpawnEvent()
-        : time(0.f), etype(0), startPos(0.f, 0.f),
+        : time(0.f), etype(nullptr), startPos(0.f, 0.f),
           count(1), xSpacing(55.f), delay(0.25f), fired(false) {}
 };
 
@@ -97,7 +82,7 @@ struct SpawnJob
     int scoreValue;
     float moveSpeed;
     SpawnJob()
-        : etype(0), startPos(0.f, 0.f), delayRemaining(0.f),
+        : etype(nullptr), startPos(0.f, 0.f), delayRemaining(0.f),
           hp(30.f), maxHp(30.f), shootInterval(2.2f),
           scoreValue(50), moveSpeed(200.f) {}
 };
@@ -114,7 +99,6 @@ struct Star
 const int MAX_BULLETS = 700;
 const int MAX_ENEMIES = 80;
 const int MAX_PARTICLES = 1000;
-const int MAX_PICKUPS = 64;
 const int MAX_STARS = 200;
 
 template <class T, int N>
@@ -140,7 +124,7 @@ public:
             if (!items[i].on)
                 return &items[i];
         }
-        return 0;
+        return nullptr;
     }
     void clearAll()
     {

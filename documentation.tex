@@ -1,0 +1,1506 @@
+% ============================================================
+% Semester Project — Deepspace Defenders
+% Object Oriented Programming Techniques (CSE142)
+% Institute of Business Administration Karachi
+% ============================================================
+
+\documentclass[11pt]{article}
+
+% ── Packages ──────────────────────────────────────────────────────────────
+\usepackage[a4paper, margin=1in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{parskip}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usetikzlibrary{shapes,arrows,positioning,fit,backgrounds,calc}
+
+% ── Colours ───────────────────────────────────────────────────────────────
+\definecolor{primary}{RGB}{165, 28, 48}
+\definecolor{secondary}{RGB}{0, 53, 107}
+\definecolor{accent}{RGB}{232, 95, 26}
+\definecolor{codebg}{RGB}{245, 248, 250}
+\definecolor{codecomment}{RGB}{106, 153, 85}
+\definecolor{codekeyword}{RGB}{0, 0, 200}
+\definecolor{codestring}{RGB}{163, 21, 21}
+\definecolor{stdtype}{RGB}{43, 145, 175}
+
+% ── C++ Listing style ─────────────────────────────────────────────────────
+\lstdefinestyle{cpp}{
+    language=C++,
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    captionpos=b,
+    commentstyle=\color{codecomment}\itshape,
+    keywordstyle=\color{codekeyword}\bfseries,
+    stringstyle=\color{codestring},
+    numbers=left,
+    numbersep=8pt,
+    numberstyle=\tiny\color{gray},
+    frame=single,
+    rulecolor=\color{gray!40},
+    showstringspaces=false,
+    tabsize=4,
+    xleftmargin=1.5em,
+    framexleftmargin=1.5em,
+    morekeywords={override, nullptr, auto, decltype, noexcept,
+                  final, constexpr, explicit, virtual, class, struct,
+                  public, private, protected, new, delete, this},
+}
+\lstset{style=cpp}
+
+% ── Header / Footer ───────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyhead[L]{\textcolor{primary}{\textbf{\mytitle}}}
+\fancyhead[R]{\textcolor{primary}{\thepage}}
+
+\fancypagestyle{firstpage}{
+    \fancyhf{}
+    \renewcommand{\headrulewidth}{0pt}
+    \fancyfoot[C]{\textcolor{gray}{\small \mytitle\ -- \thepage}}
+}
+
+% ── Section formatting ────────────────────────────────────────────────────
+\titleformat{\section}
+    {\normalfont\Large\bfseries\color{primary}}{\thesection}{1em}{}
+\titleformat{\subsection}
+    {\normalfont\large\bfseries\color{secondary}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+    {\normalfont\normalsize\bfseries\color{accent}}{\thesubsubsection}{1em}{}
+
+% ── TikZ node styles ──────────────────────────────────────────────────────
+\tikzset{
+    block/.style={rectangle, draw, fill=blue!10, text width=2.5cm,
+                  text centered, rounded corners, minimum height=1cm},
+    line/.style={draw, -latex},
+}
+
+% ── Info boxes ────────────────────────────────────────────────────────────
+\newtcolorbox{infobox}{
+    colback=primary!5, colframe=primary, boxrule=0.6pt,
+    arc=3pt, left=8pt, right=8pt, top=6pt, bottom=6pt, breakable
+}
+\newtcolorbox{notebox}{
+    colback=accent!5, colframe=accent, boxrule=0.6pt,
+    arc=3pt, left=8pt, right=8pt, top=6pt, bottom=6pt, breakable
+}
+% conceptbox: blue-framed box used for OOP concept explanations
+\newtcolorbox{conceptbox}[1]{
+    colback=secondary!5, colframe=secondary, boxrule=0.6pt,
+    arc=3pt, left=8pt, right=8pt, top=6pt, bottom=6pt, breakable,
+    title={\textbf{OOP Concept: #1}}, fonttitle=\bfseries\small
+}
+
+% ── Project metadata ──────────────────────────────────────────────────────
+\newcommand{\mytitle}{Deepspace Defenders --- Space Shooter Game}
+\newcommand{\mycourse}{CSE142 Object Oriented Programming Techniques}
+\newcommand{\mysemester}{Spring 2026}
+\newcommand{\myinstructor}{Behraj Khan}
+\newcommand{\authorone}{Hamza Faisal --- ERP: 32406}
+\newcommand{\authortwo}{Hunain Adnan --- ERP: 32397}
+\newcommand{\authorthree}{Burhanuddin Murtaza Patanwala --- ERP: 32400}
+\newcommand{\duedate}{10th May 2026}
+
+% ─────────────────────────────────────────────────────────────────────────
+\begin{document}
+% ─────────────────────────────────────────────────────────────────────────
+
+% ── Title page ────────────────────────────────────────────────────────────
+\thispagestyle{firstpage}
+\begin{center}
+    \vspace*{0.5cm}
+
+    {\Huge\bfseries\textcolor{primary}{\mytitle}}
+
+    \vspace{0.5cm}
+    \rule{0.9\textwidth}{1pt}
+    \vspace{0.5cm}
+
+    {\Large A Semester Project Report}
+
+    \vspace{1cm}
+
+    \begin{tabular}{rl}
+        \textbf{Course:}     & \mycourse     \\[4pt]
+        \textbf{Semester:}   & \mysemester   \\[4pt]
+        \textbf{Instructor:} & \myinstructor \\[4pt]
+        \textbf{Due Date:}   & \duedate      \\[4pt]
+        \textbf{Author(s):}  & \authorone    \\[2pt]
+                             & \authortwo    \\[2pt]
+                             & \authorthree  \\
+    \end{tabular}
+
+    \vspace{1.5cm}
+
+    \includegraphics[width=0.5\textwidth]{misc/IBA-logo}
+
+    \vfill
+
+    {\large Department of Computer Science}\\[4pt]
+    {\large Institute of Business Administration, Karachi}\\[6pt]
+    \today
+\end{center}
+
+\newpage
+
+% ── Abstract ──────────────────────────────────────────────────────────────
+\section*{Abstract}
+\addcontentsline{toc}{section}{Abstract}
+
+\textbf{Deepspace Defenders} is a fully playable 2D space shooter game developed
+in C++ using the SFML (Simple and Fast Multimedia Library) graphics framework.
+The player controls a spaceship and must survive waves of progressively harder
+enemies across three levels, each ending with a boss fight.
+
+We built this game to apply the OOP concepts from our course in a real project.
+The architecture uses three inheritance hierarchies; a template
+class called \texttt{ObjectPool} to manage all live game objects without any dynamic allocation during gameplay; and encapsulation to protect classes' internal states. Score is added through an overloaded
+operator, and custom exception classes handle asset loading failures and invalid
+level transitions.
+
+This results in a 60 fps arcade style space shooter game, which demonstrates the power of using OOP concepts effectively.
+
+\vspace{0.3cm}
+\noindent\textbf{Keywords:} Object-Oriented Programming, C++, SFML, Inheritance,
+Polymorphism, Encapsulation, Templates, Operator Overloading, Exception Handling, Recursion,
+Game Development.
+
+\newpage
+
+% ── Table of contents ─────────────────────────────────────────────────────
+\tableofcontents
+\newpage
+
+% ─────────────────────────────────────────────────────────────────────────
+\clearpage
+\section{Introduction}
+% ─────────────────────────────────────────────────────────────────────────
+
+\subsection{Background}
+
+We chose to make a space shooter for our OOP project because everything in it --- the player, enemies, bullets, levels, particles ---
+can be implemented as a class. Each thing owns its own data and handles its own
+behaviour. The space shooter genre is simple enough to finish in time but
+complex enough to genuinely need every major OOP concept.
+
+\subsection{Problem Statement}
+
+We needed to build a game where:
+\begin{itemize}
+    \item Multiple enemy types (small, medium, boss) share common logic but differ in stats and shooting patterns.
+    \item Multiple levels each define their own wave structure but share common rendering and loading logic.
+    \item Multiple bullet types (player, enemy, boss beam) are distinguishable
+          without scattering \texttt{if/else} chains everywhere.
+    \item Hundreds of live objects are managed without allocating or freeing memory every frame.
+    \item The game had to flow through distinct screens (Home, Level Select, Playing,
+          Paused, Game Over, Level Complete) in a predictable, bug-free way.
+\end{itemize}
+
+\subsection{Objectives}
+
+\begin{enumerate}
+    \item Design three independent inheritance hierarchies (bullets, enemies,
+          levels) that are easily extendable.
+    \item Implement a generic \texttt{ObjectPool} template that recycles objects
+          in a fixed array, avoiding runtime memory allocation.
+    \item Encapsulate all player state inside the \texttt{Player} class so no other code can accidentally corrupt it.
+    \item Use virtual functions and abstract classes so that the main game loop
+          does not need to know the concrete type of each object.
+    \item Demonstrate operator overloading, static class members, and custom
+          exceptions as part of the design --- not as add-ons.
+    \item Use a state stack to manage the different game states.
+\end{enumerate}
+
+\subsection{Scope and Limitations}
+
+\begin{notebox}
+\textbf{In scope:} Three levels, three enemy types, four bullet types, a particle
+explosion system, a scrolling star background, background music (OGG format via
+SFML Audio), a home screen, a level-select screen, pause/resume, game over, and
+level-complete overlays.\\[4pt]
+\textbf{Out of scope:} Saved high scores (no file I/O at runtime), multiplayer,
+sound effects, and power-ups. These are possible future extensions.
+\end{notebox}
+
+% ─────────────────────────────────────────────────────────────────────────
+\clearpage
+\section{OOP Design}
+% ─────────────────────────────────────────────────────────────────────────
+
+\subsection{Project File Structure}
+
+The project has 12 source files. Each file only depends on files that appear
+above it in the list.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Source files in dependency order}
+    \label{tab:files}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{|c|l|p{7.5cm}|}
+        \hline
+        \textbf{Layer} & \textbf{File} & \textbf{Purpose} \\
+        \hline
+        1 & \texttt{Utils.h}           & Pure math helpers (vector length, normalise, lerp, clamp, random) \\
+        \hline
+        1 & \texttt{BulletType.h}      &  Bullet category class + 4 concrete subclasses + \texttt{BulletTypeRegistry}\\
+        \hline
+        1 & \texttt{EnemyType.h}       & Enemy stat profile class + 3 concrete subclasses + \texttt{EnemyTypeRegistry} \\
+        \hline
+        1 & \texttt{GameState.h}       & Game-screen state value class (constants defined in \texttt{main.cpp}) \\
+        \hline
+        2 & \texttt{GameData.h}        & Data structs (Bullet, Enemy, Particle, Star, SpawnEvent, SpawnJob) + ObjectPool template \\
+        \hline
+        3 & \texttt{Player.h}          & Player class (fully inline, no .cpp) \\
+        \hline
+        4 & \texttt{Level.h}           & Abstract Level base class + LevelOne, LevelTwo, LevelThree \\
+        \hline
+        4 & \texttt{Level.cpp}         & Level method implementations and wave definitions \\
+        \hline
+        5 & \texttt{Game.h}            & Game class declaration \\
+        \hline
+        5 & \texttt{Game.cpp}          & Core logic: init, update, collision detection, enemy spawning \\
+        \hline
+        5 & \texttt{Game\_graphics.cpp}& All rendering methods (render, renderBullets, renderEnemies, HUD, overlays) \\
+        \hline
+        6 & \texttt{main.cpp}          & Defines all static member variables; instantiates registries; game entry point \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Class Hierarchy}
+
+There are three inheritance hierarchies and one composition hub (\texttt{Game}).
+Figures~\ref{fig:inherit} and~\ref{fig:compose} show the relationships.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{misc/fig1_inheritance.png}
+    \caption{Three inheritance hierarchies (BulletType, EnemyType, Level).
+             Arrows point from child to parent (\emph{``inherits from''}).
+             Shaded boxes are abstract bases; plain boxes are concrete subclasses.}
+    \label{fig:inherit}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.80\textwidth]{misc/fig2_composition.png}
+    \caption{Composition: the \texttt{Game} class \emph{owns} (has-a) all subsystems.
+             Arrows labelled \texttt{has-a} mean ``contains as a member variable''.}
+    \label{fig:compose}
+\end{figure}
+
+\subsection{Class and Struct Descriptions}
+
+\subsubsection{Classes (with behaviour)}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Classes and their responsibilities}
+    \label{tab:classes}
+    \renewcommand{\arraystretch}{1.2}
+    \small
+    \begin{tabular}{|l|p{3.2cm}|p{5.8cm}|}
+        \hline
+        \textbf{Class} & \textbf{Responsibility} & \textbf{Key members} \\
+        \hline
+        \texttt{BulletType} & Identifies a bullet's category and owner & \texttt{id}, \texttt{playerBullet}, \texttt{getId()}, \texttt{isPlayerBullet()}, static globals \texttt{PlayerNorm}, \texttt{EnemyNorm}, \texttt{EnemyBurst}, \texttt{BossBeam}\\
+        \hline
+        \texttt{PlayerNormBullet} & Player's shot& Inherits BulletType with id=0, playerBullet=true \\
+        \hline
+        \texttt{EnemyNormBullet} & Basic aimed enemy shot & id=3, playerBullet=false \\
+        \hline
+        \texttt{EnemyBurstBullet} & Spread-fire enemy shot & id=4, playerBullet=false \\
+        \hline
+        \texttt{BossBeamBullet} & Boss beam projectile & id=5, playerBullet=false \\
+        \hline
+        \texttt{BulletTypeRegistry} & Owns and initialises all four bullet-type pointers& Private members: one instance of each concrete subclass; constructor wires static pointers; destructor clears them to \texttt{nullptr}; copy disabled (\texttt{= delete}) \\
+        \hline
+        \texttt{EnemyType} & Stores the stat profile for one enemy category & \texttt{maxHp}, \texttt{shootInterval}, \texttt{scoreValue}, \texttt{moveSpeed}, \texttt{radius}, \texttt{kind}; static globals \texttt{Small}, \texttt{Medium}, \texttt{Boss}\\
+        \hline
+        \texttt{SmallEnemyType} & Fast, weak enemy & 30\,HP, interval 2.2s, radius 16px, worth 50 pts \\
+        \hline
+        \texttt{MediumEnemyType} & Tanky spread-shooter & 80\,HP, interval 1.8s, radius 22px, worth 120 pts \\
+        \hline
+        \texttt{BossEnemyType} & End-of-level boss & 2500\,HP, interval 0.8s, radius 60px, worth 2000 pts \\
+        \hline
+        \texttt{EnemyTypeRegistry} & Owns and initialises all three enemy-type pointers& Same pattern as \texttt{BulletTypeRegistry}; constructor assigns \texttt{Small}, \texttt{Medium}, \texttt{Boss} pointers; destructor sets them to \texttt{nullptr}; copy disabled\\
+        \hline
+        \texttt{GameState} & Tracks which screen is active & \texttt{id}; \texttt{operator==}, \texttt{operator!=}; static constants \texttt{Home}, \texttt{LevelSelect}, \texttt{Playing}, \texttt{Paused}, \texttt{GameOver}, \texttt{LevelComplete} \\
+        \hline
+        \texttt{Player} & Encapsulates all player state and behaviour & pos, hp, maxHp, speed, lives, score, timers; movement, clamping, damage, healing, score accumulation \\
+        \hline
+        \texttt{Level} & Abstract base for a playable level & name, desc, events (SpawnEvent list), planetTexture; pure virtual \texttt{buildWaves()}, \texttt{getDuration()}, \texttt{getPlanetTexturePath()} \\
+        \hline
+        \texttt{LevelOne/Two/Three} & Concrete level implementations & Override \texttt{buildWaves()} with a timed enemy schedule \\
+        \hline
+        \texttt{ObjectPool<T,N>} & Fixed-size object recycler & \texttt{items[N]}; \texttt{alloc()}, \texttt{clearAll()}, \texttt{countActive()} \\
+        \hline
+        \texttt{Game} & Central orchestrator & Owns all subsystems; implements init, run, update, collision, spawning; includes \texttt{sf::Music} for background audio; rendering split into \texttt{Game\_graphics.cpp} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsubsection{Data Structs (plain data containers)}
+
+\begin{table}[H]
+    \centering
+    \caption{Data structs used as game objects}
+    \label{tab:structs}
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{|l|p{4.2cm}|p{5.5cm}|}
+        \hline
+        \textbf{Struct} & \textbf{Represents} & \textbf{Key fields} \\
+        \hline
+        \texttt{Bullet}     & One active projectile         & pos, vel, dmg, \texttt{BulletType*} type, on \\
+        \hline
+        \texttt{Enemy}      & One active enemy              & pos, vel, hp, maxHp, \texttt{EnemyType*} type, shootTimer, shootInterval, path, pathIndex, angle, pulse, scoreValue, moveSpeed, on \\
+        \hline
+        \texttt{Particle}   & One explosion spark           & pos, vel, colorStart, colorEnd, life, maxLife, size, on \\
+        \hline
+        \texttt{SpawnEvent} & A scheduled group spawn       & time, etype, startPos, path, count, xSpacing, delay, fired \\
+        \hline
+        \texttt{SpawnJob}   & One pending individual spawn  & etype, startPos, delayRemaining, path, hp, maxHp, shootInterval, scoreValue, moveSpeed \\
+        \hline
+        \texttt{Star}       & One background star           & pos, speed, brightness, size \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{notebox}
+\textbf{Why separate Struct from Class?}
+We used structs for data-heavy objects like enemies to allow direct access to variables, which significantly improves performance and avoids the boilerplate of getters and setters.
+\end{notebox}
+
+\subsection{OOP Concepts Summary}
+
+\begin{table}[htbp]
+    \centering
+    \caption{OOP concepts used and where they appear}
+    \label{tab:oop}
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{|l|p{9cm}|}
+        \hline
+        \textbf{OOP Concept} & \textbf{Where and how it is used} \\
+        \hline
+        Encapsulation & \texttt{Player} class: all fields are \texttt{private}; external code uses getters and setters only \\
+        \hline
+        Inheritance & Three hierarchies: BulletType, EnemyType, Level (each with subclasses)\\
+        \hline
+        Polymorphism & \texttt{Level::buildWaves()}, \texttt{getDuration()}, and \texttt{getPlanetTexturePath()} are pure virtual; \texttt{Game} calls them without knowing the concrete type \\
+        \hline
+        Abstract Classes & \texttt{Level} cannot be instantiated directly because they have pure virtual methods\\
+        \hline
+        Templates & \texttt{ObjectPool<T,N>} works for \texttt{Bullet}, \texttt{Enemy}, and \texttt{Particle} using the same code \\
+        \hline
+        Operator Overloading & \texttt{Player::operator+=(int)} adds score; \texttt{GameState::operator==} and \texttt{operator!=} compare states \\
+        \hline
+        Static Members & \texttt{BulletType::PlayerNorm}, \texttt{EnemyType::Small}, \texttt{GameState::Home} etc.\ --- global pointers accessed through the class name\\
+        \hline
+        Exception Handling & \texttt{AssetLoadException} and \texttt{InvalidLevelException} (custom classes inheriting \texttt{std::runtime\_error}) \\
+        \hline
+        Recursion & \texttt{spawnExplosion()} calls itself with \texttt{count/2} and \texttt{depth-1}; base case is \texttt{depth <= 0} \\
+        \hline
+        Composition & \texttt{Game} owns \texttt{Player}, \texttt{ObjectPool<Bullet>}, \texttt{ObjectPool<Enemy>}, \texttt{ObjectPool<Particle>}, and \texttt{Level*[]} as member variables (has-a relationships) \\
+        \hline
+        Virtual Destructor & All parent classes use a virtual destructor to ensure correct cleanup of child classes, so derived objects are safely deleted via a base pointer\\
+        \hline
+    \end{tabular}
+\end{table}
+
+% ─────────────────────────────────────────────────────────────────────────
+\clearpage
+\section{Implementation}
+% ─────────────────────────────────────────────────────────────────────────
+
+\subsection{Development Environment}
+\begin{itemize}
+    \item \textbf{Language:} C++17
+    \item \textbf{Graphics \& Audio library:} SFML 2.6 --- graphics, window, and audio modules
+    \item \textbf{Build system:} CMake 3.21+
+    \item \textbf{IDE:} Visual Studio Code
+    \item \textbf{Version control:} Git / GitHub
+    \item \textbf{Platform:} Windows 11, MinGW-w64 (ucrt64)
+\end{itemize}
+
+% ─────────────────────────────────────────────────────────────────────────
+\subsection{Encapsulation --- The Player Class}
+
+\begin{conceptbox}{Encapsulation}
+Encapsulation means keeping a class's data private and only letting outside
+code interact with it through a controlled public interface.
+\end{conceptbox}
+
+The \texttt{Player} class is the clearest example of encapsulation in this
+project. Every field --- position, HP, lives, timers --- is \texttt{private}.
+The rest of the code can only interact with the player through the public
+interface.
+
+\begin{lstlisting}[caption={Player class skeleton (Player.h)}]
+class Player {
+private:
+    // position, hp, maxHp, speed, lives, score
+    // shootTimer, iframeTimer, shieldTimer, tilt, alive
+
+public:
+    // Getters: getPos(), getHp(), getLives(), getScore(), isAlive(), ...
+    void takeDamage(float d);       // reduces hp
+    void heal(float h);             // increases hp, capped at maxHp
+    void loseLife();                // decrements lives
+    void clampToArena();            // keeps ship inside the play area
+    Player& operator+=(int bonus);  // adds score (operator overload)
+};
+\end{lstlisting}
+
+\textbf{Why this matters:} If \texttt{hp} were \texttt{public}, any part of
+the code could accidentally write \texttt{player.hp = -999}. Making it
+\texttt{private} turns that into a compile error. Only \texttt{takeDamage()}
+and \texttt{heal()} can modify health, and both do it safely.
+
+% ─────────────────────────────────────────────────────────────────────────
+\subsection{Inheritance --- Three Class Hierarchies}
+
+\begin{conceptbox}{Inheritance}
+Inheritance lets a child class reuse the code of a parent class and then add
+or override specific behaviour. The parent defines the shared interface; each
+child fills in the parts that are different.
+\end{conceptbox}
+
+\subsubsection{Bullet Type Hierarchy}
+
+We need to tell four kinds of bullets apart at runtime without scattering
+raw integer comparisons through the code. Each bullet type is its own class:
+
+\begin{lstlisting}[caption={BulletType hierarchy skeleton (BulletType.h)}]
+class BulletType {          // abstract base -- defines the interface
+    int id; bool playerBullet;
+public:
+    virtual ~BulletType() {}
+    int getId() const; bool isPlayerBullet() const;
+    static BulletType *PlayerNorm, *EnemyNorm, *EnemyBurst, *BossBeam;
+};
+// Concrete subclasses -- each hard-codes its own id
+class PlayerNormBullet : public BulletType { /* id=0, player bullet */ };
+class EnemyNormBullet  : public BulletType { /* id=3, enemy bullet  */ };
+class EnemyBurstBullet : public BulletType { /* id=4, burst bullet  */ };
+class BossBeamBullet   : public BulletType { /* id=5, boss beam     */ };
+\end{lstlisting}
+
+The four concrete objects are owned by a \texttt{BulletTypeRegistry} class.
+The registries are local variables at the top of \texttt{main()}, created
+before the \texttt{Game} object, so the static pointers are valid for the entire
+program lifetime:
+
+\begin{lstlisting}[caption={BulletTypeRegistry --- RAII singleton manager (BulletType.h)}]
+class BulletTypeRegistry {
+private:
+    PlayerNormBullet playerNorm;   // owned by value -- no heap allocation
+    EnemyNormBullet  enemyNorm;
+    EnemyBurstBullet enemyBurst;
+    BossBeamBullet   bossBeam;
+public:
+    BulletTypeRegistry() {
+        BulletType::PlayerNorm  = &playerNorm;   // wire static pointers
+        BulletType::EnemyNorm   = &enemyNorm;
+        BulletType::EnemyBurst  = &enemyBurst;
+        BulletType::BossBeam    = &bossBeam;
+    }
+    ~BulletTypeRegistry() {
+        BulletType::PlayerNorm = nullptr;        // safe teardown at exit
+        BulletType::EnemyNorm  = nullptr;
+        BulletType::EnemyBurst = nullptr;
+        BulletType::BossBeam   = nullptr;
+    }
+    BulletTypeRegistry(const BulletTypeRegistry&)            = delete;
+    BulletTypeRegistry& operator=(const BulletTypeRegistry&) = delete;
+};
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Static definitions and registry activation in main.cpp}]
+BulletType *BulletType::PlayerNorm = nullptr;
+// ... (EnemyType and GameState statics defined here too)
+
+int main() {
+    BulletTypeRegistry registryBullet;  // wires BulletType statics
+    EnemyTypeRegistry  registry;         // wires EnemyType statics
+    try {
+        Game game; game.init(); game.run();
+    } catch (...) { ... }
+    // registries destroyed here -- destructors clear statics to nullptr
+}
+\end{lstlisting}
+
+\textbf{Why consolidate into main.cpp?} C++ requires each static member
+variable to be defined in exactly one translation unit. Putting them all in
+\texttt{main.cpp} makes ownership clear and eliminates separate
+\texttt{BulletType.cpp}, \texttt{EnemyType.cpp}, and \texttt{GameState.cpp}
+files.
+
+\subsubsection{Enemy Type Hierarchy}
+
+Enemy types follow the same pattern but carry meaningful gameplay data:
+
+\begin{lstlisting}[caption={EnemyType hierarchy skeleton (EnemyType.h)}]
+class EnemyType {       // abstract base -- stores gameplay stats
+    // maxHp, shootInterval, scoreValue, moveSpeed, radius, kind
+public:
+    virtual ~EnemyType() {}
+    // Getters: getMaxHp(), getShootInterval(), getScoreValue(), ...
+    static EnemyType *Small, *Medium, *Boss;
+};
+// Stats baked in: (hp, shootInterval, score, speed, radius, kind)
+class SmallEnemyType  : public EnemyType { /* 30 HP,   2.2s,  50 pts  */ };
+class MediumEnemyType : public EnemyType { /* 80 HP,   1.8s, 120 pts  */ };
+class BossEnemyType   : public EnemyType { /* 2500 HP, 0.8s, 2000 pts */ };
+\end{lstlisting}
+
+\texttt{EnemyType.h} also defines an \texttt{EnemyTypeRegistry} that follows
+the exact pattern as \texttt{BulletTypeRegistry}.
+
+\subsubsection{Level Hierarchy}
+
+\begin{lstlisting}[caption={Level abstract base class skeleton (Level.h)}]
+class Level {           // abstract base
+protected:
+    // name, desc, events (wave schedule), planetTexture
+public:
+    virtual ~Level() {}
+    // Pure virtual -- every subclass MUST implement:
+    virtual float       getDuration()          const = 0;
+    virtual std::string getPlanetTexturePath() const = 0;
+    virtual void        buildWaves()                 = 0;
+    virtual void renderPlanet(sf::RenderWindow& w);  // has default impl.
+};
+class LevelOne   : public Level { /* 55s, planet1.png */ };
+class LevelTwo   : public Level { /* 65s, planet2.png */ };
+class LevelThree : public Level { /* 80s, planet3.png, two bosses */ };
+\end{lstlisting}
+
+% ─────────────────────────────────────────────────────────────────────────
+\subsection{Polymorphism --- Same Call, Different Behaviour}
+
+\begin{conceptbox}{Polymorphism}
+If you have a base-class pointer and call a
+\texttt{virtual} function through it, C++ automatically calls the correct
+overridden version in the derived class --- even though the pointer only knows
+about the base type. This is the use of polymorphism.
+\end{conceptbox}
+
+In \texttt{Game.cpp}, levels are stored as base-class pointers. The game
+calls virtual functions through those pointers without ever checking which
+concrete level is loaded:
+
+\begin{lstlisting}[caption={Polymorphic level calls in Game.cpp}]
+std::vector<Level *> levels;   // stores LevelOne*, LevelTwo*, or LevelThree*
+
+// During initialisation:
+for (int i = 0; i < levels.size(); i++) {
+    levels[i]->buildWaves();          // calls the correct override automatically
+    levels[i]->loadPlanet();
+}
+
+// During gameplay rendering:
+void Game::renderBackground() {
+    levels[currentLevel]->renderPlanet(window);  // correct planet drawn automatically
+}
+\end{lstlisting}
+
+% ─────────────────────────────────────────────────────────────────────────
+\subsection{Templates --- The ObjectPool}
+
+\begin{conceptbox}{Templates}
+A template is a class or function where the type is a parameter. You write the
+logic once, and the compiler generates a correctly-typed version for each type
+you use it with. This avoids writing the same container multiple times for
+different types.
+\end{conceptbox}
+
+The game can have up to 700 bullets, 80 enemies, and 1000 particles active at
+the same time. Calling \texttt{new} and \texttt{delete} every frame would be
+slow and could fragment memory. Instead we use a fixed-size \emph{object pool}:
+a pre-allocated array where inactive slots are reused instead of freed.
+
+\begin{lstlisting}[caption={ObjectPool template class (GameData.h)}]
+template <class T, int N>
+class ObjectPool
+{
+private:
+    std::array<T, N> items;   // fixed array -- allocated once, never reallocated
+
+public:
+    ObjectPool() {
+        for (int i = 0; i < N; i++)
+            items[i].on = false;   // all slots start as "free"
+    }
+
+    int  capacity()  const { return N; }
+    T&   at(int i)         { return items[i]; }
+
+    // Find the first free slot and return a pointer to it
+    T* alloc() {
+        for (int i = 0; i < N; i++) {
+            if (!items[i].on)
+                return &items[i];
+        }
+        return nullptr;   // pool is full -- caller must handle this
+    }
+
+    void clearAll()       { for (int i = 0; i < N; i++) items[i].on = false; }
+    int  countActive() const {
+        int c = 0;
+        for (int i = 0; i < N; i++) if (items[i].on) c++;
+        return c;
+    }
+};
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Three pool instances in Game.h}]
+ObjectPool<Bullet,   MAX_BULLETS>   bullets;    // 700 slots
+ObjectPool<Enemy,    MAX_ENEMIES>   enemies;    //  80 slots
+ObjectPool<Particle, MAX_PARTICLES> particles;  // 1000 slots
+\end{lstlisting}
+
+The template is written once; the compiler generates three separate typed
+arrays from it. When a bullet is needed, \texttt{bullets.alloc()} finds a free
+slot and returns a pointer. When the bullet goes off-screen,
+\texttt{b.on = false} marks the slot as available again. No \texttt{new} or
+\texttt{delete} is called during gameplay.
+
+% ─────────────────────────────────────────────────────────────────────────
+\subsection{Operator Overloading}
+
+\begin{conceptbox}{Operator Overloading}
+C++ lets you define what standard operators (\texttt{+}, \texttt{=},
+\texttt{==}, etc.) mean for your own classes. It makes code easier to read
+when used carefully.
+\end{conceptbox}
+
+\subsubsection{Player::operator+= (score addition)}
+
+\begin{lstlisting}[caption={Score addition via operator overload (Player.h)}]
+Player& operator+=(int scoreBonus) {
+    score += scoreBonus;
+    return *this;
+}
+\end{lstlisting}
+
+Used in \texttt{Game.cpp} when an enemy is destroyed:
+\begin{lstlisting}[caption={Using the overloaded operator in Game.cpp}]
+if (e.hp <= 0.f) {
+    e.on = false;
+    player += e.scoreValue;   // clean, readable syntax
+}
+\end{lstlisting}
+
+\subsubsection{GameState::operator== and operator!=}
+
+\begin{lstlisting}[caption={Comparison operators on GameState (GameState.h)}]
+bool operator==(const GameState& o) const { return id == o.id; }
+bool operator!=(const GameState& o) const { return id != o.id; }
+\end{lstlisting}
+
+Used throughout \texttt{Game.cpp} for readable state checks:
+\begin{lstlisting}[caption={State comparison in Game.cpp}]
+GameState current = stateStack.top();
+if (current == GameState::Playing) { update(dt); }
+\end{lstlisting}
+
+% ─────────────────────────────────────────────────────────────────────────
+\subsection{Exception Handling --- Custom Exception Classes}
+
+\begin{conceptbox}{Exception Handling}
+Exceptions let you signal that something went wrong without scattering error
+checks through every function. When an error occurs you \texttt{throw} an
+exception and it propagates up the call stack until a \texttt{catch} block
+handles it.
+\end{conceptbox}
+
+We defined two custom exception classes inside \texttt{Game.cpp}:
+
+\begin{lstlisting}[caption={Custom exception classes (Game.cpp)}]
+// Thrown when a texture, font, or other asset cannot be loaded from disk
+class AssetLoadException : public std::runtime_error {
+public:
+    AssetLoadException() : std::runtime_error("Failed to load asset") {}
+};
+
+// Thrown when startLevel() is called with an invalid index
+class InvalidLevelException : public std::runtime_error {
+public:
+    InvalidLevelException() : std::runtime_error("Invalid level") {}
+};
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Throwing and catching exceptions (Game.cpp)}]
+// In Game::init() -- missing assets are non-fatal; game warns and continues
+try {
+    loadTextureOrThrow(shipTexture, "assets/textures/spaceship.png");
+    // ... more assets ...
+} catch (const AssetLoadException& ex) {
+    std::cerr << "Asset warning: " << ex.what() << "\n";
+}
+
+// In Game::startLevel() -- an invalid index is a programming bug
+void Game::startLevel(int index) {
+    if (index < 0 || index >= (int)levels.size())
+        throw InvalidLevelException();
+}
+
+// In main.cpp -- the outermost safety net
+int main() {
+    try { Game game; game.init(); game.run(); }
+    catch (const std::exception& ex) {
+        std::cerr << "Fatal error: " << ex.what() << std::endl;
+        return 1;
+    }
+}
+\end{lstlisting}
+
+% ─────────────────────────────────────────────────────────────────────────
+\subsection{Recursion --- Layered Explosion System}
+
+\begin{conceptbox}{Recursion}
+Recursion is when a function calls itself with a smaller version of the same
+problem until a base case is reached. Here, spawning an explosion that itself
+spawns smaller explosions is a natural fit.
+\end{conceptbox}
+
+When an enemy is destroyed, \texttt{Game::spawnExplosion()} spawns a burst of
+particles, then calls itself three times with \texttt{count/2} and
+\texttt{depth-1} to create sub-explosions at nearby random offsets:
+
+\begin{lstlisting}[caption={Recursive explosion spawner (Game.cpp)}]
+void Game::spawnExplosion(sf::Vector2f pos, sf::Color cStart,
+                          sf::Color cEnd, int count, int depth) {
+    if (depth <= 0 || count <= 0) return;   // base case
+
+    for (int i = 0; i < count; i++) {
+        Particle* p = particles.alloc();
+        if (!p) return;
+        // ... set pos, vel, color, life ...
+        p->on = true;
+    }
+    // Recursive step: three smaller explosions at random nearby offsets
+    for (int i = 0; i < 3; i++) {
+        sf::Vector2f offset(randFloat(-25.f, 25.f), randFloat(-25.f, 25.f));
+        spawnExplosion(pos + offset, cStart, cEnd, count / 2, depth - 1);
+    }
+}
+\end{lstlisting}
+
+% ─────────────────────────────────────────────────────────────────────────
+\subsection{Game Loop and State Machine}
+
+The \texttt{GameState} class works with a \texttt{std::stack} to implement a
+push/pop state machine. When the player pauses, the Paused state is pushed on
+top of Playing. When they resume, it is popped and Playing is active again.
+This means overlay states do not destroy the state underneath them.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{misc/fig3_states.png}
+    \caption{Game state transitions. Arrows show what action triggers each transition.}
+    \label{fig:states}
+\end{figure}
+
+% ─────────────────────────────────────────────────────────────────────────
+\clearpage
+\section{Testing}
+% ─────────────────────────────────────────────────────────────────────────
+
+\subsection{Test Cases}
+
+\begin{table}[H]
+    \centering
+    \caption{Edge Case and Exception Test Cases}
+    \label{tab:tests}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{|c|p{3.8cm}|p{3.8cm}|c|}
+        \hline
+        \textbf{TC} & \textbf{Scenario} & \textbf{Expected Outcome} & \textbf{Pass?} \\
+        \hline
+        TC-01 & Hold Space to fire \textasciitilde700 bullets & Pool fills up; \texttt{alloc()} returns \texttt{nullptr}; no crash & \checkmark \\
+        \hline
+        TC-02 & Take damage immediately after a previous hit (iframes active) & Damage ignored for iframe duration; HP unchanged & \checkmark \\
+        \hline
+        TC-03 & Rename or delete a texture file; launch game & \texttt{AssetLoadException} caught; warning printed; game continues & \checkmark \\
+        \hline
+        TC-04 & Call \texttt{startLevel(-1)} programmatically & \texttt{InvalidLevelException} thrown and caught in \texttt{main()} & \checkmark \\
+        \hline
+        TC-05 & Kill all enemies including boss & \texttt{isLevelClear()} returns true; Level Complete overlay shown & \checkmark \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Memory Leak Testing}
+
+An earlier version used \texttt{new} to create the \texttt{BulletType} and
+\texttt{EnemyType} singletons. Since \texttt{delete} was never called on them,
+memory analysis tools reported leaks. We fixed this by introducing
+\texttt{BulletTypeRegistry} and \texttt{EnemyTypeRegistry}. Each
+registry stores its instances as plain member variables (no heap
+allocation), wires the static pointers in its constructor, and resets them
+to \texttt{nullptr} in its destructor. Both registries are local variables in
+\texttt{main()} and are cleaned up automatically when \texttt{main()} returns.
+
+% ─────────────────────────────────────────────────────────────────────────
+\clearpage
+\section{Expected Output --- Screenshots}
+% ─────────────────────────────────────────────────────────────────────────
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.68\textwidth]{misc/ss1_home.png}
+    \caption{Home screen: title text, scrolling star background, two decorative
+             planets, and the PLAY button.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.68\textwidth]{misc/ss2_levelselect.png}
+    \caption{Level Select screen: three planet buttons (the selected one is
+             larger), level name and description preview, BACK and PLAY buttons.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.68\textwidth]{misc/ss3_gameplay.png}
+    \caption{Mid-game: player ship, enemy formation following waypoints,
+             player bullets, HUD showing HP bar, lives, and score.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.68\textwidth]{misc/ss4_boss.png}
+    \caption{Boss encounter: large boss sprite, red boss HP bar at the top,
+             particle explosions visible.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.68\textwidth]{misc/ss5_gameover.png}
+    \caption{Game Over overlay: dimmed background, ``GAME OVER'' heading,
+             final score, and ``Click to restart'' prompt.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.68\textwidth]{misc/ss6_levelcomplete.png}
+    \caption{Level Complete overlay: green panel with level name, score,
+             and ``Click to continue'' prompt.}
+\end{figure}
+
+% ─────────────────────────────────────────────────────────────────────────
+\clearpage
+\section{Results and Discussion}
+% ─────────────────────────────────────────────────────────────────────────
+
+\subsection{Results}
+
+\begin{itemize}
+    \item The game runs at 60 fps on standard hardware.
+    \item All three levels are completable.
+    \item Background music plays via \texttt{sf::Music} using OGG audio streaming.
+    \item The \texttt{ObjectPool} prevents runtime allocation: no \texttt{new}
+          or \texttt{delete} occurs during gameplay.
+    \item The state machine handles all screen transitions cleanly, including
+          nested states (Paused inside Playing).
+    \item Rendering logic is fully separated into \texttt{Game\_graphics.cpp},
+          keeping \texttt{Game.cpp} focused on game logic only.
+\end{itemize}
+
+\subsection{Analysis}
+
+\begin{itemize}
+    \item \textbf{ObjectPool vs dynamic allocation:} Searching a 700-slot array to find a free bullet takes minimal CPU time. The speed gained by skipping dynamic memory allocation makes this linear search highly efficient.
+
+    \item \textbf{Polymorphism overhead:} Virtual functions add a tiny bit of processing time, but because we only use them for high-level tasks (like rendering the current level), the overhead is completely unnoticeable.
+
+    \item \textbf{Template code size:} The compiler generates three separate
+          versions of \texttt{ObjectPool}. For three small instantiations
+          the binary size increase is negligible.
+\end{itemize}
+
+% ─────────────────────────────────────────────────────────────────────────
+\clearpage
+\section{Challenges and Solutions}
+% ─────────────────────────────────────────────────────────────────────────
+
+\subsection{Pointer Leaks}
+\textbf{Problem:} The first version used \texttt{new} for global pointers;
+\texttt{delete} was never called, so memory tools reported leaks, even though the game was working.\\[4pt]
+\textbf{Solution:} Introduced registry classes that store instances by
+value and clear static pointers to \texttt{nullptr} in the destructor. Copy
+construction and assignment are \texttt{= delete}d.\\[4pt]
+\textbf{Learning:} managing dangling pointers manually and learning about the order of destructors called in main.
+
+\subsection{Enemies All Spawning at the Same Position}
+\textbf{Problem:} All enemies in a wave appeared at the same $(x, y)$.\\[4pt]
+\textbf{Solution:} We added spacing logic that shifts each enemy slightly to the left or right based on their index in the group.\\[4pt]
+\textbf{Learning:} Basic math offsets are essential when generating multiple game objects.
+
+\subsection{Frame-rate-dependent Movement}
+\textbf{Problem:} Objects moved a fixed number of pixels per frame.\\[4pt]
+\textbf{Solution:} All movement and timer updates are multiplied by \texttt{dt}
+(delta time in seconds). The product gives the same distance per second
+regardless of frame rate.\\[4pt]
+\textbf{Learning:} Always measure game speed in units per \emph{second}, not
+per \emph{frame}, to account for slower devices.
+
+% ─────────────────────────────────────────────────────────────────────────
+\clearpage
+\section{Future Work}
+% ─────────────────────────────────────────────────────────────────────────
+
+\begin{itemize}
+    \item \textbf{Power-ups:} Add a \texttt{PowerUp} base class with subclasses
+    \item \textbf{High score persistence:} Save the player's score to a
+          \texttt{.txt} file on game over
+    \item \textbf{Sound effects:} Use sounds for shoot, explosion, and level-complete sounds.
+    \item \textbf{More levels:} Adding \texttt{LevelFour} only requires a new
+          subclass of \texttt{Level} --- no changes to \texttt{Game.cpp}.
+\end{itemize}
+
+% ─────────────────────────────────────────────────────────────────────────
+\clearpage
+\section{Conclusion}
+% ─────────────────────────────────────────────────────────────────────────
+
+\begin{infobox}
+Deepspace Defenders proves that OOP concepts aren't just academic theory; they are practical tools for solving real software problems. Encapsulation prevented bugs with player health. Inheritance and Polymorphism stopped us from writing massive if/else blocks for every enemy. Templates allowed us to write one memory manager and use it for bullets, enemies, and particles. By applying these concepts, we built a stable, fast, and organized C++ game.
+\end{infobox}
+
+% ─────────────────────────────────────────────────────────────────────────
+\newpage
+\section*{References}
+\addcontentsline{toc}{section}{References}
+% ─────────────────────────────────────────────────────────────────────────
+
+\begin{enumerate}[label={[\arabic*]}]
+    \item B. Stroustrup, \textit{The C++ Programming Language}, 4th ed. Addison-Wesley, 2013.
+    \item S. Meyers, \textit{Effective Modern C++}. O'Reilly Media, 2014.
+    \item \textit{SFML Documentation}. [Online]. Available: \url{https://www.sfml-dev.org/documentation/}. [Accessed: \today].
+    \item \textit{cppreference.com --- C++ Reference}. [Online]. Available: \url{https://en.cppreference.com}. [Accessed: \today].
+
+\end{enumerate}
+
+% ─────────────────────────────────────────────────────────────────────────
+\clearpage
+\appendix
+\section{Complete Source Code}
+\label{sec:code}
+% ─────────────────────────────────────────────────────────────────────────
+
+\subsection{GameData.h}
+\begin{lstlisting}[caption={GameData.h --- all data structs and ObjectPool template}]
+#pragma once
+#include <SFML/Graphics.hpp>
+#include <array>
+#include <vector>
+#include "BulletType.h"
+#include "EnemyType.h"
+
+struct Bullet   { sf::Vector2f pos, vel; float dmg; BulletType* type; bool on; };
+struct Enemy    { sf::Vector2f pos, vel; float hp, maxHp; EnemyType* type;
+                  float shootTimer, shootInterval, angle, pulse, moveSpeed;
+                  int scoreValue, pathIndex; std::vector<sf::Vector2f> path; bool on; };
+struct Particle { sf::Vector2f pos, vel; sf::Color colorStart, colorEnd;
+                  float life, maxLife, size; bool on; };
+struct SpawnEvent { float time, xSpacing, delay; EnemyType* etype;
+                    sf::Vector2f startPos; std::vector<sf::Vector2f> path;
+                    int count; bool fired; };
+struct SpawnJob   { EnemyType* etype; sf::Vector2f startPos;
+                    float delayRemaining, hp, maxHp, shootInterval, moveSpeed;
+                    int scoreValue; std::vector<sf::Vector2f> path; };
+struct Star     { sf::Vector2f pos; float speed, brightness, size; };
+
+const int MAX_BULLETS=700, MAX_ENEMIES=80, MAX_PARTICLES=1000, MAX_STARS=200;
+
+template <class T, int N>
+class ObjectPool {
+    std::array<T, N> items;
+public:
+    ObjectPool() { for (int i=0; i<N; i++) items[i].on = false; }
+    int  capacity()  const { return N; }
+    T&   at(int i)         { return items[i]; }
+    T*   alloc() { for (int i=0; i<N; i++) if (!items[i].on) return &items[i]; return nullptr; }
+    void clearAll()  { for (int i=0; i<N; i++) items[i].on = false; }
+    int  countActive() const { int c=0; for (int i=0; i<N; i++) if (items[i].on) c++; return c; }
+};
+\end{lstlisting}
+
+\subsection{Game.h}
+\begin{lstlisting}[caption={Game.h --- Game class declaration}]
+#pragma once
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+#include <stack>
+#include <vector>
+#include <queue>
+#include "GameState.h"
+#include "Player.h"
+#include "GameData.h"
+#include "Level.h"
+#include "Utils.h"
+
+class Game {
+private:
+    sf::RenderWindow window;
+    sf::Font font;
+    sf::Music music;
+    sf::Texture shipTexture, smallEnemyTexture, mediumEnemyTexture,
+                bossEnemyTexture, homeplanet1, homeplanet2, homeplanet3, pauseIcon;
+    sf::Sprite shipSprite, pauseSprite;
+    sf::View gameView;
+
+    std::stack<GameState>  stateStack;
+    Player player;
+    ObjectPool<Bullet,   MAX_BULLETS>   bullets;
+    ObjectPool<Enemy,    MAX_ENEMIES>   enemies;
+    ObjectPool<Particle, MAX_PARTICLES> particles;
+    std::array<Star, MAX_STARS> stars;
+    std::vector<Level*>   levels;
+    std::queue<SpawnJob>  spawnQueue;
+    int   currentLevel, selectedLevel;
+    float levelTimer, bgY;
+    bool  bossActive;
+
+    void handleEvents(); void update(float dt); void render();
+    void startLevel(int index); void resetPlayer();
+    void checkCollisions(); void checkSpawns();
+    void spawnPlayerBullet(); void spawnEnemyBullet(Enemy& e);
+    void spawnEnemyFromJob(const SpawnJob& job);
+    void spawnExplosion(sf::Vector2f pos, sf::Color cs, sf::Color ce,
+                        int count, int depth=1);
+    void loadFontOrThrow(const std::string& path);
+    void loadTextureOrThrow(sf::Texture& tex, const std::string& path);
+
+    void renderBackground(); void renderStars(); void renderPlayer();
+    void renderEnemies(); void renderBullets(); void renderParticles();
+    void renderHUD(); void renderBossHP();
+    void renderHomeScreen(); void renderLevelSelect();
+    void renderPauseOverlay(); void renderGameOverOverlay();
+    void renderLevelCompleteOverlay();
+    void drawPlayerShip(sf::Vector2f pos, float tilt, float scale);
+    void drawSmallEnemy(sf::Vector2f pos, float angle);
+    void drawMediumEnemy(sf::Vector2f pos, float angle);
+    void drawBossEnemy(sf::Vector2f pos, float angle);
+    void initStars(); void buildLevels();
+    void drawTextCentered(const std::string& str, float y, int size, sf::Color col);
+    bool isLevelClear(); int countActiveEnemies();
+
+public:
+    Game(); ~Game();
+    void init(); void run();
+};
+\end{lstlisting}
+
+\subsection{Level.h}
+\begin{lstlisting}[caption={Level.h --- abstract Level base and concrete subclasses}]
+#pragma once
+#include <SFML/Graphics.hpp>
+#include <string>
+#include <vector>
+#include "GameData.h"
+
+class Level {
+protected:
+    std::string name, desc;
+    std::vector<SpawnEvent> events;
+    sf::Texture planetTexture;
+    bool planetLoaded;
+public:
+    Level() : planetLoaded(false) {}
+    virtual ~Level() {}
+    std::string getName() const { return name; }
+    std::string getDesc() const { return desc; }
+    std::vector<SpawnEvent>& getEvents() { return events; }
+    virtual float       getDuration()          const = 0;
+    virtual std::string getPlanetTexturePath() const = 0;
+    virtual void        buildWaves()                 = 0;
+    virtual void renderPlanet(sf::RenderWindow& window);
+    void loadPlanet();
+};
+
+class LevelOne   : public Level { public: LevelOne();
+    float getDuration() const override { return 55.f; }
+    std::string getPlanetTexturePath() const override;
+    void buildWaves() override; };
+
+class LevelTwo   : public Level { public: LevelTwo();
+    float getDuration() const override { return 65.f; }
+    std::string getPlanetTexturePath() const override;
+    void buildWaves() override; };
+
+class LevelThree : public Level { public: LevelThree();
+    float getDuration() const override { return 80.f; }
+    std::string getPlanetTexturePath() const override;
+    void buildWaves() override; };
+\end{lstlisting}
+
+\subsection{Utils.h}
+\begin{lstlisting}[caption={Utils.h --- math utility functions}]
+#pragma once
+#include <SFML/Graphics.hpp>
+#include <cmath>
+#include <cstdlib>
+
+inline float vlen(sf::Vector2f v) { return std::sqrt(v.x*v.x + v.y*v.y); }
+inline sf::Vector2f vnorm(sf::Vector2f v) {
+    float l = vlen(v);
+    return (l < 0.0001f) ? sf::Vector2f(0.f,0.f) : sf::Vector2f(v.x/l, v.y/l);
+}
+inline float lerp(float a, float b, float t) { return a + (b-a)*t; }
+inline sf::Color colorLerp(sf::Color a, sf::Color b, float t) {
+    t = (t<0.f)?0.f:(t>1.f?1.f:t);
+    return sf::Color((sf::Uint8)(a.r+(b.r-a.r)*t), (sf::Uint8)(a.g+(b.g-a.g)*t),
+                     (sf::Uint8)(a.b+(b.b-a.b)*t), (sf::Uint8)(a.a+(b.a-a.a)*t));
+}
+inline float clampf(float v, float lo, float hi) {
+    return (v<lo)?lo:(v>hi?hi:v); }
+inline float randFloat(float lo, float hi) {
+    return lo + (float)rand()/(float)RAND_MAX * (hi-lo); }
+inline int randInt(int lo, int hi) {
+    return (hi<=lo)?lo : lo + rand()%(hi-lo+1); }
+\end{lstlisting}
+
+\subsection{BulletType.h}
+\begin{lstlisting}[caption={BulletType.h --- bullet type hierarchy and registry}]
+#pragma once
+
+class BulletType {
+    int  id;
+    bool playerBullet;
+public:
+    BulletType(int id, bool playerBullet) : id(id), playerBullet(playerBullet) {}
+    virtual ~BulletType() {}
+    int  getId()          const { return id; }
+    bool isPlayerBullet() const { return playerBullet; }
+    static BulletType *PlayerNorm, *EnemyNorm, *EnemyBurst, *BossBeam;
+};
+class PlayerNormBullet : public BulletType {
+public: PlayerNormBullet() : BulletType(0, true)  {} };
+class EnemyNormBullet  : public BulletType {
+public: EnemyNormBullet()  : BulletType(3, false) {} };
+class EnemyBurstBullet : public BulletType {
+public: EnemyBurstBullet() : BulletType(4, false) {} };
+class BossBeamBullet   : public BulletType {
+public: BossBeamBullet()   : BulletType(5, false) {} };
+
+class BulletTypeRegistry {
+    PlayerNormBullet playerNorm;
+    EnemyNormBullet  enemyNorm;
+    EnemyBurstBullet enemyBurst;
+    BossBeamBullet   bossBeam;
+public:
+    BulletTypeRegistry() {
+        BulletType::PlayerNorm = &playerNorm; BulletType::EnemyNorm  = &enemyNorm;
+        BulletType::EnemyBurst = &enemyBurst; BulletType::BossBeam   = &bossBeam;
+    }
+    ~BulletTypeRegistry() {
+        BulletType::PlayerNorm = nullptr; BulletType::EnemyNorm  = nullptr;
+        BulletType::EnemyBurst = nullptr; BulletType::BossBeam   = nullptr;
+    }
+    BulletTypeRegistry(const BulletTypeRegistry&)            = delete;
+    BulletTypeRegistry& operator=(const BulletTypeRegistry&) = delete;
+};
+\end{lstlisting}
+
+\subsection{EnemyType.h}
+\begin{lstlisting}[caption={EnemyType.h --- enemy type hierarchy and registry}]
+#pragma once
+
+class EnemyType {
+    float maxHp, shootInterval, moveSpeed, radius;
+    int   scoreValue, kind;
+public:
+    EnemyType(float maxHp, float shootInterval, int scoreValue,
+              float moveSpeed, float radius, int kind)
+        : maxHp(maxHp), shootInterval(shootInterval), scoreValue(scoreValue),
+          moveSpeed(moveSpeed), radius(radius), kind(kind) {}
+    virtual ~EnemyType() {}
+    float getMaxHp()         const { return maxHp; }
+    float getShootInterval() const { return shootInterval; }
+    int   getScoreValue()    const { return scoreValue; }
+    float getMoveSpeed()     const { return moveSpeed; }
+    float getRadius()        const { return radius; }
+    int   getKind()          const { return kind; }
+    static EnemyType *Small, *Medium, *Boss;
+};
+class SmallEnemyType  : public EnemyType {
+public: SmallEnemyType()  : EnemyType(  30.f, 2.2f,   50, 200.f, 16.f, 0) {} };
+class MediumEnemyType : public EnemyType {
+public: MediumEnemyType() : EnemyType(  80.f, 1.8f,  120, 160.f, 22.f, 1) {} };
+class BossEnemyType   : public EnemyType {
+public: BossEnemyType()   : EnemyType(2500.f, 0.8f, 2000,  80.f, 60.f, 2) {} };
+
+class EnemyTypeRegistry {
+    SmallEnemyType small; MediumEnemyType medium; BossEnemyType boss;
+public:
+    EnemyTypeRegistry() {
+        EnemyType::Small = &small; EnemyType::Medium = &medium; EnemyType::Boss = &boss;
+    }
+    ~EnemyTypeRegistry() {
+        EnemyType::Small = nullptr; EnemyType::Medium = nullptr; EnemyType::Boss = nullptr;
+    }
+    EnemyTypeRegistry(const EnemyTypeRegistry&)            = delete;
+    EnemyTypeRegistry& operator=(const EnemyTypeRegistry&) = delete;
+};
+\end{lstlisting}
+
+\subsection{GameState.h}
+\begin{lstlisting}[caption={GameState.h --- game screen state (constants defined in main.cpp)}]
+#pragma once
+class GameState {
+    int id;
+public:
+    GameState(int i = 0) : id(i) {}
+    int  getId() const { return id; }
+    bool operator==(const GameState& o) const { return id == o.id; }
+    bool operator!=(const GameState& o) const { return id != o.id; }
+    static const GameState Home, LevelSelect, Playing, Paused, GameOver, LevelComplete;
+};
+\end{lstlisting}
+
+\subsection{Player.h}
+\begin{lstlisting}[caption={Player.h --- fully encapsulated player class}]
+#pragma once
+#include <SFML/Graphics.hpp>
+#include "Utils.h"
+
+class Player {
+private:
+    sf::Vector2f pos;
+    float hp, maxHp, speed;
+    int   lives, score;
+    float shootTimer, shootInterval, iframeTimer, shieldTimer, tilt;
+    bool  alive;
+public:
+    Player() : pos(240.f,600.f), hp(100.f), maxHp(100.f), speed(310.f),
+               lives(3), score(0), shootTimer(0.f), shootInterval(0.10f),
+               iframeTimer(0.f), shieldTimer(0.f), tilt(0.f), alive(true) {}
+
+    sf::Vector2f getPos()           const { return pos; }
+    float        getHp()            const { return hp; }
+    float        getMaxHp()         const { return maxHp; }
+    float        getSpeed()         const { return speed; }
+    int          getLives()         const { return lives; }
+    int          getScore()         const { return score; }
+    float        getShootTimer()    const { return shootTimer; }
+    float        getShootInterval() const { return shootInterval; }
+    float        getIframeTimer()   const { return iframeTimer; }
+    float        getShieldTimer()   const { return shieldTimer; }
+    float        getTilt()          const { return tilt; }
+    bool         isAlive()          const { return alive; }
+
+    void setPos(sf::Vector2f p)  { pos = p; }
+    void setTilt(float t)        { tilt = t; }
+    void setShootTimer(float t)  { shootTimer = t; }
+    void setIframeTimer(float t) { iframeTimer = t; }
+    void setShieldTimer(float t) { shieldTimer = t; }
+    void setAlive(bool a)        { alive = a; }
+
+    void move(sf::Vector2f d)  { pos += d; }
+    void clampToArena() {
+        pos.x = clampf(pos.x, 24.f, 456.f);
+        pos.y = clampf(pos.y, 24.f, 696.f);
+    }
+    void takeDamage(float d)  { hp -= d; }
+    void heal(float h)        { hp = (hp+h > maxHp) ? maxHp : hp+h; }
+    void loseLife()           { lives--; }
+    void tickShootTimer(float dt) { shootTimer  -= dt; }
+    void tickIframe(float dt)     { iframeTimer -= dt; }
+    void tickShield(float dt)     { shieldTimer -= dt; }
+
+    void resetForLevel() {
+        pos = sf::Vector2f(240.f, 600.f);
+        hp = maxHp;  speed = 310.f;
+        shootTimer = iframeTimer = shieldTimer = tilt = 0.f;
+        alive = true;  score = 0;  lives = 3;
+    }
+
+    Player& operator+=(int s) { score += s; return *this; }
+};
+\end{lstlisting}
+
+\subsection{main.cpp}
+\begin{lstlisting}[caption={main.cpp --- static definitions, registry activation, and entry point}]
+#include "Game.h"
+#include <iostream>
+#include "BulletType.h"
+#include "EnemyType.h"
+#include "GameState.h"
+
+const GameState GameState::Home(0),   GameState::LevelSelect(1),
+                GameState::Playing(2), GameState::Paused(3),
+                GameState::GameOver(4), GameState::LevelComplete(5);
+
+BulletType *BulletType::PlayerNorm = nullptr, *BulletType::EnemyNorm  = nullptr,
+           *BulletType::EnemyBurst = nullptr, *BulletType::BossBeam   = nullptr;
+
+EnemyType  *EnemyType::Small = nullptr, *EnemyType::Medium = nullptr,
+           *EnemyType::Boss  = nullptr;
+
+int main() {
+    BulletTypeRegistry registryBullet;
+    EnemyTypeRegistry  registry;
+    try {
+        Game game; game.init(); game.run();
+    } catch (const std::exception& ex) {
+        std::cerr << "Fatal error: " << ex.what() << std::endl;
+        return 1;
+    }
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Game\_graphics.cpp (key excerpt)}
+\begin{lstlisting}[caption={Game\_graphics.cpp --- render() dispatcher and renderBullets() (excerpt)}]
+void Game::render() {
+    window.setView(window.getDefaultView());
+    window.clear(sf::Color::Black);
+    window.setView(gameView);
+    GameState current = stateStack.top();
+    if (current == GameState::Home)       { renderHomeScreen();  return; }
+    if (current == GameState::LevelSelect){ renderLevelSelect(); return; }
+    renderBackground(); renderStars(); renderEnemies();
+    renderBullets(); renderParticles(); renderPlayer(); renderHUD();
+    if (bossActive) renderBossHP();
+    if (current == GameState::Paused)        renderPauseOverlay();
+    if (current == GameState::GameOver)      renderGameOverOverlay();
+    if (current == GameState::LevelComplete) renderLevelCompleteOverlay();
+}
+
+void Game::renderBullets() {
+    for (int i = 0; i < bullets.capacity(); i++) {
+        Bullet& b = bullets.at(i);
+        if (!b.on || !b.type) continue;
+        if (b.type->isPlayerBullet()) {
+            sf::RectangleShape streak(sf::Vector2f(2.f, 12.f));
+            streak.setPosition(b.pos);
+            streak.setFillColor(sf::Color(150, 230, 255));
+            window.draw(streak);
+        } else if (b.type == BulletType::BossBeam) {
+            sf::RectangleShape beam(sf::Vector2f(5.f, 14.f));
+            float angle = std::atan2(b.vel.y, b.vel.x) * 180.f / 3.14159f - 90.f;
+            beam.setRotation(angle);
+            beam.setFillColor(sf::Color(140, 180, 255));
+            window.draw(beam);
+        }
+        // else: enemy normal/burst bullets drawn as red orbs
+    }
+}
+\end{lstlisting}
+
+\subsection{Game.cpp (key excerpts)}
+\begin{lstlisting}[caption={Game.cpp --- custom exceptions, init, and collision sketch}]
+class AssetLoadException   : public std::runtime_error {
+public: AssetLoadException()   : std::runtime_error("Failed to load asset") {} };
+class InvalidLevelException : public std::runtime_error {
+public: InvalidLevelException() : std::runtime_error("Invalid level") {} };
+
+void Game::init() {
+    // ... window and viewport setup ...
+    try {
+        loadTextureOrThrow(shipTexture, "assets/textures/spaceship.png");
+        // ... more assets ...
+    } catch (const AssetLoadException& ex) {
+        std::cerr << "Asset warning: " << ex.what() << "\n";
+    }
+    if (!music.openFromFile("assets/audio/music1.ogg"))
+        std::cerr << "Music load failed\n";
+    else { music.setLoop(true); music.setVolume(50.f); music.play(); }
+    buildLevels(); initStars();
+    stateStack.push(GameState::Home);
+}
+
+void Game::startLevel(int index) {
+    if (index < 0 || index >= (int)levels.size())
+        throw InvalidLevelException();
+    currentLevel = index;
+    // ... clear pools, reset timer, reset player ...
+}
+
+void Game::checkCollisions() {
+    for (int i = 0; i < bullets.capacity(); i++) {
+        Bullet& b = bullets.at(i);
+        if (!b.on || !b.type || !b.type->isPlayerBullet()) continue;
+        for (int j = 0; j < enemies.capacity(); j++) {
+            Enemy& e = enemies.at(j);
+            if (!e.on) continue;
+            if (vlen(b.pos - e.pos) < 4.f + e.type->getRadius()) {
+                e.hp -= b.dmg; b.on = false;
+                if (e.hp <= 0.f) {
+                    e.on = false;
+                    player += e.scoreValue;   // operator+= overload
+                    spawnExplosion(e.pos, ...);
+                }
+                break;
+            }
+        }
+    }
+    // ... enemy bullet vs player collision ...
+}
+\end{lstlisting}
+
+% ─────────────────────────────────────────────────────────────────────────
+\clearpage
+\section{Build and Run Instructions}
+\label{sec:install}
+% ─────────────────────────────────────────────────────────────────────────
+
+\subsection{Prerequisites}
+\begin{itemize}
+    \item MinGW-w64 (ucrt64) on Windows --- install SFML via:\\
+          \texttt{pacman -S mingw-w64-ucrt-x86\_64-sfml}
+    \item CMake 3.21 or later
+    \item Visual Studio Code (or any editor)
+\end{itemize}
+
+\subsection{Building with CMake}
+\begin{lstlisting}[language={}]
+Using VS Code and CMake: press Ctrl+Shift+P and select "CMake: Configure",
+then press Ctrl+Shift+P again and select "CMake: Build".
+This produces the executable at build/SpaceShooter.exe
+\end{lstlisting}
+
+\subsection{Running the Game}
+\begin{lstlisting}[language={}]
+Navigate to the build/ folder and double-click SpaceShooter.exe to run the game.
+\end{lstlisting}
+
+\subsection{Controls}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ll}
+        \toprule
+        \textbf{Key / Input}        & \textbf{Action} \\
+        \midrule
+        W / A / S / D or Arrow keys & Move ship \\
+        Space or Left mouse click   & Shoot / navigate menus \\
+        P or Escape                 & Pause / Resume \\
+        Left mouse click            & Navigate menus \\
+        \bottomrule
+    \end{tabular}
+    \caption{Player controls}
+\end{table}
+
+\end{document}
