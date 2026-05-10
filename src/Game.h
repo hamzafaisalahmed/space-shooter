@@ -69,6 +69,7 @@ private:
     void spawnEnemyBullet(Enemy &e);
     void spawnEnemyFromJob(const SpawnJob &job);
 
+    // RENDER METHODS
     void renderBackground();
     void renderStars();
     void renderPlayer();
@@ -83,6 +84,7 @@ private:
     void renderGameOverOverlay();
     void renderLevelCompleteOverlay();
 
+    // DRAW METHODS
     void drawPlayerShip(sf::Vector2f pos, float tilt, float scale);
     void drawSmallEnemy(sf::Vector2f pos, float angle);
     void drawMediumEnemy(sf::Vector2f pos, float angle);

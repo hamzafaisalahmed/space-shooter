@@ -19,6 +19,7 @@ add_executable(SpaceShooter
     src/main.cpp
     src/Game.cpp
     src/Level.cpp
+    src/Game_Render_draw.cpp
 )
 
 target_link_libraries(SpaceShooter
