@@ -2,6 +2,9 @@
 
 A 2D space shooter game built with C++ and SFML.
 
+## Video demo
+[Watch the video demo on YouTube](https://youtu.be/tGU9pBQozXY)
+
 ## Dependencies
 - SFML 2.6
 - CMake 3.21+
@@ -21,5 +24,5 @@ A 2D space shooter game built with C++ and SFML.
 - **Mouse**: Select levels
 - **Space/Left Mouse Click**: Shoot
 
-## Video demo
-[Watch the video demo on YouTube](https://youtu.be/tGU9pBQozXY)
+## View on github
+**GitHub Repository**: [https://github.com/hamzafaisalahmed/space-shooter](https://github.com/hamzafaisalahmed/space-shooter)
