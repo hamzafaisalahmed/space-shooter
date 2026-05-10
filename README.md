@@ -20,4 +20,3 @@ A 2D space shooter game built with C++ and SFML.
 - **P/Esc**: Pause
 - **Mouse**: Select levels
 - **Space/Left Mouse Click**: Shoot
-awdddddasdwdsaaaaaaasdddddddddddddddddwaadadsasawddasdsa
