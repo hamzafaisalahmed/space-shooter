@@ -57,8 +57,6 @@ public:
     {
         hp = (hp + h > maxHp) ? maxHp : (hp + h);
     }
-    void addScore(int s) { score += s; }
-
     void loseLife() { lives--; }
 
     void tickShootTimer(float dt) { shootTimer -= dt; }

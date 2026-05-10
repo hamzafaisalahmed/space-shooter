@@ -4,7 +4,6 @@
 #include <SFML/Audio.hpp>
 #include <stack>
 #include <vector>
-#include <list>
 #include <queue>
 #include <string>
 #include "GameState.h"

@@ -226,7 +226,7 @@ void LevelTwo::buildWaves()
 LevelThree::LevelThree()
 {
     name = "THE FINAL BATTLE";
-    desc = "We found their homeworld! Lets end this war!";
+    desc = "We found their homeworld! Let's end this war!";
 }
 
 void LevelThree::buildWaves()
