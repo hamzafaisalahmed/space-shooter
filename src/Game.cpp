@@ -89,6 +89,17 @@ void Game::init()
         1.f));
     window.setView(gameView);
 
+    if (!music.openFromFile("assets/audio/music1.ogg"))
+    {
+        std::cerr << "Warning: Failed to load music.\n";
+    }
+    else
+    {
+        music.setLoop(true);
+        music.setVolume(50.f);
+        music.play();
+    }
+
     try
     {
         loadFontOrThrow("assets/fonts/ProFontWindows.ttf");

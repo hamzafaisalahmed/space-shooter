@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <stack>
 #include <vector>
 #include <list>
@@ -28,6 +29,8 @@ private:
     sf::Texture homeplanet3;
     sf::Texture pauseIcon;
     sf::Sprite pauseSprite;
+
+    sf::Music music;
 
     std::stack<GameState> stateStack;
 

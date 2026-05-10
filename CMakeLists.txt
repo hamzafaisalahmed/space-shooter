@@ -26,6 +26,7 @@ target_link_libraries(SpaceShooter
         sfml-graphics
         sfml-window
         sfml-system
+        sfml-audio
         opengl32
         winmm
         gdi32
