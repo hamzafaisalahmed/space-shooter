@@ -59,7 +59,7 @@ private:
     void resetPlayer();
 
     void checkCollisions();
-    void checkSpawns(float dt);
+    void checkSpawns();
     void spawnExplosion(sf::Vector2f pos, sf::Color cStart, sf::Color cEnd, int count, int depth = 1);
 
     void spawnPlayerBullet();

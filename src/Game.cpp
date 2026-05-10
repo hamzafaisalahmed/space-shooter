@@ -303,16 +303,25 @@ void Game::update(float dt)
     if (!player.isAlive())
         return;
     levelTimer += dt;
-
     sf::Vector2f moveDir(0.f, 0.f);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-        moveDir.x -= 1.f;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-        moveDir.x += 1.f;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-        moveDir.y -= 1.f;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-        moveDir.y += 1.f;
+    if (window.hasFocus())
+    {
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+            moveDir.x -= 1.f;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+            moveDir.x += 1.f;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+            moveDir.y -= 1.f;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+            moveDir.y += 1.f;
+
+        if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Mouse::isButtonPressed(sf::Mouse::Left)) && player.getShootTimer() <= 0.f)
+        {
+            spawnPlayerBullet();
+            player.setShootTimer(player.getShootInterval());
+        }
+    }
     float ml = vlen(moveDir);
     if (ml > 0.f)
     {
@@ -330,13 +339,8 @@ void Game::update(float dt)
         player.tickShield(dt);
 
     player.tickShootTimer(dt);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && player.getShootTimer() <= 0.f)
-    {
-        spawnPlayerBullet();
-        player.setShootTimer(player.getShootInterval());
-    }
 
-    checkSpawns(dt);
+    checkSpawns();
 
     while (!spawnQueue.empty())
     {
@@ -591,9 +595,8 @@ void Game::checkCollisions()
     }
 }
 
-void Game::checkSpawns(float dt)
+void Game::checkSpawns()
 {
-    (void)dt;
     std::vector<SpawnEvent> &evs = levels[currentLevel]->getEvents();
     for (int i = 0; i < (int)evs.size(); i++)
     {
