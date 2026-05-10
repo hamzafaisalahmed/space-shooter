@@ -322,6 +322,7 @@ void Game::update(float dt)
             player.setShootTimer(player.getShootInterval());
         }
     }
+    // player movement
     float ml = vlen(moveDir);
     if (ml > 0.f)
     {
@@ -333,6 +334,7 @@ void Game::update(float dt)
     float targetTilt = moveDir.x * 18.f;
     player.setTilt(lerp(player.getTilt(), targetTilt, dt * 8.f));
 
+    // player shield and shoot timer
     if (player.getIframeTimer() > 0.f)
         player.tickIframe(dt);
     if (player.getShieldTimer() > 0.f)
@@ -340,6 +342,7 @@ void Game::update(float dt)
 
     player.tickShootTimer(dt);
 
+    // spawning enemies
     checkSpawns();
 
     while (!spawnQueue.empty())
@@ -412,6 +415,7 @@ void Game::update(float dt)
         }
     }
 
+    // bullets
     for (int i = 0; i < bullets.capacity(); i++)
     {
         Bullet &b = bullets.at(i);
@@ -422,6 +426,7 @@ void Game::update(float dt)
             b.on = false;
     }
 
+    // particles
     for (int i = 0; i < particles.capacity(); i++)
     {
         Particle &p = particles.at(i);
@@ -437,6 +442,7 @@ void Game::update(float dt)
         p.vel *= 0.97f;
     }
 
+    // background
     bgY += 60.f * dt;
     if (bgY >= 1440.f)
         bgY -= 1440.f;

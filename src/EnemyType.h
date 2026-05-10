@@ -45,7 +45,7 @@ class BossEnemyType : public EnemyType
 {
 public:
     BossEnemyType()
-        : EnemyType(1200.f, 0.8f, 2000, 80.f, 60.f, 2) {}
+        : EnemyType(2500.f, 0.8f, 2000, 80.f, 60.f, 2) {}
 };
 
 class EnemyTypeRegistry
