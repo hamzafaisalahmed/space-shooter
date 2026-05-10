@@ -13,7 +13,7 @@ struct Bullet
     float dmg;
     BulletType *type;
     bool on;
-    Bullet() : pos(0.f, 0.f), vel(0.f, 0.f), dmg(20.f), type(0), on(false) {}
+    Bullet() : pos(0.f, 0.f), vel(0.f, 0.f), dmg(20.f), type(nullptr), on(false) {}
 };
 
 struct Enemy
@@ -33,7 +33,7 @@ struct Enemy
     int scoreValue;
     float moveSpeed;
     Enemy()
-        : pos(0.f, 0.f), vel(0.f, 0.f), hp(30.f), maxHp(30.f), type(0),
+        : pos(0.f, 0.f), vel(0.f, 0.f), hp(30.f), maxHp(30.f), type(nullptr),
           on(false), shootTimer(0.f), shootInterval(2.2f),
           pathIndex(0), angle(0.f), pulse(0.f),
           scoreValue(50), moveSpeed(200.f) {}
@@ -66,7 +66,7 @@ struct SpawnEvent
     float delay;
     bool fired;
     SpawnEvent()
-        : time(0.f), etype(0), startPos(0.f, 0.f),
+        : time(0.f), etype(nullptr), startPos(0.f, 0.f),
           count(1), xSpacing(55.f), delay(0.25f), fired(false) {}
 };
 
@@ -82,7 +82,7 @@ struct SpawnJob
     int scoreValue;
     float moveSpeed;
     SpawnJob()
-        : etype(0), startPos(0.f, 0.f), delayRemaining(0.f),
+        : etype(nullptr), startPos(0.f, 0.f), delayRemaining(0.f),
           hp(30.f), maxHp(30.f), shootInterval(2.2f),
           scoreValue(50), moveSpeed(200.f) {}
 };
@@ -124,7 +124,7 @@ public:
             if (!items[i].on)
                 return &items[i];
         }
-        return 0;
+        return nullptr;
     }
     void clearAll()
     {
