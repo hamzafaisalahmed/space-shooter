@@ -609,6 +609,8 @@ void Game::checkSpawns()
         SpawnEvent &ev = evs[i];
         if (!ev.fired && levelTimer >= ev.time)
         {
+            if (ev.etype == EnemyType::Boss && bossActive)
+                continue;
             ev.fired = true;
             EnemyType *et = ev.etype;
             float hp = et->getMaxHp();
