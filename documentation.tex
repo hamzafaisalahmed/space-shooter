@@ -262,7 +262,7 @@ above it in the list.
         \hline
         1 & \texttt{BulletType.h}      &  Bullet category class + 4 concrete subclasses + \texttt{BulletTypeRegistry}\\
         \hline
-        1 & \texttt{EnemyType.h}       & Abstract enemy profile class + 3 concrete subclasses + \texttt{EnemyTypeRegistry} \\
+        1 & \texttt{EnemyType.h}       & Enemy stat profile class + 3 concrete subclasses + \texttt{EnemyTypeRegistry} \\
         \hline
         1 & \texttt{GameState.h}       & Game-screen state value class (constants defined in \texttt{main.cpp}) \\
         \hline
@@ -417,6 +417,8 @@ We used structs for data-heavy objects like enemies to allow direct access to va
         Exception Handling & \texttt{AssetLoadException} and \texttt{InvalidLevelException} (custom classes inheriting \texttt{std::runtime\_error}) \\
         \hline
         Recursion & \texttt{spawnExplosion()} calls itself with \texttt{count/2} and \texttt{depth-1}; base case is \texttt{depth <= 0} \\
+        \hline
+        Composition & \texttt{Game} owns \texttt{Player}, \texttt{ObjectPool<Bullet>}, \texttt{ObjectPool<Enemy>}, \texttt{ObjectPool<Particle>}, and \texttt{Level*[]} as member variables (has-a relationships) \\
         \hline
         Virtual Destructor & All parent classes use a virtual destructor to ensure correct cleanup of child classes, so derived objects are safely deleted via a base pointer\\
         \hline

@@ -1,12 +1,10 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include <queue>
 #include <string>
 #include <vector>
 #include "GameData.h"
 #include "EnemyType.h"
-#include "Utils.h"
 
 class Level
 {
