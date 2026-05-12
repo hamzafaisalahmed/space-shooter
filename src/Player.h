@@ -24,7 +24,7 @@ public:
         : pos(240.f, 600.f), hp(100.f), maxHp(100.f), speed(310.f),
           lives(3), score(0),
           shootTimer(0.f), shootInterval(0.10f),
-          iframeTimer(0.f), shieldTimer(0.f), tilt(0.f), alive(true) {}
+          iframeTimer(0.f), tilt(0.f), alive(true) {}
 
     sf::Vector2f getPos() const { return pos; }
     float getHp() const { return hp; }
@@ -35,7 +35,6 @@ public:
     float getShootTimer() const { return shootTimer; }
     float getShootInterval() const { return shootInterval; }
     float getIframeTimer() const { return iframeTimer; }
-    float getShieldTimer() const { return shieldTimer; }
     float getTilt() const { return tilt; }
     bool isAlive() const { return alive; }
 
@@ -43,7 +42,6 @@ public:
     void setTilt(float t) { tilt = t; }
     void setShootTimer(float t) { shootTimer = t; }
     void setIframeTimer(float t) { iframeTimer = t; }
-    void setShieldTimer(float t) { shieldTimer = t; }
     void setAlive(bool a) { alive = a; }
 
     void move(sf::Vector2f delta) { pos += delta; }

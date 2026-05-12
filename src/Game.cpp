@@ -322,8 +322,6 @@ void Game::update(float dt)
     // player shield and shoot timer
     if (player.getIframeTimer() > 0.f)
         player.tickIframe(dt);
-    if (player.getShieldTimer() > 0.f)
-        player.tickShield(dt);
 
     player.tickShootTimer(dt);
 
@@ -425,9 +423,6 @@ void Game::update(float dt)
     }
 
     // background
-    bgY += 60.f * dt;
-    if (bgY >= 1440.f)
-        bgY -= 1440.f;
     for (int i = 0; i < MAX_STARS; i++)
     {
         Star &s = stars[i];
@@ -443,143 +438,6 @@ void Game::update(float dt)
     if (isLevelClear())
     {
         stateStack.push(GameState::LevelComplete);
-    }
-}
-
-void Game::checkCollisions()
-{
-    for (int bi = 0; bi < bullets.capacity(); bi++)
-    {
-        Bullet &b = bullets.at(bi);
-        if (!b.on)
-            continue;
-        if (!b.type || !b.type->isPlayerBullet())
-            continue;
-
-        for (int ei = 0; ei < enemies.capacity(); ei++)
-        {
-            Enemy &e = enemies.at(ei);
-            if (!e.on)
-                continue;
-            float eRadius = e.type ? e.type->getRadius() : 16.f;
-            float dist = vlen(b.pos - e.pos);
-            if (dist < 4.f + eRadius)
-            {
-                e.hp -= b.dmg;
-                b.on = false;
-                spawnExplosion(b.pos, sf::Color(255, 200, 80), sf::Color(255, 80, 20, 0), 3);
-                if (e.hp <= 0.f)
-                {
-                    e.on = false;
-                    sf::Color cStart, cEnd;
-                    int pCount = 12;
-                    if (e.type == EnemyType::Small)
-                    {
-                        cStart = sf::Color(255, 160, 30);
-                        cEnd = sf::Color(200, 40, 10, 0);
-                        spawnExplosion(e.pos, cStart, cEnd, pCount, 1);
-                    }
-                    else if (e.type == EnemyType::Medium)
-                    {
-                        cStart = sf::Color(80, 255, 120);
-                        cEnd = sf::Color(20, 150, 50, 0);
-                        pCount = 18;
-                        spawnExplosion(e.pos, cStart, cEnd, pCount, 2);
-                    }
-                    else
-                    {
-                        cStart = sf::Color(255, 80, 80);
-                        cEnd = sf::Color(80, 20, 20, 0);
-                        pCount = 40;
-                        spawnExplosion(e.pos, cStart, cEnd, pCount, 5);
-                    }
-                    player += e.scoreValue;
-                }
-                break;
-            }
-        }
-    }
-
-    if (player.getIframeTimer() <= 0.f)
-    {
-        for (int bi = 0; bi < bullets.capacity(); bi++)
-        {
-            Bullet &b = bullets.at(bi);
-            if (!b.on)
-                continue;
-            if (!b.type || b.type->isPlayerBullet())
-                continue;
-            float dist = vlen(b.pos - player.getPos());
-            if (dist < 5.f + 18.f)
-            {
-                b.on = false;
-                if (player.getShieldTimer() > 0.f)
-                {
-                    player.setShieldTimer(0.f);
-                    spawnExplosion(player.getPos(), sf::Color(60, 160, 255), sf::Color(20, 80, 180, 0), 10);
-                }
-                else
-                {
-                    player.takeDamage(12.f);
-                    player.setIframeTimer(1.4f);
-                    spawnExplosion(player.getPos(), sf::Color(255, 80, 80), sf::Color(255, 200, 50, 0), 6);
-                    if (player.getHp() <= 0.f)
-                    {
-                        player.loseLife();
-                        if (player.getLives() <= 0)
-                        {
-                            player.setAlive(false);
-                            stateStack.push(GameState::GameOver);
-                        }
-                        else
-                        {
-                            player.heal(player.getMaxHp());
-                            player.setIframeTimer(2.0f);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    if (player.getIframeTimer() <= 0.f)
-    {
-        for (int ei = 0; ei < enemies.capacity(); ei++)
-        {
-            Enemy &e = enemies.at(ei);
-            if (!e.on)
-                continue;
-            float eRadius = e.type ? e.type->getRadius() : 16.f;
-            float dist = vlen(e.pos - player.getPos());
-            if (dist < eRadius + 18.f)
-            {
-                if (player.getShieldTimer() > 0.f)
-                {
-                    player.setShieldTimer(0.f);
-                    spawnExplosion(player.getPos(), sf::Color(60, 160, 255), sf::Color(20, 80, 180, 0), 10);
-                }
-                else
-                {
-                    player.takeDamage(20.f);
-                    player.setIframeTimer(1.4f);
-                    spawnExplosion(player.getPos(), sf::Color(255, 80, 80), sf::Color(255, 200, 50, 0), 8);
-                    if (player.getHp() <= 0.f)
-                    {
-                        player.loseLife();
-                        if (player.getLives() <= 0)
-                        {
-                            player.setAlive(false);
-                            stateStack.push(GameState::GameOver);
-                        }
-                        else
-                        {
-                            player.heal(player.getMaxHp());
-                            player.setIframeTimer(2.0f);
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -602,19 +460,10 @@ void Game::checkSpawns()
             float moveSpd = et->getMoveSpeed();
             for (int k = 0; k < ev.count; k++)
             {
-                SpawnJob job;
-                job.etype = ev.etype;
-                job.startPos = ev.startPos;
+                SpawnJob job(et, ev.startPos, k * ev.delay, ev.path, hp, maxHp, shootInt, scoreVal, moveSpd);
                 job.startPos.x += (k - (ev.count - 1) / 2.f) * ev.xSpacing;
-                job.delayRemaining = k * ev.delay;
-                job.path = ev.path;
                 if (!job.path.empty())
                     job.path[0] = job.startPos;
-                job.hp = hp;
-                job.maxHp = maxHp;
-                job.shootInterval = shootInt;
-                job.scoreValue = scoreVal;
-                job.moveSpeed = moveSpd;
                 spawnQueue.push(job);
             }
         }
@@ -739,6 +588,127 @@ void Game::spawnExplosion(sf::Vector2f pos, sf::Color cStart, sf::Color cEnd, in
     {
         sf::Vector2f offset(randFloat(-25.f, 25.f), randFloat(-25.f, 25.f));
         spawnExplosion(pos + offset, cStart, cEnd, count / 2, depth - 1);
+    }
+}
+
+void Game::checkCollisions()
+{
+    for (int bi = 0; bi < bullets.capacity(); bi++)
+    {
+        Bullet &b = bullets.at(bi);
+        if (!b.on)
+            continue;
+        if (!b.type || !b.type->isPlayerBullet())
+            continue;
+
+        for (int ei = 0; ei < enemies.capacity(); ei++)
+        {
+            Enemy &e = enemies.at(ei);
+            if (!e.on)
+                continue;
+            float eRadius = e.type ? e.type->getRadius() : 16.f;
+            float dist = vlen(b.pos - e.pos);
+            if (dist < 4.f + eRadius)
+            {
+                e.hp -= b.dmg;
+                b.on = false;
+                spawnExplosion(b.pos, sf::Color(255, 200, 80), sf::Color(255, 80, 20, 0), 3);
+                if (e.hp <= 0.f)
+                {
+                    e.on = false;
+                    sf::Color cStart, cEnd;
+                    int pCount = 12;
+                    if (e.type == EnemyType::Small)
+                    {
+                        cStart = sf::Color(255, 160, 30);
+                        cEnd = sf::Color(200, 40, 10, 0);
+                        spawnExplosion(e.pos, cStart, cEnd, pCount, 1);
+                    }
+                    else if (e.type == EnemyType::Medium)
+                    {
+                        cStart = sf::Color(80, 255, 120);
+                        cEnd = sf::Color(20, 150, 50, 0);
+                        pCount = 18;
+                        spawnExplosion(e.pos, cStart, cEnd, pCount, 2);
+                    }
+                    else
+                    {
+                        cStart = sf::Color(255, 80, 80);
+                        cEnd = sf::Color(80, 20, 20, 0);
+                        pCount = 40;
+                        spawnExplosion(e.pos, cStart, cEnd, pCount, 5);
+                    }
+                    player += e.scoreValue;
+                }
+                break;
+            }
+        }
+    }
+
+    if (player.getIframeTimer() <= 0.f)
+    {
+        for (int bi = 0; bi < bullets.capacity(); bi++)
+        {
+            Bullet &b = bullets.at(bi);
+            if (!b.on)
+                continue;
+            if (!b.type || b.type->isPlayerBullet())
+                continue;
+            float dist = vlen(b.pos - player.getPos());
+            if (dist < 5.f + 18.f)
+            {
+                b.on = false;
+                player.takeDamage(12.f);
+                player.setIframeTimer(1.4f);
+                spawnExplosion(player.getPos(), sf::Color(255, 80, 80), sf::Color(255, 200, 50, 0), 6);
+                if (player.getHp() <= 0.f)
+                {
+                    player.loseLife();
+                    if (player.getLives() <= 0)
+                    {
+                        player.setAlive(false);
+                        stateStack.push(GameState::GameOver);
+                    }
+                    else
+                    {
+                        player.heal(player.getMaxHp());
+                        player.setIframeTimer(2.0f);
+                    }
+                }
+            }
+        }
+    }
+
+    if (player.getIframeTimer() <= 0.f)
+    {
+        for (int ei = 0; ei < enemies.capacity(); ei++)
+        {
+            Enemy &e = enemies.at(ei);
+            if (!e.on)
+                continue;
+            float eRadius = e.type ? e.type->getRadius() : 16.f;
+            float dist = vlen(e.pos - player.getPos());
+            if (dist < eRadius + 18.f)
+            {
+                player.takeDamage(20.f);
+                player.setIframeTimer(1.4f);
+                spawnExplosion(player.getPos(), sf::Color(255, 80, 80), sf::Color(255, 200, 50, 0), 8);
+                if (player.getHp() <= 0.f)
+                {
+                    player.loseLife();
+                    if (player.getLives() <= 0)
+                    {
+                        player.setAlive(false);
+                        stateStack.push(GameState::GameOver);
+                    }
+                    else
+                    {
+                        player.heal(player.getMaxHp());
+                        player.setIframeTimer(2.0f);
+                    }
+                }
+            }
+        }
     }
 }
 

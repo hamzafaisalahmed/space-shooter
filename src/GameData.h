@@ -85,6 +85,12 @@ struct SpawnJob
         : etype(nullptr), startPos(0.f, 0.f), delayRemaining(0.f),
           hp(30.f), maxHp(30.f), shootInterval(2.2f),
           scoreValue(50), moveSpeed(200.f) {}
+    SpawnJob(EnemyType *et, sf::Vector2f start, float delay,
+             std::vector<sf::Vector2f> p, float hp, float maxHp,
+             float shootInt, int scoreVal, float moveSpd)
+        : etype(et), startPos(start), delayRemaining(delay), path(p),
+          hp(hp), maxHp(maxHp), shootInterval(shootInt),
+          scoreValue(scoreVal), moveSpeed(moveSpd) {}
 };
 
 struct Star
